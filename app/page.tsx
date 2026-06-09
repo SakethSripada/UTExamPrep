@@ -20,6 +20,7 @@ import {
   RotateCcw,
   ShieldCheck,
   Terminal,
+  X,
 } from "lucide-react";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -40,10 +41,12 @@ type Question = {
   points: number;
   type: QuestionType;
   prompt: string;
+  reference?: string;
   code?: string;
   stub?: string;
   answer?: string;
   answers?: string[];
+  answerPoints?: number[];
   rubric?: Rubric[];
 };
 
@@ -53,6 +56,56 @@ type Exam = {
   subtitle: string;
   questions: Question[];
 };
+
+const computerContext = `public class Computer {
+    private int memory;
+    public Computer() { memory = 8; }
+    public Computer(int m) { memory = m; }
+    public void upgrade() { memory *= 2; }
+    public String toString() { return "" + getMemory(); }
+    public int getMemory() { return memory; }
+}
+
+public class PC extends Computer {
+    public int getMemory() { return 10; }
+}
+
+public class Mac extends Computer {
+    private int colors;
+    public Mac(int c, int m) {
+        super(m);
+        colors = c;
+    }
+    public int getColors() { return colors; }
+}`;
+
+const roomContext = `public class Room {
+    private int seats;
+    public Room(int s) { seats = s; }
+    public void expand() { seats += 5; }
+    public int getSeats() { return seats; }
+    public String toString() { return "room: " + seats; }
+}
+
+public class Meeting extends Room {
+    private boolean tele;
+    public Meeting(int s) { super(s); }
+    public void expand() { tele = true; }
+    public String toString() { return super.toString() + " " + tele; }
+}
+
+public class Classroom extends Room {
+    private int plugs;
+    public Classroom(int p, int s) {
+        super(s * 2);
+        plugs = p;
+    }
+    public void add(int p) {
+        plugs += p;
+        expand();
+        expand();
+    }
+}`;
 
 const examOne: Exam = {
   id: "sample-1",
@@ -337,12 +390,13 @@ public void upgrade(int x) { memory += x; }`,
 }`,
       rubric: [
         { label: "Header with extends clause", points: 1 },
-        { label: "Private state tracks steps, leg length, and current direction", points: 2 },
+        { label: "Instance variables track steps, leg length, and current direction", points: 1 },
+        { label: "Instance variables are private", points: 1 },
         { label: "Random direction chosen correctly and equally among four directions", points: 2 },
-        { label: "eat returns true", points: 1 },
-        { label: "fight checks the next direction without calling getMove", points: 4 },
-        { label: "getMove returns current direction and increments step count", points: 2 },
-        { label: "getMove advances leg length and direction at the right time", points: 4 },
+        { label: "eat overridden correctly", points: 1 },
+        { label: "fight checks the correct next direction and returns the correct attack", points: 4 },
+        { label: "getMove handles incrementing steps this leg and direction to return", points: 2 },
+        { label: "getMove updates steps, leg length, and direction at the end of a leg", points: 4 },
       ],
     },
     {
@@ -377,11 +431,12 @@ public static boolean capitalLettersPresent(Scanner sc, int[] required) {
     return true;
 }`,
       rubric: [
-        { label: "Loops through Scanner correctly", points: 4 },
-        { label: "Loops through every character in each token", points: 2 },
-        { label: "Checks capital-letter range correctly", points: 4 },
-        { label: "Maps letter to required index and updates count", points: 3 },
-        { label: "Checks remaining counters and returns false when needed", points: 3 },
+        { label: "Correctly loops while hasNext is true for the Scanner", points: 2 },
+        { label: "Gets the next token from the Scanner", points: 2 },
+        { label: "Loops through all characters of the token", points: 2 },
+        { label: "Correctly checks that the current char is a capital letter", points: 4 },
+        { label: "Correctly updates the counter for the given letter", points: 3 },
+        { label: "After reading all tokens, checks counters and returns false if any are above zero", points: 3 },
         { label: "Returns true when requirements are met", points: 1 },
       ],
     },
@@ -441,11 +496,14 @@ public static boolean capitalLettersPresent(Scanner sc, int[] required) {
     return min;
 }`,
       rubric: [
-        { label: "Uses a double minimum initialized correctly", points: 3 },
+        { label: "Variable for minimum distance of type double", points: 1 },
+        { label: "Correctly initializes minimum distance", points: 2 },
         { label: "Outer loop covers all Points", points: 3 },
-        { label: "Inner loop checks all later Points without redundant pairs", points: 5 },
-        { label: "Accesses Points and calls distance correctly", points: 3 },
-        { label: "Updates and returns the correct minimum", points: 3 },
+        { label: "Inner loop checks all Points after the current Point", points: 5 },
+        { label: "Correctly accesses Point objects from the array", points: 1 },
+        { label: "Correctly calculates distance using the distance method", points: 2 },
+        { label: "Updates the minimum distance when current distance is smaller", points: 2 },
+        { label: "Returns the correct result", points: 1 },
       ],
     },
     {
@@ -477,10 +535,14 @@ public static boolean capitalLettersPresent(Scanner sc, int[] required) {
 }`,
       rubric: [
         { label: "Counts removals", points: 1 },
-        { label: "Loops through Scanner and reads tokens", points: 3 },
-        { label: "Searches ArrayList with size/get", points: 5 },
-        { label: "Uses equals and removes only the first occurrence", points: 4 },
-        { label: "Increments and returns count", points: 3 },
+        { label: "Correct Scanner loop", points: 2 },
+        { label: "Gets the next token", points: 1 },
+        { label: "Loops through elements of the ArrayList", points: 3 },
+        { label: "Stops when the first occurrence is found", points: 2 },
+        { label: "Uses size and get methods for ArrayList", points: 2 },
+        { label: "Uses equals method from String", points: 2 },
+        { label: "Removes from list and increments counter if matched", points: 2 },
+        { label: "Returns correct result", points: 1 },
       ],
     },
     {
@@ -489,7 +551,7 @@ public static boolean capitalLettersPresent(Scanner sc, int[] required) {
       points: 16,
       type: "code",
       prompt:
-        "Given a rectangular int matrix and the row/column of the lower-right corner of a region, clamp all in-bounds values in that region to be at least tgt. The region has width w and height h; out-of-bounds cells are ignored. Do not create arrays or use other Java classes/methods.",
+        "Write clampValues. Given a rectangular int matrix and the row/column of the lower-right corner of a region, set every in-bounds value in that region to at least the target value. The region has width w and height h; out-of-bounds cells are ignored. Do not create arrays or use other Java classes/methods.",
       stub: `public void clampValues(int[][] mat, int r, int c, int w, int h, int tgt) {
 
 }`,
@@ -824,12 +886,15 @@ public static int um(int[] ar, int x) {
 }`,
       rubric: [
         { label: "Header with extends clause", points: 2 },
-        { label: "Private state tracks steps, leg length, direction, moving", points: 2 },
+        { label: "Instance variables track steps, leg length, direction, and moving/celebrating", points: 1 },
+        { label: "Instance variables are private", points: 1 },
         { label: "fight forfeits when already moving", points: 1 },
-        { label: "fight prepares movement correctly after a win", points: 5 },
+        { label: "fight prepares for moving correctly when not moving", points: 5 },
         { label: "fight returns SCRATCH when sitting still", points: 1 },
         { label: "getMove returns CENTER when idle", points: 1 },
-        { label: "getMove increments, stops at end, and returns direction", points: 4 },
+        { label: "getMove increments steps when moving", points: 1 },
+        { label: "getMove checks for end of leg and stops moving", points: 2 },
+        { label: "getMove returns the direction when moving", points: 1 },
       ],
     },
     {
@@ -870,11 +935,14 @@ public static int um(int[] ar, int x) {
     }
 }`,
       rubric: [
-        { label: "Loops through lines and creates a line Scanner", points: 4 },
+        { label: "Loops through lines correctly", points: 2 },
+        { label: "Creates Scanner for line", points: 2 },
         { label: "Prints or saves the name correctly", points: 3 },
         { label: "Tracks total for current person", points: 1 },
-        { label: "Reads int/symbol pairs correctly", points: 3 },
-        { label: "Checks K/S/G with equals and adds correct values", points: 6 },
+        { label: "Loops while line has next correctly", points: 2 },
+        { label: "Reads int value correctly", points: 1 },
+        { label: "Gets and checks symbol correctly", points: 4 },
+        { label: "Adds correct value to running total", points: 2 },
         { label: "Prints Galleon/Galleons correctly", points: 1 },
       ],
     },
@@ -962,10 +1030,14 @@ public static int um(int[] ar, int x) {
 }`,
       rubric: [
         { label: "Counts removals", points: 1 },
-        { label: "Removes without skipping elements", points: 5 },
-        { label: "Checks String bounds and first n characters", points: 5 },
-        { label: "Removes and increments correctly", points: 3 },
-        { label: "Returns number removed", points: 2 },
+        { label: "Loops from back or otherwise avoids skipping elements on remove", points: 5 },
+        { label: "Bounds check length of String", points: 3 },
+        { label: "Bounds check n", points: 1 },
+        { label: "Stops when target char is found", points: 1 },
+        { label: "Accesses char correctly", points: 1 },
+        { label: "Removes from list if char is found", points: 2 },
+        { label: "Increments counter", points: 1 },
+        { label: "Returns number removed", points: 1 },
       ],
     },
     {
@@ -1016,7 +1088,116 @@ public static int um(int[] ar, int x) {
   ],
 };
 
-const exams = [examOne, examTwo];
+function splitTracingQuestion(question: Question): Question[] {
+  function splitPairedLegalPrompts(code: string) {
+    return code
+      .replace(
+        /M\.\nPC p1 = new PC\(16\);\s+\/\/ legal or syntax error\nComputer c1 = new PC\(\);\s+\/\/ legal or syntax error/,
+        `M1.
+PC p1 = new PC(16);        // legal or syntax error
+
+M2.
+Computer c1 = new PC();    // legal or syntax error`,
+      )
+      .replace(
+        /N\.\nMac m1 = new Computer\(12\);\s+\/\/ legal or syntax error\nPC m2 = new Mac\(10, 8\);\s+\/\/ legal or syntax error/,
+        `N1.
+Mac m1 = new Computer(12); // legal or syntax error
+
+N2.
+PC m2 = new Mac(10, 8);    // legal or syntax error`,
+      )
+      .replace(
+        /O\.\nObject obj = Room\(\);\s+\/\/ legal or syntax error\nRoom r1 = new Classroom\(10, 10\);\s+\/\/ legal or syntax error/,
+        `O1.
+Object obj = Room();             // legal or syntax error
+
+O2.
+Room r1 = new Classroom(10, 10); // legal or syntax error`,
+      )
+      .replace(
+        /P\.\nMeeting m1 = new Object\(5\);\s+\/\/ legal or syntax error\nMeeting m2 = new Classroom\(10, 10\); \/\/ legal or syntax error/,
+        `P1.
+Meeting m1 = new Object(5);        // legal or syntax error
+
+P2.
+Meeting m2 = new Classroom(10, 10); // legal or syntax error`,
+      );
+  }
+
+  if (question.id === "e1-q2" && question.code && question.answers) {
+    const contextStart = question.code.indexOf("\nFor M through V consider these classes:");
+    const mStart = question.code.indexOf("\nM.\n", contextStart);
+    return [
+      {
+        ...question,
+        id: "e1-q2a",
+        title: "2. Code Tracing A-L",
+        points: 12,
+        code: question.code.slice(0, contextStart).trim(),
+        answers: question.answers.slice(0, 12),
+      },
+      {
+        ...question,
+        id: "e1-q2b",
+        title: "2. Code Tracing M-V",
+        points: 10,
+        prompt:
+          "For M through V, use the Computer, PC, and Mac definitions in the reference block. For each statement, answer legal or syntax error; for each snippet, state the exact output or error.",
+        reference: computerContext,
+        code: splitPairedLegalPrompts(question.code.slice(mStart + 1).trim()),
+        answers: [
+          "syntax error",
+          "legal",
+          "syntax error",
+          "syntax error",
+          ...question.answers.slice(14),
+        ],
+        answerPoints: [0.5, 0.5, 0.5, 0.5, ...Array(8).fill(1)],
+      },
+    ];
+  }
+
+  if (question.id === "e2-q2" && question.code && question.answers) {
+    const contextStart = question.code.indexOf("\nFor O through X consider these classes:");
+    const oStart = question.code.indexOf("\nO.\n", contextStart);
+    return [
+      {
+        ...question,
+        id: "e2-q2a",
+        title: "2. Code Tracing A-N",
+        points: 14,
+        code: question.code.slice(0, contextStart).trim(),
+        answers: question.answers.slice(0, 14),
+      },
+      {
+        ...question,
+        id: "e2-q2b",
+        title: "2. Code Tracing O-X",
+        points: 10,
+        prompt:
+          "For O through X, use the Room, Meeting, and Classroom definitions in the reference block. For each statement, answer legal or syntax error; for each snippet, state the exact output or error.",
+        reference: roomContext,
+        code: splitPairedLegalPrompts(question.code.slice(oStart + 1).trim()),
+        answers: [
+          "syntax error",
+          "legal",
+          "syntax error",
+          "syntax error",
+          ...question.answers.slice(16),
+        ],
+        answerPoints: [0.5, 0.5, 0.5, 0.5, ...Array(8).fill(1)],
+      },
+    ];
+  }
+
+  return [question];
+}
+
+const exams = [examOne, examTwo].map((exam) => ({
+  ...exam,
+  questions: exam.questions.flatMap(splitTracingQuestion),
+}));
 
 type AnswerState = Record<string, string | string[]>;
 type ManualState = Record<string, number>;
@@ -1040,6 +1221,15 @@ type ObjectivePart = {
   label?: string;
   code: string;
   answerIndex?: number;
+};
+type MissingPart = {
+  label: string;
+  targetId?: string;
+};
+type IncompleteSection = {
+  question: Question;
+  questionIndex: number;
+  missingParts: MissingPart[];
 };
 type PersistedExam = {
   answers?: AnswerState;
@@ -1065,6 +1255,8 @@ function readSavedExamIds() {
 function normalizeAnswer(value: string) {
   return value
     .trim()
+    .replace(/\s*,\s*/g, ",")
+    .replace(/[;]/g, " ")
     .replace(/\s+/g, " ")
     .replace(/^syntax error$/i, "COMPILE ERROR")
     .replace(/^compile error$/i, "COMPILE ERROR")
@@ -1079,6 +1271,18 @@ function isCorrect(given: string, expected: string) {
     return true;
   }
   return user === official;
+}
+
+function normalizeCode(value: string) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function hasEditedCodeAnswer(item: Question, answers: AnswerState) {
+  const value = (answers[item.id] as string | undefined) ?? "";
+  if (!value.trim()) {
+    return false;
+  }
+  return normalizeCode(value) !== normalizeCode(item.stub ?? "");
 }
 
 function labelForIndex(index: number) {
@@ -1121,7 +1325,7 @@ function buildObjectiveParts(question: Question): ObjectivePart[] {
   };
 
   for (const line of question.code.split("\n")) {
-    const marker = line.match(/^([A-Z])\.\s*(.*)$/);
+    const marker = line.match(/^([A-Z](?:\d+)?)\.\s*(.*)$/);
     const startsSharedContext = /^For\s+[A-Z].*consider/i.test(line);
 
     if (startsSharedContext) {
@@ -1192,22 +1396,41 @@ export default function Home() {
   const [selectedExamId, setSelectedExamId] = useState(exams[0].id);
   const [mode, setMode] = useState<"menu" | "exam" | "review">("menu");
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<AnswerState>(() => readPersistedExam(exams[0].id).answers ?? {});
-  const [manual, setManual] = useState<ManualState>(() => readPersistedExam(exams[0].id).manual ?? {});
-  const [flags, setFlags] = useState<FlagState>(() => readPersistedExam(exams[0].id).flags ?? {});
-  const [savedExamIds, setSavedExamIds] = useState<string[]>(readSavedExamIds);
+  const [answers, setAnswers] = useState<AnswerState>({});
+  const [manual, setManual] = useState<ManualState>({});
+  const [flags, setFlags] = useState<FlagState>({});
+  const [savedExamIds, setSavedExamIds] = useState<string[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
   const [javaStatus, setJavaStatus] = useState<JavaStatus | null>(null);
   const [javaRuns, setJavaRuns] = useState<JavaRunState>({});
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [submitRunning, setSubmitRunning] = useState(false);
+  const [pendingTargetId, setPendingTargetId] = useState<string | null>(null);
 
   const exam = exams.find((item) => item.id === selectedExamId) ?? exams[0];
   const question = exam.questions[index];
 
   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const persisted = readPersistedExam(exams[0].id);
+      setAnswers(persisted.answers ?? {});
+      setManual(persisted.manual ?? {});
+      setFlags(persisted.flags ?? {});
+      setSavedExamIds(readSavedExamIds());
+      setStorageReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!storageReady) {
+      return;
+    }
     window.localStorage.setItem(
       `digitalexams:${selectedExamId}`,
       JSON.stringify({ answers, manual, flags }),
     );
-  }, [answers, flags, manual, selectedExamId]);
+  }, [answers, flags, manual, selectedExamId, storageReady]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1231,6 +1454,20 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!pendingTargetId) {
+      return;
+    }
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(pendingTargetId);
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      const input = target?.querySelector("input, textarea, [tabindex]") as HTMLElement | null;
+      input?.focus({ preventScroll: true });
+      setPendingTargetId(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [index, pendingTargetId]);
+
   const totals = (() => {
     let autoEarned = 0;
     let autoPossible = 0;
@@ -1241,10 +1478,9 @@ export default function Home() {
       if (item.type === "short" && item.answers) {
         autoPossible += item.points;
         const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
-        const per = item.points / item.answers.length;
         item.answers.forEach((expected, answerIndex) => {
           if (isCorrect(userAnswers[answerIndex] ?? "", expected)) {
-            autoEarned += per;
+            autoEarned += item.answerPoints?.[answerIndex] ?? item.points / item.answers!.length;
           }
         });
       } else {
@@ -1261,6 +1497,43 @@ export default function Home() {
       possible: autoPossible + manualPossible,
     };
   })();
+
+  function questionAnswered(item: Question) {
+    if (item.type === "short") {
+      const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
+      return item.answers?.every((_, answerIndex) => Boolean(userAnswers[answerIndex]?.trim())) ?? false;
+    }
+    return hasEditedCodeAnswer(item, answers);
+  }
+
+  function questionHasPartialAnswer(item: Question) {
+    if (item.type === "short") {
+      return Boolean(((answers[item.id] as string[] | undefined) ?? []).some((answer) => answer?.trim()));
+    }
+    return hasEditedCodeAnswer(item, answers);
+  }
+
+  function getMissingParts(item: Question) {
+    if (item.type === "code") {
+      return questionAnswered(item) ? [] : [{ label: "Code response", targetId: `${item.id}-editor` }];
+    }
+    const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
+    return buildObjectiveParts(item)
+      .filter((part) => part.kind === "answer")
+      .filter((part) => !userAnswers[part.answerIndex ?? 0]?.trim())
+      .map((part) => ({
+        label: `Part ${part.label}`,
+        targetId: `${item.id}-part-${part.label}`,
+      }));
+  }
+
+  const incompleteSections: IncompleteSection[] = exam.questions
+    .map((item, questionIndex) => ({
+      question: item,
+      questionIndex,
+      missingParts: getMissingParts(item),
+    }))
+    .filter((section) => section.missingParts.length > 0);
 
   function setShortAnswer(questionId: string, answerIndex: number, value: string) {
     setAnswers((current) => {
@@ -1284,6 +1557,53 @@ export default function Home() {
     setIndex(0);
   }
 
+  function returnToMenu() {
+    setSavedExamIds(readSavedExamIds());
+    setMode("menu");
+  }
+
+  async function finalizeSubmit() {
+    setSubmitRunning(true);
+    try {
+      if (javaStatus?.available) {
+        const codeQuestions = exam.questions.filter(
+          (item) => item.type === "code" && hasEditedCodeAnswer(item, answers),
+        );
+        const results = await Promise.all(
+          codeQuestions.map(async (item) => ({
+            item,
+            result: await runJavaTests(item),
+          })),
+        );
+        setManual((current) => {
+          const next = { ...current };
+          for (const { item, result } of results) {
+            if (result && typeof result.passed === "number" && typeof result.total === "number" && result.total > 0) {
+              next[item.id] = Math.round((item.points * result.passed * 10) / result.total) / 10;
+            }
+          }
+          return next;
+        });
+      }
+      setMode("review");
+    } finally {
+      setSubmitRunning(false);
+    }
+  }
+
+  function requestSubmit() {
+    if (incompleteSections.length > 0) {
+      setSubmitModalOpen(true);
+      return;
+    }
+    void finalizeSubmit();
+  }
+
+  function submitAnyway() {
+    setSubmitModalOpen(false);
+    void finalizeSubmit();
+  }
+
   function resetExam() {
     setAnswers({});
     setManual({});
@@ -1294,8 +1614,17 @@ export default function Home() {
     setSavedExamIds(readSavedExamIds());
   }
 
-  async function runJavaTests(item: Question) {
+  async function runJavaTests(item: Question): Promise<JavaRunResult | null> {
     const code = ((answers[item.id] as string | undefined) ?? item.stub ?? "").trim();
+    if (!hasEditedCodeAnswer(item, answers)) {
+      const result = {
+        ok: false,
+        phase: "request",
+        message: "Add code before running local tests.",
+      };
+      setJavaRuns((current) => ({ ...current, [item.id]: result }));
+      return result;
+    }
     setJavaRuns((current) => ({ ...current, [item.id]: { loading: true } }));
     try {
       const response = await fetch("/api/java/run", {
@@ -1308,15 +1637,18 @@ export default function Home() {
       if (result.phase === "java") {
         setJavaStatus({ available: false, message: result.message });
       }
+      return result;
     } catch {
+      const result = {
+        ok: false,
+        phase: "network",
+        message: "Could not reach the local Java runner.",
+      };
       setJavaRuns((current) => ({
         ...current,
-        [item.id]: {
-          ok: false,
-          phase: "network",
-          message: "Could not reach the local Java runner.",
-        },
+        [item.id]: result,
       }));
+      return result;
     }
   }
 
@@ -1367,9 +1699,9 @@ export default function Home() {
   }
 
   return (
-    <main className="exam-shell">
+    <main className={`exam-shell ${mode === "review" ? "review-shell" : ""}`}>
       <header className="topbar">
-        <button className="icon-button" aria-label="Back to menu" onClick={() => setMode("menu")}>
+        <button className="icon-button" aria-label="Back to menu" onClick={returnToMenu}>
           <HomeIcon size={19} />
         </button>
         <div className="topbar-title">
@@ -1385,9 +1717,9 @@ export default function Home() {
             Reset
           </button>
           {mode === "exam" ? (
-            <button className="primary-button" onClick={() => setMode("review")}>
+            <button className="primary-button" onClick={requestSubmit} disabled={submitRunning}>
               <ClipboardCheck size={17} />
-              Submit
+              {submitRunning ? "Grading" : "Submit"}
             </button>
           ) : (
             <button className="primary-button" onClick={() => setMode("exam")}>
@@ -1412,10 +1744,8 @@ export default function Home() {
           </div>
           <div className="question-map">
             {exam.questions.map((item, qIndex) => {
-              const hasAnswer =
-                item.type === "short"
-                  ? Boolean(((answers[item.id] as string[] | undefined) ?? []).some(Boolean))
-                  : Boolean((answers[item.id] as string | undefined)?.trim());
+              const isComplete = questionAnswered(item);
+              const isPartial = !isComplete && questionHasPartialAnswer(item);
               const itemRun = javaRuns[item.id];
               const passedJava = itemRun && !("loading" in itemRun) && itemRun.ok;
               const failedJava = itemRun && !("loading" in itemRun) && !itemRun.ok;
@@ -1444,10 +1774,12 @@ export default function Home() {
                       <span className="map-badge failed">
                         <Terminal size={12} />
                       </span>
-                    ) : hasAnswer ? (
+                    ) : isComplete ? (
                       <span className="map-badge answered">
                         <Check size={12} />
                       </span>
+                    ) : isPartial ? (
+                      <span className="map-badge partial" aria-label="Partially answered" />
                     ) : null}
                   </span>
                 </button>
@@ -1457,6 +1789,21 @@ export default function Home() {
         </aside>
 
         <section className="question-pane">
+          {mode === "review" ? (
+            <section className="review-banner">
+              <div>
+                <p className="eyebrow">Scoring Mode</p>
+                <h2>
+                  {totals.earned.toFixed(1)} / {totals.possible} points
+                </h2>
+              </div>
+              <p>
+                Answers are locked while reviewing. Use Continue Editing to return to the exam and make
+                changes.
+              </p>
+            </section>
+          ) : null}
+
           <div className="question-header">
             <div>
               <p className="eyebrow">{question.points} points</p>
@@ -1465,6 +1812,7 @@ export default function Home() {
             <button
               className={`flag-button ${flags[question.id] ? "flagged" : ""}`}
               onClick={() => setFlags((current) => ({ ...current, [question.id]: !current[question.id] }))}
+              disabled={mode === "review"}
             >
               <Flag size={17} />
               Flag
@@ -1472,6 +1820,12 @@ export default function Home() {
           </div>
 
           <p className="prompt">{question.prompt}</p>
+          {question.reference ? (
+            <section className="reference-panel">
+              <h2>Reference for this section</h2>
+              <CodeBlock code={question.reference} />
+            </section>
+          ) : null}
 
           {question.type === "short" && question.answers ? (
             <div className="objective-list">
@@ -1489,8 +1843,9 @@ export default function Home() {
                 const userAnswers = (answers[question.id] as string[] | undefined) ?? [];
                 const submitted = mode === "review";
                 const correct = submitted && isCorrect(userAnswers[answerIndex] ?? "", question.answers![answerIndex]);
+                const partTargetId = `${question.id}-part-${part.label}`;
                 return (
-                  <section className="objective-part" key={`${question.id}-${answerIndex}`}>
+                  <section className="objective-part" id={partTargetId} key={`${question.id}-${answerIndex}`}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
                       <CodeBlock code={part.code.trim()} />
@@ -1498,6 +1853,7 @@ export default function Home() {
                     <label className="answer-line">
                       <span>Answer {part.label}</span>
                       <input
+                        disabled={mode === "review"}
                         value={userAnswers[answerIndex] ?? ""}
                         onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
                         placeholder="Type exact output"
@@ -1513,7 +1869,7 @@ export default function Home() {
               })}
             </div>
           ) : (
-            <div className="editor-wrap">
+            <div className="editor-wrap" id={`${question.id}-editor`}>
               <MonacoEditor
                 height="430px"
                 defaultLanguage="java"
@@ -1529,6 +1885,7 @@ export default function Home() {
                   wordWrap: "on",
                   tabSize: 4,
                   automaticLayout: true,
+                  readOnly: mode === "review",
                 }}
               />
             </div>
@@ -1539,6 +1896,7 @@ export default function Home() {
               question={question}
               status={javaStatus}
               runState={javaRuns[question.id]}
+              hasEditedCode={hasEditedCodeAnswer(question, answers)}
               onRun={() => runJavaTests(question)}
             />
           ) : null}
@@ -1561,6 +1919,22 @@ export default function Home() {
           </div>
         </section>
       </div>
+      {submitModalOpen ? (
+        <SubmitModal
+          incompleteSections={incompleteSections}
+          javaAvailable={Boolean(javaStatus?.available)}
+          submitting={submitRunning}
+          onClose={() => setSubmitModalOpen(false)}
+          onSubmit={submitAnyway}
+          onJump={(targetIndex, targetId) => {
+            setSubmitModalOpen(false);
+            if (targetIndex >= 0) {
+              setIndex(targetIndex);
+              setPendingTargetId(targetId ?? null);
+            }
+          }}
+        />
+      ) : null}
     </main>
   );
 }
@@ -1569,11 +1943,13 @@ function JavaRunnerPanel({
   question,
   status,
   runState,
+  hasEditedCode,
   onRun,
 }: {
   question: Question;
   status: JavaStatus | null;
   runState?: JavaRunResult | { loading: true };
+  hasEditedCode: boolean;
   onRun: () => void;
 }) {
   const isLoading = Boolean(runState && "loading" in runState);
@@ -1589,13 +1965,13 @@ function JavaRunnerPanel({
           </h2>
           <p>
             Tests run on this computer through the local Next server using the installed JDK. Code is not
-            uploaded.
+            uploaded. The official rubric remains the scoring authority.
           </p>
         </div>
         <button
           className="primary-button"
           onClick={onRun}
-          disabled={isLoading || status?.available === false || !question.stub}
+          disabled={isLoading || status?.available === false || !question.stub || !hasEditedCode}
         >
           <Play size={17} />
           {isLoading ? "Running" : "Run Tests"}
@@ -1606,6 +1982,7 @@ function JavaRunnerPanel({
         <ShieldCheck size={17} />
         <span>{status?.message ?? "Checking local Java availability..."}</span>
       </div>
+      {!hasEditedCode ? <p className="java-hint">Edit the starter code to enable local tests.</p> : null}
 
       {result ? (
         <div className={`java-result ${result.ok ? "passed" : "failed"}`}>
@@ -1620,6 +1997,69 @@ function JavaRunnerPanel({
         </div>
       ) : null}
     </section>
+  );
+}
+
+function SubmitModal({
+  incompleteSections,
+  javaAvailable,
+  submitting,
+  onClose,
+  onSubmit,
+  onJump,
+}: {
+  incompleteSections: IncompleteSection[];
+  javaAvailable: boolean;
+  submitting: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  onJump: (index: number, targetId?: string) => void;
+}) {
+  return (
+    <div className="modal-backdrop" role="presentation">
+      <section className="submit-modal" role="dialog" aria-modal="true" aria-labelledby="submit-title">
+        <div className="modal-heading">
+          <div>
+            <h2 id="submit-title">Submit exam?</h2>
+            <p>
+              {incompleteSections.length} section{incompleteSections.length === 1 ? " is" : "s are"} still
+              incomplete. Jump back to a section, continue editing, or submit anyway.
+              {javaAvailable ? " Answered code questions will be tested locally before scoring." : ""}
+            </p>
+          </div>
+          <button className="modal-close" aria-label="Close submit dialog" onClick={onClose}>
+            <X size={18} />
+          </button>
+        </div>
+        <div className="incomplete-list">
+          {incompleteSections.map((section) => (
+            <details key={section.question.id} open>
+              <summary>
+                <span>{section.question.title}</span>
+                <strong>
+                  {section.missingParts.length} missing · {section.question.points} pts
+                </strong>
+              </summary>
+              <div className="missing-parts">
+                {section.missingParts.map((part) => (
+                  <button key={part.label} onClick={() => onJump(section.questionIndex, part.targetId)}>
+                    {part.label}
+                  </button>
+                ))}
+              </div>
+            </details>
+          ))}
+        </div>
+        <div className="modal-actions">
+          <button className="secondary-button" onClick={onClose} disabled={submitting}>
+            Continue Editing
+          </button>
+          <button className="primary-button" onClick={onSubmit} disabled={submitting}>
+            {submitting ? "Grading" : "Submit Anyway"}
+          </button>
+        </div>
+      </section>
+    </div>
   );
 }
 
