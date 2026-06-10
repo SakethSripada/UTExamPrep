@@ -59,6 +59,22 @@ export function readSavedExamIds() {
   return exams.filter((item) => window.localStorage.getItem(`digitalexams:${item.id}`)).map((item) => item.id);
 }
 
+export function clearPersistedExam(examId: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.localStorage.removeItem(`digitalexams:${examId}`);
+}
+
+export function clearAllPersistedExams() {
+  if (typeof window === "undefined") {
+    return;
+  }
+  for (const item of exams) {
+    clearPersistedExam(item.id);
+  }
+}
+
 export function normalizeAnswer(value: string) {
   return value
     .trim()

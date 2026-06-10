@@ -9,7 +9,6 @@ import {
   ChevronRight,
   ClipboardCheck,
   Code2,
-  FileText,
   Flag,
   Home as HomeIcon,
   RotateCcw,
@@ -23,6 +22,8 @@ import type { AnswerState, Exam, FlagState, IncompleteSection, JavaRunResult, Ja
 import {
   answerPlaceholder,
   buildObjectiveParts,
+  clearAllPersistedExams,
+  clearPersistedExam,
   hasEditedCodeAnswer,
   isCorrect,
   isSameCode,
@@ -52,7 +53,6 @@ export default function Home() {
 
   const exam = exams.find((item) => item.id === selectedExamId) ?? exams[0];
   const question = exam.questions[index];
-  const totalSections = exams.reduce((sum, item) => sum + item.questions.length, 0);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -68,6 +68,14 @@ export default function Home() {
 
   useEffect(() => {
     if (!storageReady) {
+      return;
+    }
+    if (
+      Object.keys(answers).length === 0 &&
+      Object.keys(manual).length === 0 &&
+      Object.keys(flags).length === 0
+    ) {
+      clearPersistedExam(selectedExamId);
       return;
     }
     window.localStorage.setItem(
@@ -258,6 +266,17 @@ export default function Home() {
     void finalizeSubmit();
   }
 
+  function resetAllExams() {
+    clearAllPersistedExams();
+    setAnswers({});
+    setManual({});
+    setFlags({});
+    setJavaRuns({});
+    setIndex(0);
+    setReferenceOpen(false);
+    setSavedExamIds([]);
+  }
+
   function resetExam() {
     setAnswers({});
     setManual({});
@@ -266,8 +285,8 @@ export default function Home() {
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
-    window.localStorage.removeItem(`digitalexams:${selectedExamId}`);
-    setSavedExamIds(readSavedExamIds());
+    clearPersistedExam(selectedExamId);
+    setSavedExamIds((current) => current.filter((examId) => examId !== selectedExamId));
   }
 
   async function runJavaTests(item: Question): Promise<JavaRunResult | null> {
@@ -315,6 +334,10 @@ export default function Home() {
           <div>
             <h1> UT Austin CS Practice Exams</h1>
           </div>
+          <button className="secondary-button" onClick={resetAllExams}>
+            <RotateCcw size={17} />
+            Reset All
+          </button>
         </section>
 
         <section className="exam-list" aria-label="Available exams">
