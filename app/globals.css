@@ -485,6 +485,28 @@ button:disabled {
   white-space: pre-wrap;
 }
 
+.mixed-content {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mixed-content .code-display {
+  margin: 0;
+}
+
+.mixed-prose {
+  display: grid;
+  gap: 6px;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.mixed-prose p {
+  margin: 0;
+}
+
 .objective-list {
   display: grid;
   gap: 12px;
@@ -536,6 +558,11 @@ button:disabled {
 }
 
 .part-code .code-display {
+  grid-column: 2;
+  align-self: center;
+}
+
+.part-code .mixed-content {
   grid-column: 2;
   align-self: center;
 }

@@ -107,6 +107,25 @@ public class Classroom extends Room {
     }
 }`;
 
+const critterContext = `public abstract class Critter {
+    public boolean eat() { return false; }
+    public Attack fight(String opponent) { return Attack.FORFEIT; }
+    public Color getColor() { return Color.BLACK; }
+    public Direction getMove() { return Direction.CENTER; }
+    public String toString() { return "?"; }
+
+    public static enum Direction {
+        NORTH, SOUTH, EAST, WEST, CENTER
+    }
+
+    public static enum Attack {
+        ROAR, POUNCE, SCRATCH, FORFEIT
+    }
+}
+
+Use Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, and Direction.CENTER for moves.
+Use Attack.ROAR, Attack.POUNCE, Attack.SCRATCH, and Attack.FORFEIT for fights.`;
+
 const examOne: Exam = {
   id: "sample-1",
   title: "CS 312 Sample Credit by Exam 1",
@@ -346,6 +365,7 @@ public void upgrade(int x) { memory += x; }`,
       type: "code",
       prompt:
         "Implement a Yak class that extends Critter. Override only fight, eat, and getMove. A Yak chooses a random NORTH/EAST/SOUTH/WEST direction with equal likelihood, moves 1 step that direction, then 2 steps in a new random direction, then 3, and so on. When fighting, a Yak ROARs if it would move NORTH or SOUTH next; otherwise it POUNCEs. A Yak always returns true when asked to eat.",
+      reference: critterContext,
       stub: `public class Yak extends Critter {
     // include instance variables and any constructor you need
 
@@ -849,6 +869,7 @@ public static int um(int[] ar, int x) {
       type: "code",
       prompt:
         "Implement JumpingBean. It sits still until involved in a fight. If it wins, it later moves in random NORTH or WEST direction. After the first win it moves twice, after the second win 4 times, adding 2 moves each win. It SCRATCHes if sitting still and FORFEITs if it would move next.",
+      reference: critterContext,
       stub: `public class JumpingBean extends Critter {
     // include instance variables and any constructor you need
 
@@ -1286,7 +1307,29 @@ public class FragilePackage extends Package {
       points: 17,
       type: "code",
       prompt:
-        "Inside GenericList<E>, implement copyWithoutTarget. Return a new GenericList containing all elements of the calling list except those equal to target. Preserve relative order. This list is not altered. You may use equals and array length, create only the returned GenericList and its native array, and use only the shown zero-argument constructor unless you implement more yourself.",
+        "Inside GenericList<E>, implement copyWithoutTarget. Return a new GenericList that is a copy of the calling object except elements equal to target are excluded; preserve the relative order of all remaining elements. Examples: [A, B, C, A, B, B, X].copyWithoutTarget(A) returns [B, C, B, B, X]; target B returns [A, C, A, X]; all matching values return []; no matches return a full copy. Do not check preconditions.",
+      reference: `public class GenericList<E> {
+    // This GenericList does NOT allow the client to store null values.
+    private E[] con;
+    private int size;
+
+    public GenericList() { } // Sets instance vars to 0 equivalent.
+}
+
+Storage model:
+- The first size elements of con store the list elements.
+- An element's list position is the same as its array position.
+- con may have extra capacity; extra array slots store null.
+
+Restrictions:
+- You may not use any other GenericList methods or constructors except the shown zero-argument constructor unless you implement them yourself.
+- You may call equals on objects.
+- You may use the length field for arrays.
+- You may not use any other Java classes or methods.
+- Do not create any new data structures other than a native array for the resulting GenericList and the resulting GenericList itself.
+
+// pre: target != null
+// post: Per the problem description. This GenericList is not altered.`,
       stub: `// pre: target != null
 // post: per the problem description
 public GenericList<E> copyWithoutTarget(E target) {
@@ -1319,7 +1362,25 @@ public GenericList<E> copyWithoutTarget(E target) {
       points: 16,
       type: "code",
       prompt:
-        "Inside MathMatrix, implement concatenate. Return a new MathMatrix formed by horizontally concatenating this matrix on the left and rhs on the right. Use only the shown constructor and array length; do not use other MathMatrix methods or create extra data structures beyond the result.",
+        "Inside MathMatrix, implement concatenate. Return a new MathMatrix that horizontally concatenates the calling object on the left with rhs on the right. For example, a 2x3 matrix [1 5 3; 2 7 6] concatenated with a 2x4 matrix [12 10 -3 0; 9 -5 4 8] returns [1 5 3 12 10 -3 0; 2 7 6 9 -5 4 8]. Do not check preconditions.",
+      reference: `public class MathMatrix {
+    // No extra capacity. No other instance variables.
+    private int cells[][];
+
+    public MathMatrix(int rows, int columns) {
+        cells = new int[rows][columns];
+    }
+}
+
+Facts and restrictions:
+- MathMatrix objects are rectangular: every row in one MathMatrix has the same number of columns.
+- Every MathMatrix object is at least 1 x 1; no zero-row or zero-column matrices.
+- You may not use any other MathMatrix methods or constructors other than the constructor shown.
+- You may use the length field for arrays.
+- You may not use any other Java classes or methods.
+- Do not create any new data structures other than a 2d native array for the resulting MathMatrix and the resulting MathMatrix itself.
+
+// pre: rhs != null. The number of rows in this and rhs are equal.`,
       stub: `// pre: rhs != null. The number of rows in this and rhs are equal.
 public MathMatrix concatenate(MathMatrix rhs) {
 
@@ -1356,7 +1417,43 @@ public MathMatrix concatenate(MathMatrix rhs) {
       points: 17,
       type: "code",
       prompt:
-        "Inside MultiSet<E>, implement getIntersection. Return a new MultiSet containing each value that appears in both multisets with frequency equal to the smaller frequency. Do not alter either multiset. You may use equals and Math.min, and create only the new MultiSet and its necessary internal ValueAndFrequency entries.",
+        "Inside MultiSet<E>, implement getIntersection. Return a new MultiSet that represents the intersection of the calling object and other. Each element in both multisets appears in the result with frequency equal to the smaller of the two frequencies. The result is an abstract multiset, so internal order does not matter. Do not check preconditions.",
+      reference: `public class MultiSet<E> { // Does NOT allow client to add null.
+    private ValueAndFrequency<E>[] con; /* May have extra capacity.
+        ValueAndFrequency objects stored in first numDistinct spots. */
+    private int numDistinct; /* Number of distinct elements. */
+    private int size; /* Total number of elements including duplicates. */
+
+    public MultiSet(int initialCapacity) { // pre: initialCap > 0
+        con = new ValueAndFrequency[initialCapacity];
+    }
+
+    private static class ValueAndFrequency<E> {
+        private E element; // Never null.
+        private int frequency; // Always >= 1.
+
+        private ValueAndFrequency(E e, int f) { // pre: e != null, f > 0
+            element = e;
+            frequency = f;
+        }
+    }
+}
+
+Examples:
+- [B, B, B, C, C, C, C, A].getIntersection([A, C, C]) returns [C, C, A]
+- [B, B, C, C, C, C, A].getIntersection([Y, Z, X]) returns []
+- [].getIntersection([A, A, C]) returns []
+- [B, B, B, C, A, A].getIntersection([A, A, A, B, B]) returns [A, A, B, B]
+- [B, X, X, C, C, C, C, A].getIntersection([A, B, M]) returns [A, B]
+- [].getIntersection([]) returns []
+- [B, A, X, X, X, C, C].getIntersection([A, A, B, B]) returns [A, B]
+
+Restrictions:
+- Do not use any other Java methods or classes except the MultiSet instance variables, constructor, and nested ValueAndFrequency class.
+- You may use equals on Objects and Math.min(int, int).
+- Do not create any new data structures besides the new MultiSet and the necessary internal variables for that MultiSet.
+
+/* pre: other != null post: per the problem description. */`,
       stub: `/* pre: other != null
    post: per the problem description */
 public MultiSet<E> getIntersection(MultiSet<E> other) {
@@ -1491,7 +1588,33 @@ Y. Same tree and alternating add/subtract during postorder traversal, starting w
       points: 16,
       type: "code",
       prompt:
-        "Implement playedMostRanked. Given a map from team name to teams played, and a set of ranked team names, return a team key that has played the most ranked teams. Ties may return any tied team. At least one team has played a ranked team. Do not create new data structures or alter the inputs.",
+        "Implement playedMostRanked. Given a map from college volleyball team name to an ArrayList of teams it has played, and a Set of top-25 ranked team names, return the key team that has played the most ranked teams. If there is a tie, return any tied team. It is correct to count repeated games against ranked teams as repeated ranked opponents. Do not check preconditions.",
+      reference: `Partial example of teams:
+Texas -> [A&M, Pitt, SMU, TCU, Stanford, Baylor, Georgia, Vanderbilt, Wisconsin]
+A&M -> [Texas, SMU, Florida, Alabama, Arkansas, Missouri, TxSt, Trinity, UNT]
+SMU -> [Texas, A&M, TCU, UNT, Texas Tech, Colorado, Utah, Houston, West Virginia]
+UNT -> [A&M, SMU, Sam Houston, TCU, TxSt, West Texas, Baylor, Texas Tech, UTD]
+TxSt -> [UNT, Trinity, UTSA, UTD, Nebraska, Minnesota, Austin, SLU, Northwestern]
+
+Allowed methods:
+- Map<K, V>: Set<E> keySet(), V get(Object key)
+- Set<E>: boolean contains(E value)
+- Iterator<E>: boolean hasNext(), E next()
+- ArrayList<E>: E get(int index), int size()
+- You may use for-each loops.
+
+Restrictions:
+- At least one team represented by a key in teams has played at least one ranked team.
+- Do not use any other Java methods or classes.
+- Do not create any new data structures.
+- You may use primitives.
+- Do not use recursion.
+
+/* pre: teams != null, no null key,
+   none of the elements of the value lists are null,
+   ranked != null, ranked.size() == 25
+   post: per the problem description.
+   Neither teams nor ranked is altered by this method. */`,
       stub: `public static String playedMostRanked(
         Map<String, ArrayList<String>> teams,
         Set<String> ranked) {
@@ -1530,7 +1653,31 @@ Y. Same tree and alternating add/subtract during postorder traversal, starting w
       points: 17,
       type: "code",
       prompt:
-        "Inside LL314<E>, implement addIfFrequencyLessThan. Add tgt to the end of the list only if fewer than freq copies of tgt are already present. Return true if a node was added, false otherwise. The list has only first, no size and no last. Do not use recursion, arrays, or other data structures.",
+        "Inside LL314<E>, implement addIfFrequencyLessThan. Add tgt to the end of the list only if fewer than freq copies of tgt are already present. Return true if a node was added, false otherwise. For example, [A, B, C, A, B, B, X].addIfFrequencyLessThan(A, 2) returns false and leaves the list unchanged; with A, 3 it returns true and appends A; with missing value M it appends M. Do not check preconditions.",
+      reference: `public class LL314<E> {
+    private Node<E> first; // Stores null if this list is empty.
+
+    private static class Node<E> {
+        private E data;
+        private Node<E> next; // Set to null if last node.
+        public Node(E val) { data = val; } // Can use!
+    }
+}
+
+Facts and restrictions:
+- You may not use any other methods in LL314 unless you implement them yourself as part of your solution.
+- You may not add instance or class variables to LL314.
+- The list only has a reference to the first node in the chain of nodes. No size, no last.
+- When the list is empty, first stores null.
+- The list does not store null values.
+- If the list is not empty, the last node stores null in its next variable.
+- You may use the nested Node class and equals on objects.
+- You may not use any other Java classes or native arrays.
+- Do not create any new data structures. You may create a new Node object if necessary.
+- Do not use recursion.
+
+// pre: tgt != null, freq >= 1
+// post: Per the problem description.`,
       stub: `// pre: tgt != null, freq >= 1
 // post: per the problem description
 public boolean addIfFrequencyLessThan(E tgt, int freq) {
@@ -1572,7 +1719,24 @@ public boolean addIfFrequencyLessThan(E tgt, int freq) {
       points: 17,
       type: "code",
       prompt:
-        "Implement canForm. Determine whether dictionary words can form at least one word loop with exactly goal words. Words cannot be reused. Each next word must start with the previous word's last character, and the final word must link back to the first. Do not alter dictionary; if successful, loop holds the first loop found, otherwise loop is empty.",
+        "Implement canForm, a recursive backtracking helper. Determine whether dictionary can form at least one word loop with exactly goal words. The first word may be any dictionary word; each later word must start with the previous word's last character; the last word's last character must match the first word's first character. Words may not be reused. Example valid goal-5 loop: [blast, tall, lab, bad, dub]. Example invalid loop due to reuse: [pup, pip, pup, pip, pup]. Do not check preconditions.",
+      reference: `Rules and restrictions:
+- You may not add static variables.
+- You may not add new parameters to canForm.
+- The only helper method you may add is a helper that determines if the last character in one String equals the first character of another String.
+- dictionary contains the valid words we can use to form the word loop.
+- Do not alter dictionary in any way, not even temporarily.
+- No elements of dictionary are null.
+- All elements of dictionary have length() >= 2.
+- Assume loop is initially empty: the original caller passes an ArrayList<String> with size() == 0.
+- Assume goal >= 2. The loop must have exactly goal words.
+- If a word loop can be formed, loop holds the first loop found when all calls complete.
+- If no word loop can be formed, loop shall be empty when all calls complete.
+- Do not create any new data structures. No new arrays, lists, maps, or sets.
+- You may use String charAt(int index) and length().
+- You may use ArrayList size(), get(int index), contains(E value), add(E value), remove(int index).
+- You may use a for-each loop to iterate through dictionary.
+- Do not use any other Java classes or methods. You can use primitive chars.`,
       stub: `public static boolean canForm(ArrayList<String> dictionary,
         ArrayList<String> loop, int goal) {
 
@@ -1692,7 +1856,52 @@ Y. Output of IntStream.range(4, 9).map(x -> x * 2 - 3).filter(y -> y < 9).sum()?
       points: 17,
       type: "code",
       prompt:
-        "Inside Graph, implement isBridge(String v1, String v2). The graph is connected, undirected, unweighted, and v1/v2 are adjacent. Temporarily remove the edge if useful, perform breadth-first search with a single Queue314<Vertex>, restore the graph before returning, and return whether the edge is a bridge.",
+        "Inside Graph, implement isBridge(String v1, String v2). Return true if the specified adjacent edge is a bridge, false otherwise. A bridge is an edge whose removal makes the connected undirected graph no longer connected. In the shown exam graph, D-F is a bridge, while D-C is not. Do not check preconditions.",
+      reference: `The Graph, Vertex, and Edge classes for this question are essentially the same as assignment 11.
+Vertex has an added removeEdge method that removes and returns the edge with the given destination Vertex from the calling Vertex object's adjacency List.
+
+public class Graph {
+    private Map<String, Vertex> verts; // keys are names of vertices
+
+    private void clearAll() // Sets all Vertex.scratch variables to 0.
+
+    public boolean isBridge(String v1, String v2) // TO DO
+
+    private static class Vertex {
+        private String name;
+        private List<Edge> adjacent;
+        private int scratch;
+        public Edge removeEdge(Vertex dest)
+        // Do not use or add other instance variables or methods.
+    }
+
+    private static class Edge {
+        private Vertex dest;
+        // Do not use or add other instance variables or methods.
+    }
+}
+
+Restrictions:
+- The graph is unweighted and undirected. All edge costs are 1.
+- If vertex A has an edge in its adjacency list to B, B also has an edge to A.
+- The graph is connected.
+- The two vertices specified by v1 and v2 are adjacent.
+- Do not use recursion. Implement a breadth-first search.
+- You may create and use a single Queue314<Vertex>; allowed Queue314 methods are enqueue(E e), boolean isEmpty(), E front(), E dequeue().
+- You may use Map get(Object key) and size().
+- The Map verts is not altered by this method.
+- You may use the given clearAll method.
+- You may temporarily alter the Vertex objects connected by the target edge by removing that edge, but must restore adjacency lists before returning.
+- Use Vertex.scratch variables as needed.
+- You may use List size(), get(int pos), add(E val), iterator().
+- You may use Iterator next() and hasNext().
+- Do not create new data structures other than the single Queue314<Vertex> and Iterator objects.
+
+/* pre: v1 != null, v2 != null, !v1.equals(v2),
+   the vertices specified by v1 and v2 are adjacent,
+   there is an edge between them, and this Graph is connected.
+   post: return true if the specified edge is a bridge edge, false otherwise.
+   This Graph is not altered after this method completes. */`,
       stub: `/* pre: v1 != null, v2 != null, !v1.equals(v2),
    the vertices are adjacent, and this Graph is connected.
    post: return true iff the specified edge is a bridge.
@@ -1740,7 +1949,45 @@ public boolean isBridge(String v1, String v2) {
       points: 16,
       type: "code",
       prompt:
-        "Inside IntBST, implement numInRange(low, high). Return the number of values in the BST in the inclusive range [low, high]. Use the BST property to avoid visiting unnecessary nodes. Do not create new data structures, arrays, class variables, or instance variables.",
+        "Inside IntBST, implement numInRange(low, high). Return the number of int values in the binary search tree that are in the inclusive range [low, high]. Use the BST property to avoid visiting unnecessary nodes. The calling object is not altered. Do not check preconditions.",
+      reference: `Example tree:
+        5
+      /   \\
+     3     12
+    /     /  \\
+   0     9    15
+        /
+       7
+
+Example calls:
+- numInRange(3, 6) returns 2
+- numInRange(20, 30) returns 0
+- numInRange(-5, -10) returns 0
+- numInRange(3, 3) returns 1
+- numInRange(3, 5) returns 2
+- numInRange(-5, 20) returns 7
+- numInRange(0, 15) returns 7
+- numInRange(3, 10) returns 4
+
+public class IntBST {
+    private IntNode root; // stores null if tree is empty
+    // no size variable
+
+    private static class IntNode {
+        private int val;
+        private IntNode left;  // stores null if no left child
+        private IntNode right; // stores null if no right child
+    }
+}
+
+Restrictions:
+- You may use the nested IntNode class.
+- You may not create any new data structures, not even an array of length 1.
+- If you create a helper method, do not include unnecessary parameters.
+- Do not add any class or instance variables to IntBST.
+- The calling object is not altered by this method.
+
+/* pre: low <= high, post: per the problem description. */`,
       stub: `/* pre: low <= high
    post: per the problem description */
 public int numInRange(int low, int high) {
@@ -1776,7 +2023,35 @@ private int help(IntNode n, int low, int high) {
       points: 17,
       type: "code",
       prompt:
-        "Inside HashTable314<E>, fully implement the inner HIterator class with instance variables, constructor if needed, hasNext, next, and remove. The table uses chaining with List<E>[] con and null empty buckets. hasNext must be O(1) and must not alter the iterator. Use bucket Iterators as needed and null out buckets emptied by remove.",
+        "Inside HashTable314<E>, fully implement the inner HIterator class with instance variables, constructor if needed, and the hasNext, next, and remove methods. The iterator must allow clients to access all elements of the hash table. hasNext must be O(1) in all cases and must not alter iterator state.",
+      reference: `public class HashTable314<E> implements Iterable<E> {
+    private List<E>[] con;
+    private int size; // number of elements in this HashTable314.
+
+    public Iterator<E> iterator() {
+        return new HIterator();
+    }
+
+    private class HIterator implements Iterator<E> { // TO DO
+    }
+}
+
+Facts and restrictions:
+- HashTable314 uses closed addressing (chaining/buckets) to resolve collisions.
+- Buckets in con are objects that implement java.util.List.
+- Empty buckets store null in con.
+- Hash tables do not provide E get(int pos).
+- Declare the necessary HIterator instance variables and implement a constructor if necessary.
+- Do NOT check preconditions for next or remove.
+- If a bucket becomes empty due to HIterator.remove, null out that element in con.
+- You may create and use Iterator objects for internal buckets via the List iterator methods.
+- You may call hasNext, next, and remove on those bucket Iterators.
+- Do not create any new data structures other than Iterators for internal buckets.
+- You may call List.size() on non-null List objects stored in con.
+- Do not attempt to deal with potential ConcurrentModificationExceptions with the outer HashTable314 object.
+- Do not use any other Java methods or classes than those described above.
+- Do not add methods or variables to HashTable314.
+- Do not use recursion.`,
       stub: `private class HIterator implements Iterator<E> {
     // instance variables, constructor, hasNext, next, and remove
 
@@ -1966,6 +2241,10 @@ type ObjectivePart = {
   label?: string;
   code: string;
   answerIndex?: number;
+};
+type ContentSegment = {
+  kind: "code" | "text";
+  text: string;
 };
 type MissingPart = {
   label: string;
@@ -2180,6 +2459,138 @@ function CodeBlock({ code, className = "" }: { code?: string; className?: string
       {code ?? ""}
     </SyntaxHighlighter>
   );
+}
+
+function isLikelyCodeLine(line: string) {
+  const trimmed = line.trim();
+  if (!trimmed) {
+    return false;
+  }
+  if (/^(-|•)\s+/.test(trimmed)) {
+    return false;
+  }
+  if (
+    /^(Restrictions|Facts and restrictions|Rules and restrictions|Allowed methods|Storage model|Examples|Example calls|Partial example|Facts|Method to implement):/.test(
+      trimmed,
+    )
+  ) {
+    return false;
+  }
+  if (/^(pre|post):\s/i.test(trimmed)) {
+    return false;
+  }
+  if (/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new)\b/.test(trimmed)) {
+    return true;
+  }
+  if (/^(int|double|boolean|char|String|Object|Map|Set|List|ArrayList|Iterator|Queue314|GenericList|MathMatrix|MultiSet|LL314|IntBST|HashTable314|Vertex|Edge)\b/.test(trimmed)) {
+    return true;
+  }
+  if (/^[}\])]/.test(trimmed) || /[;{}]/.test(trimmed)) {
+    return true;
+  }
+  if (/\/\*|\*\/|\/\//.test(trimmed)) {
+    return true;
+  }
+  return false;
+}
+
+function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
+  if (forceCode) {
+    return content.trim() ? [{ kind: "code", text: content.trim() }] : [];
+  }
+
+  const segments: ContentSegment[] = [];
+  let currentKind: ContentSegment["kind"] | null = null;
+  let currentLines: string[] = [];
+  let inBlockComment = false;
+
+  const flush = () => {
+    const text = currentLines.join("\n").trim();
+    if (currentKind && text) {
+      segments.push({ kind: currentKind, text });
+    }
+    currentKind = null;
+    currentLines = [];
+  };
+
+  for (const line of content.split("\n")) {
+    const startsBlockComment = line.includes("/*") && !line.includes("*/");
+    const nextKind: ContentSegment["kind"] = inBlockComment || isLikelyCodeLine(line) ? "code" : "text";
+    if (!line.trim()) {
+      if (currentKind === "code") {
+        currentLines.push(line);
+      } else {
+        flush();
+      }
+      continue;
+    }
+    if (currentKind && currentKind !== nextKind) {
+      flush();
+    }
+    currentKind = nextKind;
+    currentLines.push(line);
+    if (inBlockComment && line.includes("*/")) {
+      inBlockComment = false;
+    } else if (startsBlockComment) {
+      inBlockComment = true;
+    }
+  }
+
+  flush();
+  return segments;
+}
+
+function MixedContent({
+  content,
+  forceCode = false,
+  className = "",
+}: {
+  content?: string;
+  forceCode?: boolean;
+  className?: string;
+}) {
+  const segments = splitMixedContent(content, forceCode);
+  return (
+    <div className={`mixed-content ${className}`}>
+      {segments.map((segment, index) =>
+        segment.kind === "code" ? (
+          <CodeBlock code={segment.text} key={`${segment.kind}-${index}`} />
+        ) : (
+          <div className="mixed-prose" key={`${segment.kind}-${index}`}>
+            {segment.text.split("\n").map((line, lineIndex) => (
+              <p key={lineIndex}>{line}</p>
+            ))}
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
+
+function answerPlaceholder(part: ObjectivePart) {
+  const text = part.code.toLowerCase();
+  if (/compile-time errors|list all line numbers|which.*lines.*compile/.test(text)) {
+    return "List compile errors";
+  }
+  if (/legal or syntax error|syntax error|compiles or error|compiles error|compile-time errors|compile error/.test(text)) {
+    return "Type legal or syntax error";
+  }
+  if (/true or false/.test(text)) {
+    return "Type true or false";
+  }
+  if (/pick the letter|answer with the letter|which of the following/.test(text)) {
+    return "Type letter";
+  }
+  if (/big o|order\b|efficient/.test(text)) {
+    return "Type Big O";
+  }
+  if (/expected time|seconds|time for/.test(text)) {
+    return "Type time";
+  }
+  if (/what is output|what is printed|system\.out|exact output/.test(text)) {
+    return "Type exact output";
+  }
+  return "Type answer";
 }
 
 export default function Home() {
@@ -2623,7 +3034,7 @@ export default function Home() {
           {question.reference ? (
             <section className="reference-panel">
               <h2>Reference for this section</h2>
-              <CodeBlock code={question.reference} />
+              <MixedContent content={question.reference} />
             </section>
           ) : null}
 
@@ -2634,7 +3045,7 @@ export default function Home() {
                   return (
                     <section className="context-block" key={`${question.id}-context-${partIndex}`}>
                       <h2>Shared context</h2>
-                      <CodeBlock code={part.code} />
+                      <MixedContent content={part.code} />
                     </section>
                   );
                 }
@@ -2648,7 +3059,7 @@ export default function Home() {
                   <section className="objective-part" id={partTargetId} key={`${question.id}-${answerIndex}`}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
-                      <CodeBlock code={part.code.trim()} />
+                      <MixedContent content={part.code.trim()} forceCode={question.title.includes("Expressions")} />
                     </div>
                     <label className="answer-line">
                       <span>Answer {part.label}</span>
@@ -2656,7 +3067,7 @@ export default function Home() {
                         disabled={mode === "review"}
                         value={userAnswers[answerIndex] ?? ""}
                         onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
-                        placeholder="Type exact output"
+                        placeholder={answerPlaceholder(part)}
                       />
                       {submitted ? (
                         <strong className={correct ? "correct" : "incorrect"}>
