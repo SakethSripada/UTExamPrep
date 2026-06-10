@@ -1117,7 +1117,7 @@ const cs314ExamOne: Exam = {
     {
       id: "cs314-e1-q1",
       title: "1. Short Answer",
-      points: 50,
+      points: 48,
       type: "short",
       prompt:
         "Answer each short-answer item. For compile errors answer compile error; for runtime errors answer runtime error; for infinite loops answer infinite loop. Big O answers should be the most restrictive correct Big O.",
@@ -1150,7 +1150,6 @@ public static int d(int[] data) {
     }
     return t;
 }
-E. The method e was officially thrown out on the key. Answer with the official status.
 F. What is the order of f? Method check is O(N) where N = n.
 public static int f(int n) {
     int t = 0;
@@ -1275,7 +1274,6 @@ public class FragilePackage extends Package {
         "13N + 7",
         "10 seconds",
         "3N^3 + 5N^2 + 5N + 4",
-        "Thrown out",
         "O(N^3)",
         "O(N)",
         "[C, GO, C, CS]",
@@ -1299,7 +1297,7 @@ public class FragilePackage extends Package {
         "COMPILE ERROR",
         "413",
       ],
-      answerPoints: [...Array(14).fill(2), 1, 1, 1, 1, ...Array(9).fill(2)],
+      answerPoints: [...Array(13).fill(2), 1, 1, 1, 1, ...Array(9).fill(2)],
     },
     {
       id: "cs314-e1-q2",
@@ -2482,16 +2480,108 @@ function isLikelyCodeLine(line: string) {
   if (/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new)\b/.test(trimmed)) {
     return true;
   }
-  if (/^(int|double|boolean|char|String|Object|Map|Set|List|ArrayList|Iterator|Queue314|GenericList|MathMatrix|MultiSet|LL314|IntBST|HashTable314|Vertex|Edge)\b/.test(trimmed)) {
+  if (/^[}\])]/.test(trimmed) || /;/.test(trimmed)) {
     return true;
   }
-  if (/^[}\])]/.test(trimmed) || /[;{}]/.test(trimmed)) {
-    return true;
-  }
-  if (/\/\*|\*\/|\/\//.test(trimmed)) {
+  if (/^(\/\*|\*\/|\/\/|\*)/.test(trimmed)) {
     return true;
   }
   return false;
+}
+
+function splitChoiceOptions(text: string) {
+  const matches = [...text.matchAll(/(?:^|,\s+)([A-Z])(?:\.|\s)(?=\S)/g)];
+  if (matches.length < 2) {
+    return null;
+  }
+
+  return matches.map((match, index) => {
+    const start = (match.index ?? 0) + match[0].length;
+    const end = index + 1 < matches.length ? matches[index + 1].index ?? text.length : text.length;
+    return {
+      label: match[1],
+      text: text.slice(start, end).replace(/^,\s*/, "").trim(),
+    };
+  });
+}
+
+function parseChoiceLine(line: string) {
+  const marker = "Choices:";
+  const markerIndex = line.indexOf(marker);
+  if (markerIndex === -1) {
+    return null;
+  }
+
+  const intro = line.slice(0, markerIndex).trim();
+  const choicesText = line.slice(markerIndex + marker.length).trim();
+  const choices = splitChoiceOptions(choicesText);
+  if (!choices) {
+    return null;
+  }
+  return { intro, choices };
+}
+
+function inlineCodeParts(line: string) {
+  const tokenPattern =
+    /(\[[^\]\n]+\]|\{[^}\n]+\}|\b[A-Za-z_]\w*(?:<[^>\n]+>)?(?:\.[A-Za-z_]\w*)+\([^)\n]*\)|\b[A-Za-z_]\w*\([^)\n]*\)|\b[A-Za-z_]\w*(?:<[^>\n]+>)?(?:\[\])?(?:\.[A-Za-z_]\w*)+\b|\b(?:ArrayList|LinkedList|LinkedList314|Stack314|Queue314|BST314|RedBlackTree314|TreeMap|HashMap|TreeSet|GenericList|MathMatrix|MultiSet|LL314|IntBST|HashTable314|Scanner|IntStream)(?:<[^>\n]+>)?(?:\[\])?\b|\b(?:Map|Set|List|Iterator|Vertex|Edge|String|Integer|Object)(?:<[^>\n]+>|\[\])\b|\bO\([^)\n]+\)|\bN(?:\^?\d+)?\b|\b[a-zA-Z_]\w*\.length\b|\b[a-zA-Z_]\w*\[\]\b)/g;
+  const parts: Array<{ code: boolean; text: string }> = [];
+  let lastIndex = 0;
+
+  for (const match of line.matchAll(tokenPattern)) {
+    const text = match[0];
+    const index = match.index ?? 0;
+    if (index > lastIndex) {
+      parts.push({ code: false, text: line.slice(lastIndex, index) });
+    }
+    parts.push({ code: true, text });
+    lastIndex = index + text.length;
+  }
+
+  if (lastIndex < line.length) {
+    parts.push({ code: false, text: line.slice(lastIndex) });
+  }
+
+  return parts.length ? parts : [{ code: false, text: line }];
+}
+
+function InlineFormattedLine({ line }: { line: string }) {
+  const choiceLine = parseChoiceLine(line);
+  if (choiceLine) {
+    return (
+      <span className="choice-line">
+        {choiceLine.intro ? (
+          <span className="choice-intro">
+            <InlineFormattedLine line={choiceLine.intro} />
+          </span>
+        ) : null}
+        <span className="choice-label-text">Choices</span>
+        <span className="choice-options">
+          {choiceLine.choices.map((choice) => (
+            <span className="choice-option" key={choice.label}>
+              <strong>{choice.label}</strong>
+              <span>
+                <InlineFormattedLine line={choice.text} />
+              </span>
+            </span>
+          ))}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <>
+      {inlineCodeParts(line).map((part, index) =>
+        part.code ? (
+          <code className="inline-code" key={index}>
+            {part.text}
+          </code>
+        ) : (
+          <span key={index}>{part.text}</span>
+        ),
+      )}
+    </>
+  );
 }
 
 function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
@@ -2558,11 +2648,25 @@ function MixedContent({
         ) : (
           <div className="mixed-prose" key={`${segment.kind}-${index}`}>
             {segment.text.split("\n").map((line, lineIndex) => (
-              <p key={lineIndex}>{line}</p>
+              <p key={lineIndex}>
+                <InlineFormattedLine line={line} />
+              </p>
             ))}
           </div>
         ),
       )}
+    </div>
+  );
+}
+
+function InlineProseContent({ content, className = "" }: { content?: string; className?: string }) {
+  return (
+    <div className={`mixed-prose ${className}`}>
+      {(content ?? "").split("\n").map((line, index) => (
+        <p key={index}>
+          <InlineFormattedLine line={line} />
+        </p>
+      ))}
     </div>
   );
 }
@@ -2578,7 +2682,7 @@ function answerPlaceholder(part: ObjectivePart) {
   if (/true or false/.test(text)) {
     return "Type true or false";
   }
-  if (/pick the letter|answer with the letter|which of the following/.test(text)) {
+  if (/pick the letter|answer with the letter|which of the following|choices:/.test(text)) {
     return "Type letter";
   }
   if (/big o|order\b|efficient/.test(text)) {
@@ -3030,7 +3134,7 @@ export default function Home() {
             </button>
           </div>
 
-          <p className="prompt">{question.prompt}</p>
+          <InlineProseContent content={question.prompt} className="prompt" />
           {question.reference ? (
             <section className="reference-panel">
               <h2>Reference for this section</h2>
