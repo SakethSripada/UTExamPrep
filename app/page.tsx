@@ -1660,6 +1660,7 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
+    setJavaRuns({});
     setIndex(0);
     setMode("exam");
     window.localStorage.removeItem(`digitalexams:${selectedExamId}`);
