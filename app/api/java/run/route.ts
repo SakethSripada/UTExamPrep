@@ -21,6 +21,20 @@ type Harness = {
   files: Record<string, string>;
 };
 
+type JavaTools =
+  | {
+      available: true;
+      javac: string;
+      java: string;
+      javacVersion: string;
+      javaVersion: string;
+    }
+  | {
+      available: false;
+      message: string;
+      stderr?: string;
+    };
+
 function parseResult(stdout: string) {
   const match = stdout.match(/RESULT\s+(\d+)\/(\d+)/);
   if (!match) {
@@ -48,6 +62,7 @@ async function runCommand(command: string, args: string[], cwd: string) {
       timeout: TIMEOUT_MS,
       maxBuffer: MAX_BUFFER,
       env: {
+        ...process.env,
         PATH: process.env.PATH ?? "",
         NODE_ENV: process.env.NODE_ENV,
       },
@@ -71,6 +86,61 @@ async function runCommand(command: string, args: string[], cwd: string) {
       code: err.code,
     };
   }
+}
+
+async function firstExecutableOnPath(command: string) {
+  const lookupCommand = process.platform === "win32" ? "where.exe" : "which";
+  const lookup = await runCommand(lookupCommand, [command], process.cwd());
+  if (!lookup.ok) {
+    return command;
+  }
+
+  return lookup.stdout
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean) ?? command;
+}
+
+function companionJavaForJavac(javac: string) {
+  if (!path.isAbsolute(javac)) {
+    return "java";
+  }
+
+  return path.join(path.dirname(javac), process.platform === "win32" ? "java.exe" : "java");
+}
+
+function versionText(stdout: string, stderr: string) {
+  return (stderr || stdout).trim();
+}
+
+async function resolveJavaTools(): Promise<JavaTools> {
+  const javac = await firstExecutableOnPath("javac");
+  const javacCheck = await runCommand(javac, ["-version"], process.cwd());
+  if (!javacCheck.ok) {
+    return {
+      available: false,
+      message: "Local Java was not found. Install a JDK to enable Java test execution.",
+      stderr: javacCheck.stderr,
+    };
+  }
+
+  const java = companionJavaForJavac(javac);
+  const javaCheck = await runCommand(java, ["-version"], process.cwd());
+  if (!javaCheck.ok) {
+    return {
+      available: false,
+      message: `Found ${versionText(javacCheck.stdout, javacCheck.stderr)}, but could not run Java from the same JDK.`,
+      stderr: javaCheck.stderr,
+    };
+  }
+
+  return {
+    available: true,
+    javac,
+    java,
+    javacVersion: versionText(javacCheck.stdout, javacCheck.stderr),
+    javaVersion: versionText(javaCheck.stdout, javaCheck.stderr).split(/\r?\n/)[0] ?? "",
+  };
 }
 
 function methodHarness(methodCode: string, testRunner: string): Harness {
@@ -402,12 +472,12 @@ function buildHarness(questionId: string, code: string): Harness | null {
 }
 
 export async function GET() {
-  const check = await runCommand("javac", ["-version"], process.cwd());
+  const tools = await resolveJavaTools();
   return json({
-    available: check.ok,
-    message: check.ok
-      ? `Local Java detected: ${(check.stderr || check.stdout).trim()}`
-      : "Local Java was not found. Install a JDK to enable Java test execution.",
+    available: tools.available,
+    message: tools.available
+      ? `Local Java detected: ${tools.javacVersion}; runtime: ${tools.javaVersion}`
+      : tools.message,
   });
 }
 
@@ -433,13 +503,13 @@ export async function POST(request: Request) {
     return json({ ok: false, phase: "unsupported", message: "No local Java tests are available for this question." }, 404);
   }
 
-  const javaCheck = await runCommand("javac", ["-version"], process.cwd());
-  if (!javaCheck.ok) {
+  const tools = await resolveJavaTools();
+  if (!tools.available) {
     return json({
       ok: false,
       phase: "java",
-      message: "Local Java was not found. Install a JDK with javac and java available on PATH.",
-      stderr: javaCheck.stderr,
+      message: tools.message,
+      stderr: tools.stderr,
     });
   }
 
@@ -449,7 +519,7 @@ export async function POST(request: Request) {
       Object.entries(harness.files).map(([file, content]) => writeFile(path.join(dir, file), content, "utf8")),
     );
 
-    const compile = await runCommand("javac", Object.keys(harness.files), dir);
+    const compile = await runCommand(tools.javac, Object.keys(harness.files), dir);
     if (!compile.ok) {
       return json({
         ok: false,
@@ -460,7 +530,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const run = await runCommand("java", ["TestRunner"], dir);
+    const run = await runCommand(tools.java, ["TestRunner"], dir);
     const parsed = parseResult(run.stdout);
     return json({
       ok: run.ok,

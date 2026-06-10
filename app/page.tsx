@@ -1237,12 +1237,55 @@ type PersistedExam = {
   flags?: FlagState;
 };
 
+function isSameCode(left: string | undefined, right: string | undefined) {
+  return normalizeCode(left ?? "") === normalizeCode(right ?? "");
+}
+
+function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
+  const next: AnswerState = {};
+  const codeStubs = exams
+    .flatMap((item) => item.questions)
+    .filter((question) => question.type === "code" && question.stub)
+    .map((question) => question.stub ?? "");
+
+  for (const question of exam.questions) {
+    const value = answers[question.id];
+    if (question.type === "short") {
+      if (Array.isArray(value)) {
+        next[question.id] = value;
+      }
+      continue;
+    }
+
+    if (typeof value !== "string" || !value.trim()) {
+      continue;
+    }
+
+    const isOwnStarter = isSameCode(value, question.stub);
+    const isOtherStarter = codeStubs.some((stub) => !isSameCode(stub, question.stub) && isSameCode(value, stub));
+    if (!isOwnStarter && !isOtherStarter) {
+      next[question.id] = value;
+    }
+  }
+
+  return next;
+}
+
 function readPersistedExam(examId: string): PersistedExam {
   if (typeof window === "undefined") {
     return {};
   }
   const saved = window.localStorage.getItem(`digitalexams:${examId}`);
-  return saved ? (JSON.parse(saved) as PersistedExam) : {};
+  if (!saved) {
+    return {};
+  }
+
+  const persisted = JSON.parse(saved) as PersistedExam;
+  const exam = exams.find((item) => item.id === examId);
+  return {
+    ...persisted,
+    answers: exam ? sanitizeAnswersForExam(exam, persisted.answers) : persisted.answers,
+  };
 }
 
 function readSavedExamIds() {
@@ -1282,7 +1325,7 @@ function hasEditedCodeAnswer(item: Question, answers: AnswerState) {
   if (!value.trim()) {
     return false;
   }
-  return normalizeCode(value) !== normalizeCode(item.stub ?? "");
+  return !isSameCode(value, item.stub);
 }
 
 function labelForIndex(index: number) {
@@ -1543,8 +1586,17 @@ export default function Home() {
     });
   }
 
-  function setCodeAnswer(questionId: string, value: string | undefined) {
-    setAnswers((current) => ({ ...current, [questionId]: value ?? "" }));
+  function setCodeAnswer(item: Question, value: string | undefined) {
+    setAnswers((current) => {
+      const next = { ...current };
+      const code = value ?? "";
+      if (!code.trim() || isSameCode(code, item.stub)) {
+        delete next[item.id];
+      } else {
+        next[item.id] = code;
+      }
+      return next;
+    });
   }
 
   function startExam(target: Exam) {
@@ -1738,8 +1790,8 @@ export default function Home() {
               {totals.earned.toFixed(1)} / {totals.possible}
             </strong>
             <small>
-              Auto {totals.autoEarned.toFixed(1)}/{totals.autoPossible}; self {totals.manualEarned}/
-              {totals.manualPossible}
+              Short answer {totals.autoEarned.toFixed(1)}/{totals.autoPossible}; coding{" "}
+              {totals.manualEarned}/{totals.manualPossible}
             </small>
           </div>
           <div className="question-map">
@@ -1871,12 +1923,14 @@ export default function Home() {
           ) : (
             <div className="editor-wrap" id={`${question.id}-editor`}>
               <MonacoEditor
+                key={`${selectedExamId}-${question.id}`}
                 height="430px"
                 defaultLanguage="java"
                 language="java"
+                path={`${selectedExamId}/${question.id}.java`}
                 theme="vs"
                 value={(answers[question.id] as string | undefined) ?? question.stub ?? ""}
-                onChange={(value) => setCodeAnswer(question.id, value)}
+                onChange={(value) => setCodeAnswer(question, value)}
                 options={{
                   minimap: { enabled: false },
                   fontSize: 14,
@@ -1965,7 +2019,7 @@ function JavaRunnerPanel({
           </h2>
           <p>
             Tests run on this computer through the local Next server using the installed JDK. Code is not
-            uploaded. The official rubric remains the scoring authority.
+            uploaded.
           </p>
         </div>
         <button
@@ -2088,7 +2142,7 @@ function ReviewPanel({
     <section className="review-panel">
       <h2>
         <ListChecks size={18} />
-        Self Grade
+        Coding Score
       </h2>
       <label className="manual-score">
         <span>Your score for this problem</span>

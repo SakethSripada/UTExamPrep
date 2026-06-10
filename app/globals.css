@@ -255,7 +255,7 @@ button:disabled {
   height: calc(100vh - 64px);
   padding: 18px 14px;
   overflow: auto;
-  background: #eef1f5;
+  background: #f3f5f8;
   border-right: 1px solid var(--line);
 }
 
@@ -285,7 +285,7 @@ button:disabled {
 
 .question-map {
   display: grid;
-  gap: 2px;
+  gap: 0;
   padding-top: 12px;
 }
 
@@ -294,26 +294,26 @@ button:disabled {
   grid-template-columns: 28px minmax(0, 1fr) auto;
   gap: 9px;
   align-items: center;
-  min-height: 48px;
+  min-height: 50px;
   padding: 8px 9px;
   color: #2d3748;
   text-align: left;
   background: transparent;
   border: 1px solid transparent;
-  border-bottom-color: #d9dee6;
-  border-radius: 3px;
+  border-bottom-color: #d8dee7;
+  border-radius: 4px;
 }
 
 .map-item:hover {
   background: #ffffff;
-  border-color: #cbd3df;
+  border-color: #c6cfdb;
 }
 
 .map-item.active {
   color: #111827;
   background: #ffffff;
-  border-color: #aeb7c4;
-  box-shadow: none;
+  border-color: #98a2b3;
+  box-shadow: inset 3px 0 0 #253040;
 }
 
 .map-number {
@@ -344,7 +344,7 @@ button:disabled {
 .map-copy strong {
   overflow: hidden;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
