@@ -129,7 +129,7 @@ export function buildObjectiveParts(question: Question): ObjectivePart[] {
   }
 
   const parts: ObjectivePart[] = [];
-  let current: ObjectivePart | null = null;
+  let current: Extract<ObjectivePart, { kind: "answer" }> | null = null;
   let answerIndex = 0;
   let contextLines: string[] = [];
   let collectingContext = false;
@@ -186,11 +186,23 @@ export function buildObjectiveParts(question: Question): ObjectivePart[] {
 
   pushCurrent();
   pushContext();
+
+  if (question.thrownOut) {
+    const { label, afterLabel, note } = question.thrownOut;
+    const insertAt = parts.findIndex((part) => part.kind === "answer" && part.label === afterLabel);
+    const thrownPart: ObjectivePart = { kind: "thrown", label, note };
+    if (insertAt === -1) {
+      parts.push(thrownPart);
+    } else {
+      parts.splice(insertAt + 1, 0, thrownPart);
+    }
+  }
+
   return parts;
 }
 
 export function answerPlaceholder(part: ObjectivePart) {
-  const text = part.code.toLowerCase();
+  const text = "code" in part ? part.code.toLowerCase() : "";
   if (/compile-time errors|list all line numbers|which.*lines.*compile/.test(text)) {
     return "List compile errors";
   }

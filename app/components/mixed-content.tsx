@@ -31,22 +31,49 @@ export function CodeBlock({ code, className = "" }: { code?: string; className?:
   );
 }
 
-function isLikelyCodeLine(line: string) {
+// Lines that should always be treated as prose, even when they appear inside an
+// open code block (used to break out of a class/method body).
+function isProseMarker(line: string) {
   const trimmed = line.trim();
   if (!trimmed) {
     return false;
   }
   if (/^(-|•)\s+/.test(trimmed)) {
-    return false;
+    return true;
   }
   if (
     /^(Restrictions|Facts and restrictions|Rules and restrictions|Allowed methods|Storage model|Examples|Example calls|Partial example|Facts|Method to implement):/.test(
       trimmed,
     )
   ) {
-    return false;
+    return true;
   }
   if (/^(pre|post):\s/i.test(trimmed)) {
+    return true;
+  }
+  return false;
+}
+
+// Net change in brace depth for a code line, ignoring trailing line comments.
+function netBraceDelta(line: string) {
+  const code = line.replace(/\/\/.*$/, "");
+  let delta = 0;
+  for (const char of code) {
+    if (char === "{") {
+      delta += 1;
+    } else if (char === "}") {
+      delta -= 1;
+    }
+  }
+  return delta;
+}
+
+function isLikelyCodeLine(line: string) {
+  const trimmed = line.trim();
+  if (!trimmed) {
+    return false;
+  }
+  if (isProseMarker(line)) {
     return false;
   }
   if (/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new)\b/.test(trimmed)) {
@@ -165,6 +192,7 @@ function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
   let currentKind: ContentSegment["kind"] | null = null;
   let currentLines: string[] = [];
   let inBlockComment = false;
+  let braceDepth = 0;
 
   const flush = () => {
     const text = currentLines.join("\n").trim();
@@ -173,11 +201,18 @@ function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
     }
     currentKind = null;
     currentLines = [];
+    braceDepth = 0;
   };
 
   for (const line of content.split("\n")) {
     const startsBlockComment = line.includes("/*") && !line.includes("*/");
-    const nextKind: ContentSegment["kind"] = inBlockComment || isLikelyCodeLine(line) ? "code" : "text";
+    let nextKind: ContentSegment["kind"] = inBlockComment || isLikelyCodeLine(line) ? "code" : "text";
+    // Keep contiguous code blocks intact: a line inside an open brace block
+    // (e.g. enum constants like "NORTH, SOUTH, EAST") stays code even when it
+    // does not look like code on its own. Explicit prose markers still break out.
+    if (currentKind === "code" && braceDepth > 0 && line.trim() && !isProseMarker(line)) {
+      nextKind = "code";
+    }
     if (!line.trim()) {
       if (currentKind === "code") {
         currentLines.push(line);
@@ -191,6 +226,9 @@ function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
     }
     currentKind = nextKind;
     currentLines.push(line);
+    if (nextKind === "code" && !inBlockComment) {
+      braceDepth += netBraceDelta(line);
+    }
     if (inBlockComment && line.includes("*/")) {
       inBlockComment = false;
     } else if (startsBlockComment) {

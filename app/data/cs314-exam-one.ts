@@ -8,8 +8,14 @@ export const cs314ExamOne: Exam = {
     {
       id: "cs314-e1-q1",
       title: "1. Short Answer",
-      points: 48,
+      points: 50,
       type: "short",
+      thrownOut: {
+        label: "E",
+        afterLabel: "D",
+        note: "This question was thrown out after the exam. Its 2 points are awarded automatically to everyone.",
+        points: 2,
+      },
       prompt:
         "Answer each short-answer item. For compile errors answer compile error; for runtime errors answer runtime error; for infinite loops answer infinite loop. Big O answers should be the most restrictive correct Big O.",
       code: `A. A method is O(N^4). It takes 2 seconds when N = 5,000. Expected time when N = 10,000?

@@ -60,7 +60,7 @@ button:disabled {
   display: grid;
   align-content: start;
   gap: 22px;
-  padding: 40px clamp(18px, 4vw, 56px);
+  padding: clamp(48px, 7vh, 96px) clamp(18px, 4vw, 56px) 48px;
 }
 
 .menu-hero {
@@ -155,13 +155,137 @@ button:disabled {
   top: 0;
   z-index: 20;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 14px;
   align-items: center;
   min-height: 64px;
   padding: 9px 20px;
   background: #ffffff;
   border-bottom: 1px solid var(--line);
+}
+
+.topbar-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+
+.topbar-actions {
+  justify-self: end;
+}
+
+.exam-timer {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.timer-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-input {
+  min-width: 4ch;
+  box-sizing: content-box;
+  padding: 2px 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: 18px;
+  color: #111827;
+  text-align: center;
+}
+
+.timer-input:hover:not(:read-only) {
+  border-color: var(--line);
+}
+
+.timer-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #ffffff;
+}
+
+.timer-input:read-only {
+  cursor: default;
+}
+
+.exam-timer.running .timer-input {
+  color: #047857;
+}
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timer-chip {
+  padding: 3px 8px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+}
+
+.timer-chip:hover {
+  background: #eef2f7;
+}
+
+.timer-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.timer-action:hover:not(:disabled) {
+  background: #eef2f7;
+}
+
+.timer-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.exam-timer.expired {
+  border-color: #ef4444;
+  animation: timer-flash 0.9s ease-in-out infinite;
+}
+
+.exam-timer.expired .timer-input {
+  color: #dc2626;
+}
+
+@keyframes timer-flash {
+  0%,
+  100% {
+    background: #fef2f2;
+    box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0);
+  }
+  50% {
+    background: #fee2e2;
+    box-shadow: inset 0 0 0 2px rgba(239, 68, 68, 0.45);
+  }
 }
 
 .topbar-title {
@@ -450,6 +574,16 @@ button:disabled {
   color: #2f3744;
   font-size: 16px;
   line-height: 1.65;
+}
+
+.thrown-out-note {
+  margin: 0;
+  padding: 12px 14px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 14px;
 }
 
 .reference-panel {
@@ -1163,11 +1297,18 @@ button:disabled {
   }
 
   .topbar {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .exam-timer {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: center;
   }
 
   .topbar-actions {
     grid-column: 1 / -1;
+    justify-self: stretch;
     justify-content: stretch;
   }
 

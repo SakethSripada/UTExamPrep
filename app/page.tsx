@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { exams } from "@/app/data/exams";
 import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
+import { ExamTimer } from "@/app/components/exam-timer";
 import { InlineProseContent, MixedContent } from "@/app/components/mixed-content";
 import type { AnswerState, Exam, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import {
@@ -129,6 +130,10 @@ export default function Home() {
     for (const item of exam.questions) {
       if (item.type === "short" && item.answers) {
         autoPossible += item.points;
+        // Points for a thrown-out part are awarded to everyone automatically.
+        if (item.thrownOut) {
+          autoEarned += item.thrownOut.points;
+        }
         const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
         item.answers.forEach((expected, answerIndex) => {
           if (isCorrect(userAnswers[answerIndex] ?? "", expected)) {
@@ -368,16 +373,19 @@ export default function Home() {
   return (
     <main className={`exam-shell ${mode === "review" ? "review-shell" : ""}`}>
       <header className="topbar">
-        <button className="icon-button" aria-label="Back to menu" onClick={returnToMenu}>
-          <HomeIcon size={19} />
-        </button>
-        <div className="topbar-title">
-          <span>{exam.title}</span>
-          <strong>
-            {mode === "review" ? "Review" : "In progress"} · Question {index + 1} of{" "}
-            {exam.questions.length}
-          </strong>
+        <div className="topbar-left">
+          <button className="icon-button" aria-label="Back to menu" onClick={returnToMenu}>
+            <HomeIcon size={19} />
+          </button>
+          <div className="topbar-title">
+            <span>{exam.title}</span>
+            <strong>
+              {mode === "review" ? "Review" : "In progress"} · Question {index + 1} of{" "}
+              {exam.questions.length}
+            </strong>
+          </div>
         </div>
+        {mode === "exam" ? <ExamTimer /> : <div className="topbar-center" />}
         <div className="topbar-actions">
           <button className="secondary-button" onClick={resetExam}>
             <RotateCcw size={17} />
@@ -505,6 +513,17 @@ export default function Home() {
                     <section className="context-block" key={`${question.id}-context-${partIndex}`}>
                       <h2>Shared context</h2>
                       <MixedContent content={part.code} />
+                    </section>
+                  );
+                }
+
+                if (part.kind === "thrown") {
+                  return (
+                    <section className="objective-part thrown-out" key={`${question.id}-thrown-${part.label}`}>
+                      <div className="part-code">
+                        <div className="part-label">{part.label}</div>
+                        <p className="thrown-out-note">{part.note}</p>
+                      </div>
                     </section>
                   );
                 }
