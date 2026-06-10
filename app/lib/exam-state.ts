@@ -185,7 +185,7 @@ export function answerPlaceholder(part: ObjectivePart) {
     return "Type true or false";
   }
   if (/pick the letter|answer with the letter|which of the following|choices:/.test(text)) {
-    return "Type letter";
+    return "Type letter(s)";
   }
   if (/big o|order\b|efficient/.test(text)) {
     return "Type Big O";

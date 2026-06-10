@@ -495,17 +495,19 @@ button:disabled {
 
 .floating-reference-panel {
   position: fixed;
-  top: 82px;
+  top: 74px;
   right: clamp(14px, 2vw, 28px);
-  bottom: 82px;
+  bottom: 72px;
   z-index: 50;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 14px;
-  width: min(520px, calc(100vw - 28px));
+  width: min(920px, calc(100vw - 28px));
   padding: 16px;
   overflow: hidden;
+  overscroll-behavior: contain;
   pointer-events: none;
+  touch-action: pan-y;
   visibility: hidden;
   background: #ffffff;
   border: 1px solid var(--line-strong);
@@ -559,8 +561,31 @@ button:disabled {
 
 .floating-reference-panel > .mixed-content {
   min-height: 0;
-  overflow: auto;
-  padding-right: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+  scrollbar-gutter: stable;
+  touch-action: pan-y;
+}
+
+.floating-reference-panel .code-display {
+  height: auto !important;
+  max-height: none !important;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: visible !important;
+}
+
+.floating-reference-panel .code-display code {
+  display: block;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.floating-reference-panel .mixed-prose {
+  font-size: 15px;
 }
 
 .code-display {
@@ -624,7 +649,7 @@ button:disabled {
 
 .choice-line {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .choice-intro {
@@ -632,38 +657,48 @@ button:disabled {
 }
 
 .choice-label-text {
-  color: #475467;
-  font-size: 12px;
+  color: #667085;
+  font-size: 11px;
   font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .choice-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
 }
 
 .choice-option {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
   align-items: start;
-  padding: 8px 10px;
-  background: #f8fafc;
-  border: 1px solid #d8e0ea;
-  border-radius: 6px;
+  min-height: 48px;
+  padding: 11px 12px;
+  background: #ffffff;
+  border: 1px solid #cfd7e2;
+  border-radius: 7px;
 }
 
 .choice-option strong {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
-  color: #ffffff;
-  background: #344054;
-  border-radius: 3px;
+  width: 26px;
+  height: 26px;
+  color: #0b5c7a;
+  background: #eef8fb;
+  border: 1px solid #b8d8e3;
+  border-radius: 999px;
   font-size: 12px;
+  line-height: 1;
+}
+
+.choice-option span {
+  min-width: 0;
+  color: #263645;
+  line-height: 1.45;
 }
 
 .objective-list {

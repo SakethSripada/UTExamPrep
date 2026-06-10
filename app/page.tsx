@@ -313,18 +313,7 @@ export default function Home() {
       <main className="exam-shell menu-shell">
         <section className="menu-hero">
           <div>
-            <p className="eyebrow">DigitalExams</p>
-            <h1>CS Practice Exam Workspace</h1>
-            <p className="lede">
-              Practice with UT Austin CS sample and Fall 2025 exams. Objective short-answer problems
-              auto-grade; programming problems use the official rubric and local Java tests where available.
-            </p>
-          </div>
-          <div className="menu-summary">
-            <FileText aria-hidden />
-            <span>{exams.length} exams</span>
-            <span>{totalSections} sections</span>
-            <span>Monaco Java editor</span>
+            <h1> UT Austin CS Practice Exams</h1>
           </div>
         </section>
 
@@ -606,6 +595,8 @@ export default function Home() {
             id="floating-reference-panel"
             aria-hidden={!referenceOpen}
             aria-label="Reference for this section"
+            onWheel={(event) => event.stopPropagation()}
+            onTouchMove={(event) => event.stopPropagation()}
           >
             <div className="floating-reference-heading">
               <div>

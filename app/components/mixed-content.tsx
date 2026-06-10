@@ -16,6 +16,7 @@ export function CodeBlock({ code, className = "" }: { code?: string; className?:
         borderRadius: "6px",
         fontSize: "13px",
         lineHeight: "1.55",
+        overflow: "visible",
       }}
       codeTagProps={{
         style: {
