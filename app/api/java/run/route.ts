@@ -29,6 +29,39 @@ function runnerConfig() {
   return { base, token: process.env.JAVA_RUNNER_TOKEN?.trim() };
 }
 
+// The runner rate-limits and counts usage per anonymous device and per client
+// IP. Forward both so it sees the real browser, not this proxy. The runner
+// only trusts these headers because the request also carries the auth token.
+function clientHeaders(request: Request): Record<string, string> {
+  const out: Record<string, string> = {};
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const ip = forwardedFor?.split(",")[0].trim() || request.headers.get("x-real-ip")?.trim();
+  if (ip) {
+    out["X-Client-IP"] = ip;
+  }
+  const device = request.headers.get("x-device-id")?.trim();
+  if (device) {
+    out["X-Device-Id"] = device.slice(0, 64);
+  }
+  return out;
+}
+
+// Reject obvious cross-site abuse: if an Origin header is present it must match
+// the request host. Same-origin browser requests (and same-origin fetches that
+// omit Origin) pass, so real users are never blocked.
+function crossOriginBlocked(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    return false;
+  }
+  const host = request.headers.get("host");
+  try {
+    return Boolean(host) && new URL(origin).host !== host;
+  } catch {
+    return true;
+  }
+}
+
 async function forward(path: string, init: RequestInit) {
   const { base, token } = runnerConfig();
   if (!base) {
@@ -75,6 +108,12 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (crossOriginBlocked(request)) {
+    return json({ ok: false, phase: "forbidden", message: "Cross-origin requests are not allowed." }, 403);
+  }
+
+  const headers = clientHeaders(request);
+
   let body: JavaRunRequest;
   try {
     body = (await request.json()) as JavaRunRequest;
@@ -103,7 +142,7 @@ export async function POST(request: Request) {
   try {
     const result = await forward("/api/run", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...headers },
       body: JSON.stringify({ questionId, code }),
     });
     if (!result) {

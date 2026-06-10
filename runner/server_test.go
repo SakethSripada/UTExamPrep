@@ -14,14 +14,19 @@ func testServer(t *testing.T, authToken string) *server {
 	if err != nil {
 		t.Fatalf("newSandbox: %v", err)
 	}
-	return &server{
+	return newServer(serverConfig{
 		sandbox:        box,
 		authToken:      authToken,
 		compileTimeout: 20 * time.Second,
 		runTimeout:     8 * time.Second,
 		queueTimeout:   time.Second,
-		slots:          make(chan struct{}, 1),
-	}
+		concurrency:    1,
+		// Generous limits so functional tests are never throttled.
+		devicePerMin: 100_000, deviceBurst: 100_000,
+		ipPerMin: 100_000, ipBurst: 100_000,
+		globalPerMin: 100_000, globalBurst: 100_000,
+		rateMaxKeys: 1000,
+	})
 }
 
 func doJSON(t *testing.T, handler http.Handler, method, path, body string, headers map[string]string) *httptest.ResponseRecorder {

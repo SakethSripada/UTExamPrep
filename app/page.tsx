@@ -36,6 +36,23 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => <div className="editor-loading">Loading Java editor...</div>,
 });
+
+// A stable, anonymous per-browser id. It is never tied to a login; the runner
+// uses it only for fair per-user rate limiting (so students sharing a campus
+// IP aren't throttled together) and for a rough unique-user count.
+function deviceHeaders(): Record<string, string> {
+  try {
+    const key = "digitalexams:deviceId";
+    let id = window.localStorage.getItem(key);
+    if (!id) {
+      id = crypto.randomUUID();
+      window.localStorage.setItem(key, id);
+    }
+    return { "X-Device-Id": id };
+  } catch {
+    return {};
+  }
+}
 export default function Home() {
   const [selectedExamId, setSelectedExamId] = useState(exams[0].id);
   const [mode, setMode] = useState<"menu" | "exam" | "review">("menu");
@@ -87,7 +104,7 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/java/run")
+    fetch("/api/java/run", { headers: deviceHeaders() })
       .then((response) => response.json() as Promise<JavaStatus>)
       .then((status) => {
         if (!cancelled) {
@@ -309,7 +326,7 @@ export default function Home() {
     try {
       const response = await fetch("/api/java/run", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...deviceHeaders() },
         body: JSON.stringify({ questionId: item.id, code }),
       });
       const result = (await response.json()) as JavaRunResult;

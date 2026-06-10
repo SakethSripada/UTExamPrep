@@ -6,11 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -71,6 +73,54 @@ type server struct {
 	// slots bounds concurrent executions so a burst cannot exhaust the
 	// machine; waiting requests give up after queueTimeout.
 	slots chan struct{}
+
+	// Layered rate limiting. deviceLimiter is the primary, per-user fair
+	// limit keyed by an anonymous device id (NAT-safe: students sharing one
+	// campus IP are limited independently). ipLimiter is a looser backstop so
+	// a single source spraying random device ids can't overwhelm the box.
+	// globalLimiter is the absolute ceiling on total throughput.
+	deviceLimiter *keyedLimiter
+	ipLimiter     *keyedLimiter
+	globalLimiter *keyedLimiter
+
+	metrics *usageMetrics
+}
+
+type serverConfig struct {
+	sandbox        *sandbox
+	authToken      string
+	workRoot       string
+	compileTimeout time.Duration
+	runTimeout     time.Duration
+	queueTimeout   time.Duration
+	concurrency    int
+
+	devicePerMin, deviceBurst int
+	ipPerMin, ipBurst         int
+	globalPerMin, globalBurst int
+	rateMaxKeys               int
+}
+
+func newServer(cfg serverConfig) *server {
+	if cfg.concurrency < 1 {
+		cfg.concurrency = 1
+	}
+	s := &server{
+		sandbox:        cfg.sandbox,
+		authToken:      cfg.authToken,
+		workRoot:       cfg.workRoot,
+		compileTimeout: cfg.compileTimeout,
+		runTimeout:     cfg.runTimeout,
+		queueTimeout:   cfg.queueTimeout,
+		slots:          make(chan struct{}, cfg.concurrency),
+		deviceLimiter:  newKeyedLimiter(cfg.devicePerMin, cfg.deviceBurst, cfg.rateMaxKeys),
+		ipLimiter:      newKeyedLimiter(cfg.ipPerMin, cfg.ipBurst, cfg.rateMaxKeys),
+		globalLimiter:  newKeyedLimiter(cfg.globalPerMin, cfg.globalBurst, 1),
+		metrics:        newUsageMetrics(),
+	}
+	go s.deviceLimiter.sweep()
+	go s.ipLimiter.sweep()
+	return s
 }
 
 func (s *server) routes() http.Handler {
@@ -80,7 +130,80 @@ func (s *server) routes() http.Handler {
 	})
 	mux.HandleFunc("GET /api/run", s.requireAuth(s.handleStatus))
 	mux.HandleFunc("POST /api/run", s.requireAuth(s.handleRun))
+	mux.HandleFunc("GET /metrics", s.requireAuth(s.handleMetrics))
 	return mux
+}
+
+func (s *server) handleMetrics(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, s.metrics.snapshot())
+}
+
+// clientIP resolves the caller's address. The Next.js proxy forwards the real
+// browser IP in X-Client-IP; X-Forwarded-For is the fallback. These headers
+// are only trusted because reaching this endpoint requires the shared auth
+// token, so an anonymous attacker cannot spoof them.
+func clientIP(r *http.Request) string {
+	if ip := firstHost(r.Header.Get("X-Client-IP")); ip != "" {
+		return ip
+	}
+	if ip := firstHost(r.Header.Get("X-Forwarded-For")); ip != "" {
+		return ip
+	}
+	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
+		return host
+	}
+	return r.RemoteAddr
+}
+
+func firstHost(value string) string {
+	if i := strings.IndexByte(value, ','); i >= 0 {
+		value = value[:i]
+	}
+	return strings.TrimSpace(value)
+}
+
+// deviceID reads the anonymous per-browser id the frontend stores in
+// localStorage. Bounded in length so it cannot be abused as a memory sink.
+func deviceID(r *http.Request) string {
+	id := strings.TrimSpace(r.Header.Get("X-Device-Id"))
+	if len(id) > 64 {
+		id = id[:64]
+	}
+	return id
+}
+
+// rateLimited applies the three limiter tiers. It returns true (and writes a
+// 429) when the request should be rejected.
+func (s *server) rateLimited(w http.ResponseWriter, device, ip string) bool {
+	// Key the primary limiter by device id when present, else fall back to
+	// the IP so token-less clients (curl, an older frontend) are still
+	// limited individually.
+	primary := device
+	if primary == "" {
+		primary = "ip:" + ip
+	}
+	for _, check := range []struct {
+		limiter *keyedLimiter
+		key     string
+	}{
+		{s.deviceLimiter, primary},
+		{s.ipLimiter, "ip:" + ip},
+		{s.globalLimiter, "global"},
+	} {
+		if ok, retry := check.limiter.allow(check.key); !ok {
+			if retry < 1 {
+				retry = 1
+			}
+			w.Header().Set("Retry-After", strconv.Itoa(retry))
+			writeJSON(w, http.StatusTooManyRequests, runResponse{
+				OK:      false,
+				Phase:   "rate_limited",
+				Message: "You're running tests a bit too fast. Wait a few seconds and try again.",
+			})
+			return true
+		}
+	}
+	return false
 }
 
 func (s *server) requireAuth(next http.HandlerFunc) http.HandlerFunc {
@@ -116,6 +239,15 @@ func (s *server) handleStatus(w http.ResponseWriter, _ *http.Request) {
 
 func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
+
+	// Throttle before doing any work so even a flood of malformed requests is
+	// cheap to reject.
+	ip := clientIP(r)
+	device := deviceID(r)
+	if s.rateLimited(w, device, ip) {
+		return
+	}
+
 	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBody)
 
 	var req runRequest
@@ -158,8 +290,10 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	s.metrics.record(device, ip)
 	resp := s.execute(req.QuestionID, files)
-	log.Printf("run question=%s phase=%s ok=%t elapsed=%s", req.QuestionID, resp.Phase, resp.OK, time.Since(start).Round(time.Millisecond))
+	log.Printf("run question=%s phase=%s ok=%t client=%s elapsed=%s",
+		req.QuestionID, resp.Phase, resp.OK, logClient(device, ip), time.Since(start).Round(time.Millisecond))
 	writeJSON(w, http.StatusOK, resp)
 }
 
@@ -232,6 +366,18 @@ func (s *server) execute(questionID string, files map[string]string) runResponse
 		resp.Passed, resp.Total = &passed, &total
 	}
 	return resp
+}
+
+// logClient renders a short, privacy-conscious client tag for the run log:
+// the anonymous device id when present, otherwise the IP.
+func logClient(device, ip string) string {
+	if device != "" {
+		if len(device) > 8 {
+			device = device[:8]
+		}
+		return "dev:" + device
+	}
+	return "ip:" + ip
 }
 
 func writeJSON(w http.ResponseWriter, status int, body any) {

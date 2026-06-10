@@ -44,15 +44,31 @@ func main() {
 	}
 
 	concurrency := envInt("RUNNER_MAX_CONCURRENCY", max(1, runtime.NumCPU()))
-	srv := &server{
+	srv := newServer(serverConfig{
 		sandbox:        box,
 		authToken:      authToken,
 		workRoot:       os.Getenv("RUNNER_WORK_DIR"),
 		compileTimeout: time.Duration(envInt("RUNNER_COMPILE_TIMEOUT_MS", 20_000)) * time.Millisecond,
 		runTimeout:     time.Duration(envInt("RUNNER_RUN_TIMEOUT_MS", 8_000)) * time.Millisecond,
 		queueTimeout:   time.Duration(envInt("RUNNER_QUEUE_TIMEOUT_MS", 10_000)) * time.Millisecond,
-		slots:          make(chan struct{}, concurrency),
-	}
+		concurrency:    concurrency,
+		// Per anonymous device: comfortably above any human's click rate, far
+		// below what a script needs to be useful.
+		devicePerMin: envInt("RUNNER_RATE_DEVICE_PER_MIN", 30),
+		deviceBurst:  envInt("RUNNER_RATE_DEVICE_BURST", 15),
+		// Per IP: loose, so a whole class behind one campus NAT is not
+		// throttled, while a single-IP flood still gets capped.
+		ipPerMin: envInt("RUNNER_RATE_IP_PER_MIN", 240),
+		ipBurst:  envInt("RUNNER_RATE_IP_BURST", 80),
+		// Absolute throughput ceiling for the whole runner.
+		globalPerMin: envInt("RUNNER_RATE_GLOBAL_PER_MIN", 600),
+		globalBurst:  envInt("RUNNER_RATE_GLOBAL_BURST", 150),
+		rateMaxKeys:  envInt("RUNNER_RATE_MAX_KEYS", 100_000),
+	})
+	log.Printf("rate limits: device=%d/min(burst %d) ip=%d/min(burst %d) global=%d/min(burst %d)",
+		envInt("RUNNER_RATE_DEVICE_PER_MIN", 30), envInt("RUNNER_RATE_DEVICE_BURST", 15),
+		envInt("RUNNER_RATE_IP_PER_MIN", 240), envInt("RUNNER_RATE_IP_BURST", 80),
+		envInt("RUNNER_RATE_GLOBAL_PER_MIN", 600), envInt("RUNNER_RATE_GLOBAL_BURST", 150))
 
 	port := os.Getenv("PORT")
 	if port == "" {

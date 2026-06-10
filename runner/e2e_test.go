@@ -25,13 +25,17 @@ func e2eServer(t *testing.T) *server {
 	if !box.javaAvailable() {
 		t.Skip("no JDK available; skipping end-to-end tests")
 	}
-	return &server{
+	return newServer(serverConfig{
 		sandbox:        box,
 		compileTimeout: 60 * time.Second,
 		runTimeout:     10 * time.Second,
 		queueTimeout:   5 * time.Minute,
-		slots:          make(chan struct{}, max(1, runtime.NumCPU())),
-	}
+		concurrency:    max(1, runtime.NumCPU()),
+		devicePerMin:   100_000, deviceBurst: 100_000,
+		ipPerMin: 100_000, ipBurst: 100_000,
+		globalPerMin: 100_000, globalBurst: 100_000,
+		rateMaxKeys: 1000,
+	})
 }
 
 func postRun(t *testing.T, handler http.Handler, questionID, code string) (int, runResponse) {
