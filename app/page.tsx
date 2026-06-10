@@ -1088,6 +1088,751 @@ public static int um(int[] ar, int x) {
   ],
 };
 
+const cs314ExamOne: Exam = {
+  id: "cs314-fall-2025-e1",
+  title: "CS 314 Fall 2025 Exam 1",
+  subtitle: "Data structures, generics, matrices, and multisets",
+  questions: [
+    {
+      id: "cs314-e1-q1",
+      title: "1. Short Answer",
+      points: 50,
+      type: "short",
+      prompt:
+        "Answer each short-answer item. For compile errors answer compile error; for runtime errors answer runtime error; for infinite loops answer infinite loop. Big O answers should be the most restrictive correct Big O.",
+      code: `A. A method is O(N^4). It takes 2 seconds when N = 5,000. Expected time when N = 10,000?
+B. Using lecture rules, what is T(N) for b where N = n?
+public static int b(int n) {
+    int t = 0;
+    for (int i = 0; i < n; i++) {
+        int t2 = i * i;
+        t += t2;
+    }
+    final int LIMIT = n * 3;
+    for (int i = 0; i < LIMIT; i++) {
+        t += i * 3;
+    }
+    return t;
+}
+C. Method b from 1.B takes 2 seconds when n = 1,000,000. Expected time when n = 5,000,000?
+D. Using lecture rules, what is T(N) for d where N = data.length?
+public static int d(int[] data) {
+    int t = 0;
+    for (int i = 0; i < data.length; i++) {
+        int t1 = data[i];
+        for (int j = 0; j < data.length; j++) {
+            int t2 = data[j];
+            for (int k = 0; k < data.length; k++) {
+                t += data[k] * t1 / t2;
+            }
+        }
+    }
+    return t;
+}
+E. The method e was officially thrown out on the key. Answer with the official status.
+F. What is the order of f? Method check is O(N) where N = n.
+public static int f(int n) {
+    int t = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            t += check(i, j, n);
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        t += check(i, i, n);
+    }
+    return t;
+}
+G. What is the best-case order of g where N = list.size()?
+public static void g(ArrayList<Integer> list) {
+    for (int i = 0; i < list.size(); i++) {
+        if (list.get(i) % 2 == 0) {
+            list.remove(0);
+        } else {
+            list.remove(list.size() - 1);
+        }
+    }
+}
+H. What is output?
+ArrayList<String> letters = new ArrayList<>();
+letters.add("C");
+letters.add("CS");
+letters.add(1, "B");
+letters.add(2, "GO");
+letters.remove(1);
+letters.add(2, letters.get(letters.size() - 3));
+System.out.println(letters);
+I. True or false: there is no way for a class that states implements Comparable to compile without implementing compareTo inside that class.
+J. True or false: this IntList toString meets lecture requirements.
+public String toString() {
+    return Arrays.toString(con);
+}
+K. Method k takes 3 seconds with n = 25,000 and an all-zero int array. Expected time when n = 50,000?
+L. GenericList<String> compile-time errors. List all line numbers or No compile errors.
+GenericList<String> list = new GenericList<>(); // 1
+list.add("CS314"); // 2
+String s1 = "CS311"; // 3
+list.add(s1); // 4
+list.add(list.get(0).toLowerCase()); // 5
+list.add(s1.substring(1, 15)); // 6
+list.add("!"); // 7
+M. GenericList<String> compile-time errors. List all line numbers or No compile errors.
+GenericList<String> list1 = new GenericList<>(); // 1
+list1.add(314 + ""); // 2
+String s2 = "CS429"; // 3
+list1.add(s2.charAt(2)); // 4
+list1.add(list1.get(0).substring(1, 2)); // 5
+list1.add(439); // 6
+list1.add(s2 + s2 + s2); // 7
+list1.add(list1.toString()); // 8
+N. True or false: in Java, all data structures can be the target of enhanced for loops.
+O1. StandardPackage sp1 = new FragilePackage(2, 50); // compiles or error
+O2. Object o1 = new Package(5); // compiles or error
+P1. Package p1 = new InsuredPackage(10, 3); // compiles or error
+P2. FragilePackage fp1 = new Package(5); // compiles or error
+Q. FeatherPackage fp2 = new FeatherPackage(); System.out.print(fp2.getCost() + " " + fp2.getWeight());
+R. InsuredPackage ip1 = new InsuredPackage(2, 5); System.out.print(ip1);
+S. InsuredPackage ip2 = new InsuredPackage(2, 5); System.out.print(ip2.getCost());
+T. Package p2 = new FragilePackage(2, 5); p2.setInsure(5, 2); System.out.print(p2.getCost());
+U. Package p3 = new Package(10); Package p4 = new Package(10); System.out.print(p3.equals(p4));
+V. Package p5 = new FragilePackage(2, 5); System.out.print(p5.getCost());
+W. Given w below, what is output?
+public static void w(InsuredPackage ip) {
+    ip.setInsure(2);
+    System.out.print(ip.getCost() + " ");
+    ip = new InsuredPackage(3, 3);
+    ip.setInsure(3);
+    System.out.print(ip.getCost() + " ");
+}
+InsuredPackage ip = new InsuredPackage(1, 1);
+w(ip);
+System.out.print(ip.getCost());
+X. MediaPackage extends Package and tries to return 2 + mult * weight / 2 from getCost(int mult). MediaPackage mp1 = new MediaPackage(10); System.out.print(mp1.getCost(10));
+Y. What is output when constructing new C?
+public class A { public A() { System.out.print(4); } }
+public class B extends A { public B() { System.out.print(1); } }
+public class C extends B { public C() { System.out.print(3); } }`,
+      reference: `public class Package {
+    private int weight;
+    public Package(int weight) { this.weight = weight; }
+    public int getCost() { return 5 + weight * 2; }
+    public int getWeight() { return weight; }
+}
+
+public class FeatherPackage extends Package {
+    public FeatherPackage() { super(50); }
+    public int getWeight() { return 0; }
+}
+
+public class StandardPackage extends Package {
+    private int shippingTime;
+    public StandardPackage(int weight, int time) {
+        super(weight);
+        shippingTime = time;
+    }
+    public int getCost() { return super.getCost() + 2 * shippingTime; }
+    public String toString() { return "t: " + shippingTime; }
+}
+
+public class InsuredPackage extends StandardPackage {
+    private int insuranceCost;
+    public InsuredPackage(int wt, int t) { super(wt, t); }
+    public void setInsure(int cost) { insuranceCost = cost; }
+    public int getCost() { return super.getCost() + insuranceCost * 3; }
+}
+
+public class FragilePackage extends Package {
+    private int fee;
+    public FragilePackage(int weight, int fee) {
+        super(weight);
+        this.fee = fee;
+    }
+    public int getCost() { return 10 * fee + getWeight(); }
+}`,
+      answers: [
+        "32 seconds",
+        "13N + 7",
+        "10 seconds",
+        "3N^3 + 5N^2 + 5N + 4",
+        "Thrown out",
+        "O(N^3)",
+        "O(N)",
+        "[C, GO, C, CS]",
+        "false",
+        "false",
+        "12 seconds",
+        "No compile errors",
+        "4 and 6",
+        "false",
+        "error",
+        "compiles",
+        "compiles",
+        "error",
+        "105 0",
+        "t: 5",
+        "19",
+        "COMPILE ERROR",
+        "false",
+        "52",
+        "15 26 15",
+        "COMPILE ERROR",
+        "413",
+      ],
+      answerPoints: [...Array(14).fill(2), 1, 1, 1, 1, ...Array(9).fill(2)],
+    },
+    {
+      id: "cs314-e1-q2",
+      title: "2. Lists - copyWithoutTarget",
+      points: 17,
+      type: "code",
+      prompt:
+        "Inside GenericList<E>, implement copyWithoutTarget. Return a new GenericList containing all elements of the calling list except those equal to target. Preserve relative order. This list is not altered. You may use equals and array length, create only the returned GenericList and its native array, and use only the shown zero-argument constructor unless you implement more yourself.",
+      stub: `// pre: target != null
+// post: per the problem description
+public GenericList<E> copyWithoutTarget(E target) {
+
+}`,
+      answer: `public GenericList<E> copyWithoutTarget(E target) {
+    GenericList<E> result = new GenericList<>();
+    result.con = (E[]) new Object[size + 10];
+    for (int i = 0; i < size; i++) {
+        if (!con[i].equals(target)) {
+            result.con[result.size] = con[i];
+            result.size++;
+        }
+    }
+    return result;
+}`,
+      rubric: [
+        { label: "Creates a new GenericList result using an allowed constructor", points: 1 },
+        { label: "Creates the result array correctly, with at least one element of extra capacity", points: 2 },
+        { label: "Loops over exactly the active size elements of this list", points: 3 },
+        { label: "Uses equals correctly to exclude target values", points: 3 },
+        { label: "Adds kept elements to the correct next spot in the result array", points: 4 },
+        { label: "Maintains result size and does not alter this list", points: 2 },
+        { label: "Returns the resulting GenericList without disallowed methods or extra structures", points: 2 },
+      ],
+    },
+    {
+      id: "cs314-e1-q3",
+      title: "3. MathMatrix - concatenate",
+      points: 16,
+      type: "code",
+      prompt:
+        "Inside MathMatrix, implement concatenate. Return a new MathMatrix formed by horizontally concatenating this matrix on the left and rhs on the right. Use only the shown constructor and array length; do not use other MathMatrix methods or create extra data structures beyond the result.",
+      stub: `// pre: rhs != null. The number of rows in this and rhs are equal.
+public MathMatrix concatenate(MathMatrix rhs) {
+
+}`,
+      answer: `public MathMatrix concatenate(MathMatrix rhs) {
+    int newColumns = cells[0].length + rhs.cells[0].length;
+    MathMatrix result = new MathMatrix(cells.length, newColumns);
+    for (int r = 0; r < cells.length; r++) {
+        for (int c = 0; c < cells[0].length; c++) {
+            result.cells[r][c] = cells[r][c];
+        }
+    }
+    int offset = cells[0].length;
+    for (int r = 0; r < rhs.cells.length; r++) {
+        for (int c = 0; c < rhs.cells[0].length; c++) {
+            result.cells[r][c + offset] = rhs.cells[r][c];
+        }
+    }
+    return result;
+}`,
+      rubric: [
+        { label: "Creates the resulting MathMatrix with the given constructor", points: 1 },
+        { label: "Computes result dimensions from both matrices correctly", points: 2 },
+        { label: "Copies all elements from this matrix into the left side of result", points: 4 },
+        { label: "Attempts to copy rhs elements into the result", points: 2 },
+        { label: "Copies rhs with the correct column offset for horizontal concatenation", points: 4 },
+        { label: "Accesses MathMatrix internal arrays correctly", points: 2 },
+        { label: "Returns the resulting MathMatrix", points: 1 },
+      ],
+    },
+    {
+      id: "cs314-e1-q4",
+      title: "4. MultiSet - getIntersection",
+      points: 17,
+      type: "code",
+      prompt:
+        "Inside MultiSet<E>, implement getIntersection. Return a new MultiSet containing each value that appears in both multisets with frequency equal to the smaller frequency. Do not alter either multiset. You may use equals and Math.min, and create only the new MultiSet and its necessary internal ValueAndFrequency entries.",
+      stub: `/* pre: other != null
+   post: per the problem description */
+public MultiSet<E> getIntersection(MultiSet<E> other) {
+
+}`,
+      answer: `public MultiSet<E> getIntersection(MultiSet<E> other) {
+    MultiSet<E> result = new MultiSet<>(numDistinct + 5);
+    for (int i = 0; i < numDistinct; i++) {
+        E target = con[i].element;
+        int indexInOther = other.indexOf(target);
+        if (indexInOther != -1) {
+            int newFreq = Math.min(con[i].frequency, other.con[indexInOther].frequency);
+            result.con[result.numDistinct] = new ValueAndFrequency<>(target, newFreq);
+            result.numDistinct++;
+            result.size += newFreq;
+        }
+    }
+    return result;
+}
+
+private int indexOf(E tgt) {
+    for (int i = 0; i < numDistinct; i++) {
+        if (con[i].element.equals(tgt)) {
+            return i;
+        }
+    }
+    return -1;
+}`,
+      rubric: [
+        { label: "Creates the resulting MultiSet with extra capacity", points: 2 },
+        { label: "Loops over distinct active elements only", points: 2 },
+        { label: "Searches the other MultiSet for matching elements correctly", points: 3 },
+        { label: "Uses equals on stored elements correctly", points: 1 },
+        { label: "Uses the minimum of the two frequencies", points: 2 },
+        { label: "Creates new ValueAndFrequency objects instead of shallow copying", points: 2 },
+        { label: "Stores entries in the correct result positions", points: 2 },
+        { label: "Updates result size and numDistinct correctly", points: 2 },
+        { label: "Returns the result without altering either operand or using disallowed structures", points: 1 },
+      ],
+    },
+  ],
+};
+
+const cs314ExamTwo: Exam = {
+  id: "cs314-fall-2025-e2",
+  title: "CS 314 Fall 2025 Exam 2",
+  subtitle: "Maps, linked lists, recursion, sorting, queues, and trees",
+  questions: [
+    {
+      id: "cs314-e2-q1",
+      title: "1. Short Answer",
+      points: 50,
+      type: "short",
+      prompt:
+        "Answer each short-answer item. For compile errors answer compile error; for runtime errors answer runtime error; for infinite loops answer infinite loop. Big O answers should be the most restrictive correct Big O.",
+      code: `A. What is returned by a(4)?
+public static int a(int x) {
+    if (x == 0) {
+        return 2;
+    }
+    return (x * 2) + a(x - 1);
+}
+B. What is returned by mosTQ(5)?
+public static int mosTQ(int x) {
+    if (x <= 2) {
+        return 3;
+    }
+    return x + mosTQ(x - 2) + mosTQ(x - 1);
+}
+C. What is returned by c(2634)?
+public static int c(int n) {
+    if (n == 0) {
+        return 0;
+    } else if (n % 2 == 0) {
+        return n % 10 - c(n / 10);
+    }
+    return n % 10 + c(n / 10);
+}
+D. What is the order of method c from 1.C? N = n.
+E. HashMap output size after putting i % 7, i % 11, and i % 13 for i from 1 through 130.
+F. TreeMap output for data {5, 2, 0, 0, 5, 5, 2}, putting key data[i] and value i.
+G. HashMap + LinkedList loop takes 2 seconds when map.size() = 200,000 and list.size() = 50,000. Expected time when map.size() = 600,000 and list.size() = 100,000?
+H. LinkedList314 indexed get loop takes 2 seconds when list.size() = 10,000. Expected time when list.size() = 30,000?
+I. Dependent loop i *= 2 and inner j < i takes 10 seconds when n = 1,000,000. Expected time when n = 2,000,000?
+J. A sorted ArrayList has two random values appended, then sort(list) is called. Which studied sort typically has the fewest computations? Choices: A Selection, B Insertion, C Radix, D Quicksort, E Mergesort.
+K. TreeMap containsKey/get loop takes 10 seconds when map.size() = 1,000,000 and data.length = 1,000,000. Expected time when map.size() = 4,000,000 and data.length = 2,000,000?
+L. Stack314 pushes 5 down to 0, then loops for i < st.size() and pops into sum. What is printed?
+M. Which storage containers can make all four stack operations average case O(1)? Choices: A LL314, B java.util.LinkedList, C java.util.ArrayList, D native array, E none, F all.
+N. Queue314 enqueues odd values from {5,3,2,7,1,2,4,12,3,9,8,3}, dequeues five into s, then prints s and q.front().
+O. java.util.LinkedList iterator removal takes 3 seconds when list.size() = 250,000. Expected time when list.size() = 500,000?
+P. Search an N by N row-major sorted 2d array with no new structures. Which order? Choices: A O(logN), B O((logN)^2), C O(N), D O(NlogN), E O(N^2).
+Q. Mergesort on [9, 54, 5, 18, 78, 14, 23, 20, 0, 12]. Which array appears before final merge? Choices: A [5, 9, 18, 54, 78, 0, 12, 14, 20, 23], B [0, 5, 9, 14, 18, 20, 23, 54, 78, 12], C [9, 12, 5, 0, 14, 78, 23, 20, 18, 54], D original, E [20, 0, 12, 23, 54, 14, 5, 18, 78, 9].
+R. Recursive method r makes three calls to r(n - 1). It takes 1 second when n = 20. Expected time when n = 23?
+S. Recursive iterator method s over ArrayList [4, 5, 2, 1]. What is printed?
+T. Which is likely faster for 5,000,000 distinct random ints? A quicksort(mergesort(nums)), B mergesort(quicksort(nums)), C roughly same.
+U. In a full binary tree with 9 nodes, minimum possible number of leaf nodes with depth 2?
+V. In a complete binary tree with 37 nodes, how many nodes have 2 children?
+W. Tree: root 7; left child 3 with left child 4; right child 2 with left child 1 and right child 5. Alternating add/subtract during preorder traversal, starting with add.
+X. Same tree and alternating add/subtract during inorder traversal, starting with add.
+Y. Same tree and alternating add/subtract during postorder traversal, starting with add.`,
+      answers: [
+        "22",
+        "30",
+        "-3",
+        "O(logN)",
+        "13",
+        "{0=3, 2=6, 5=5}",
+        "4 seconds",
+        "18 seconds",
+        "20 seconds",
+        "B",
+        "22 seconds",
+        "3",
+        "F",
+        "19 9",
+        "6 seconds",
+        "A",
+        "A",
+        "27 seconds",
+        "12",
+        "C",
+        "0",
+        "18",
+        "2",
+        "4",
+        "-8",
+      ],
+    },
+    {
+      id: "cs314-e2-q2",
+      title: "2. Maps - playedMostRanked",
+      points: 16,
+      type: "code",
+      prompt:
+        "Implement playedMostRanked. Given a map from team name to teams played, and a set of ranked team names, return a team key that has played the most ranked teams. Ties may return any tied team. At least one team has played a ranked team. Do not create new data structures or alter the inputs.",
+      stub: `public static String playedMostRanked(
+        Map<String, ArrayList<String>> teams,
+        Set<String> ranked) {
+
+}`,
+      answer: `public static String playedMostRanked(
+        Map<String, ArrayList<String>> teams,
+        Set<String> ranked) {
+    String bestTeam = "";
+    int maxRanked = -1;
+    for (String team : teams.keySet()) {
+        int count = 0;
+        for (String opponent : teams.get(team)) {
+            if (ranked.contains(opponent)) {
+                count++;
+            }
+        }
+        if (count > maxRanked) {
+            maxRanked = count;
+            bestTeam = team;
+        }
+    }
+    return bestTeam;
+}`,
+      rubric: [
+        { label: "Iterates through the teams represented by map keys", points: 3 },
+        { label: "Counts ranked opponents for one team correctly", points: 4 },
+        { label: "Uses allowed Map, Set, Iterator, and ArrayList operations correctly", points: 3 },
+        { label: "Tracks the best count and best team so far", points: 4 },
+        { label: "Returns a valid best team without altering inputs or creating extra structures", points: 2 },
+      ],
+    },
+    {
+      id: "cs314-e2-q3",
+      title: "3. Linked Lists - addIfFrequencyLessThan",
+      points: 17,
+      type: "code",
+      prompt:
+        "Inside LL314<E>, implement addIfFrequencyLessThan. Add tgt to the end of the list only if fewer than freq copies of tgt are already present. Return true if a node was added, false otherwise. The list has only first, no size and no last. Do not use recursion, arrays, or other data structures.",
+      stub: `// pre: tgt != null, freq >= 1
+// post: per the problem description
+public boolean addIfFrequencyLessThan(E tgt, int freq) {
+
+}`,
+      answer: `public boolean addIfFrequencyLessThan(E tgt, int freq) {
+    if (first == null) {
+        first = new Node<>(tgt);
+        return true;
+    }
+    Node<E> scout = first;
+    Node<E> trailer = first;
+    int count = 0;
+    while (scout != null) {
+        if (scout.data.equals(tgt)) {
+            count++;
+            if (count == freq) {
+                return false;
+            }
+        }
+        trailer = scout;
+        scout = scout.next;
+    }
+    trailer.next = new Node<>(tgt);
+    return true;
+}`,
+      rubric: [
+        { label: "Handles the empty list by creating the first node", points: 3 },
+        { label: "Traverses the linked nodes correctly", points: 3 },
+        { label: "Uses equals and counts existing target occurrences correctly", points: 3 },
+        { label: "Stops and returns false once freq occurrences are found", points: 2 },
+        { label: "Tracks the last node for appending", points: 3 },
+        { label: "Adds one new node at the end and returns true when appropriate", points: 3 },
+      ],
+    },
+    {
+      id: "cs314-e2-q4",
+      title: "4. Recursive Backtracking - canForm",
+      points: 17,
+      type: "code",
+      prompt:
+        "Implement canForm. Determine whether dictionary words can form at least one word loop with exactly goal words. Words cannot be reused. Each next word must start with the previous word's last character, and the final word must link back to the first. Do not alter dictionary; if successful, loop holds the first loop found, otherwise loop is empty.",
+      stub: `public static boolean canForm(ArrayList<String> dictionary,
+        ArrayList<String> loop, int goal) {
+
+}`,
+      answer: `public static boolean canForm(ArrayList<String> dictionary,
+        ArrayList<String> loop, int goal) {
+    if (loop.size() == goal) {
+        String first = loop.get(0);
+        String last = loop.get(goal - 1);
+        return charsMatch(last, first);
+    }
+    for (String nextWord : dictionary) {
+        if (loop.size() == 0 || (!loop.contains(nextWord)
+                && charsMatch(loop.get(loop.size() - 1), nextWord))) {
+            loop.add(nextWord);
+            if (canForm(dictionary, loop, goal)) {
+                return true;
+            }
+            loop.remove(loop.size() - 1);
+        }
+    }
+    return false;
+}
+
+private static boolean charsMatch(String s1, String s2) {
+    return s1.charAt(s1.length() - 1) == s2.charAt(0);
+}`,
+      rubric: [
+        { label: "Base case requires exactly goal words and checks final-to-first character match", points: 4 },
+        { label: "Tries dictionary words as recursive choices", points: 2 },
+        { label: "Handles the first word as a valid starting choice", points: 2 },
+        { label: "Prevents word reuse with contains", points: 2 },
+        { label: "Checks last-to-first character compatibility before recursing", points: 2 },
+        { label: "Uses recursive return values to stop after success", points: 2 },
+        { label: "Backtracks by removing the last word after failed recursive attempts", points: 2 },
+        { label: "Respects method, data structure, and allowed-method restrictions", points: 1 },
+      ],
+    },
+  ],
+};
+
+const cs314ExamThree: Exam = {
+  id: "cs314-fall-2025-e3",
+  title: "CS 314 Fall 2025 Exam 3",
+  subtitle: "Trees, graphs, hashing, heaps, tries, and dynamic programming",
+  questions: [
+    {
+      id: "cs314-e3-q1",
+      title: "1. Short Answer",
+      points: 50,
+      type: "short",
+      prompt:
+        "Answer each short-answer item. For compile errors answer compile error; for runtime errors answer runtime error; for infinite loops answer infinite loop. Big O answers should be the most restrictive correct Big O.",
+      code: `A. Order of a where N = list.size() and list is LinkedList314:
+public static int a(LinkedList314<Integer> list) {
+    int t = 0;
+    for (int i = 1; i < list.size(); i *= 2) {
+        t += list.get(i);
+    }
+    return t;
+}
+B. BST314 simple naive insertion of {5, 2, 10, 5, 4, 12, -12, 6, 10, 9}. Sum of nodes with depth 2?
+C. BST314 simple naive insertion of i % 6 for i = 0 to 999. Height of resulting tree?
+D. Iteratively adding sorted 0..n-1 to naive BST takes 10 seconds when n = 50,000. Expected time when n = 150,000?
+E. Adding sorted 0..n-1 to java.util.TreeSet takes 10 seconds when n = 1,000,000. Expected time when n = 4,000,000?
+F. RedBlackTree314 add values {2, 5, 10, 5, 2, -4, 13}. How many nodes are red?
+G. Huffman STF tree bits with BITS_PER_WORD = 8 and input containing 15 distinct values. Exclude the 32-bit tree-size header.
+H. Huffman frequencies 65:10, 66:20, 67:40, 68:80, 69:160. What is the encoding for value 67?
+I. Assignment 8 AbstractSet: which methods could not be implemented correctly without an internal data structure or explicit subclass references? Choices: A add, B addAll, C intersection, D iterator, E remove, F size.
+J. Graph stores vertices in HashMap<String, Vertex>. Given V vertices and average E outgoing edges, order of determining maximum outdegree?
+K. Same graph representation. Given V vertices and average E outgoing edges, order of determining maximum indegree?
+L. Weighted graph edges: A-B 17, A-G 3, B-G 18, B-C 2, G-E 1, G-H 5, E-C 9, E-H 2, C-D 7, C-I 4, H-I 2, D-I 11, D-F 4, I-F 6. Cost of shortest path from A to B?
+M. Same graph. Starting at C, first four vertices visited by Dijkstra's algorithm as presented in lecture. No spaces or commas.
+N. Same graph. Sum of edge weights in the minimum spanning tree?
+O. Worst-case order of adding an element to the lecture hash table that already contains N elements.
+P. Probing hash table iterator access all elements is O(N). What does N represent? Choices: A internal array length, B client element count, C null count, D load limit, E load factor.
+Q. Chaining hash table has load limit 2.0, current load factor 1.5, N elements. Average-case order of adding an absent element?
+R. For 150,000 English words, compare S = sum of String lengths and T = number of Trie nodes. Most likely? Choices: A T significantly less than S, B roughly same, C T significantly more than S.
+S. Trie search with HashMap child references is worst-case O(N). What is N? Choices: A number of words, B number of nodes, C length of searched word, D alphabet size, E leaves.
+T. 11 integer values are inserted into an initially empty min-heap. How many leaves?
+U. Ternary heap stored in array with root at index 1. Parent index P for child index N? Choices: A N/3, B N/2, C (N/3)+1, D (N+1)/3, E N%3.
+V. Values 5, 10, 8, 12, 18, 5, 20, 2, 8 are added to an initially empty min-heap. How many total swaps?
+W. Minimum bits to encode 500 distinct colleges and universities?
+X. 0-1 knapsack time orders. Choices: A O(N^2) and O(N^2), B O(2^N) and O(N^2), C O(N^2 C^2) and O(NC), D O(2^N) and O(NC), E O(CN) and O(N^2 C^2).
+Y. Output of IntStream.range(4, 9).map(x -> x * 2 - 3).filter(y -> y < 9).sum()?`,
+      answers: [
+        "O(N)",
+        "10",
+        "5",
+        "90 seconds",
+        "44 seconds",
+        "2",
+        "175",
+        "001",
+        "A, D",
+        "O(V)",
+        "O(VE)",
+        "14",
+        "CBIH",
+        "24",
+        "O(N)",
+        "A",
+        "O(1)",
+        "A",
+        "C",
+        "6",
+        "D",
+        "5",
+        "9",
+        "D",
+        "12",
+      ],
+    },
+    {
+      id: "cs314-e3-q2",
+      title: "2. Graphs - isBridge",
+      points: 17,
+      type: "code",
+      prompt:
+        "Inside Graph, implement isBridge(String v1, String v2). The graph is connected, undirected, unweighted, and v1/v2 are adjacent. Temporarily remove the edge if useful, perform breadth-first search with a single Queue314<Vertex>, restore the graph before returning, and return whether the edge is a bridge.",
+      stub: `/* pre: v1 != null, v2 != null, !v1.equals(v2),
+   the vertices are adjacent, and this Graph is connected.
+   post: return true iff the specified edge is a bridge.
+   This Graph is not altered after this method completes. */
+public boolean isBridge(String v1, String v2) {
+
+}`,
+      answer: `public boolean isBridge(String v1, String v2) {
+    clearAll();
+    Vertex start = verts.get(v1);
+    Vertex other = verts.get(v2);
+    Edge removedEdge = start.removeEdge(other);
+    start.scratch = 1;
+    Queue314<Vertex> queue = new Queue314<>();
+    queue.enqueue(start);
+    while (!queue.isEmpty()) {
+        Vertex current = queue.dequeue();
+        for (Edge e : current.adjacent) {
+            Vertex dest = e.dest;
+            if (dest.scratch == 0) {
+                if (dest == other) {
+                    start.adjacent.add(removedEdge);
+                    return false;
+                }
+                dest.scratch = 1;
+                queue.enqueue(dest);
+            }
+        }
+    }
+    start.adjacent.add(removedEdge);
+    return true;
+}`,
+      rubric: [
+        { label: "Calls clearAll and initializes the start/target vertices correctly", points: 2 },
+        { label: "Removes, stores, and restores the tested edge on every return path", points: 4 },
+        { label: "Creates and uses one Queue314<Vertex> to perform BFS", points: 4 },
+        { label: "Uses scratch to avoid revisiting vertices", points: 3 },
+        { label: "Detects reaching the opposite endpoint and returns false promptly", points: 3 },
+        { label: "Returns true when BFS cannot reconnect the endpoints", points: 1 },
+      ],
+    },
+    {
+      id: "cs314-e3-q3",
+      title: "3. Trees - numInRange",
+      points: 16,
+      type: "code",
+      prompt:
+        "Inside IntBST, implement numInRange(low, high). Return the number of values in the BST in the inclusive range [low, high]. Use the BST property to avoid visiting unnecessary nodes. Do not create new data structures, arrays, class variables, or instance variables.",
+      stub: `/* pre: low <= high
+   post: per the problem description */
+public int numInRange(int low, int high) {
+
+}`,
+      answer: `public int numInRange(int low, int high) {
+    return help(root, low, high);
+}
+
+private int help(IntNode n, int low, int high) {
+    if (n == null) {
+        return 0;
+    } else if (n.val < low) {
+        return help(n.right, low, high);
+    } else if (n.val > high) {
+        return help(n.left, low, high);
+    } else {
+        return 1 + help(n.left, low, high) + help(n.right, low, high);
+    }
+}`,
+      rubric: [
+        { label: "Uses an appropriate helper and calls it correctly", points: 2 },
+        { label: "Handles the null/base case correctly", points: 3 },
+        { label: "Tests whether the current node value is in range and counts it", points: 2 },
+        { label: "Uses BST comparisons to skip unnecessary subtrees", points: 4 },
+        { label: "Recurses correctly to left and/or right children when needed", points: 4 },
+        { label: "Returns the correct count without disallowed structures or extra parameters", points: 1 },
+      ],
+    },
+    {
+      id: "cs314-e3-q4",
+      title: "4. Hash Tables - HIterator",
+      points: 17,
+      type: "code",
+      prompt:
+        "Inside HashTable314<E>, fully implement the inner HIterator class with instance variables, constructor if needed, hasNext, next, and remove. The table uses chaining with List<E>[] con and null empty buckets. hasNext must be O(1) and must not alter the iterator. Use bucket Iterators as needed and null out buckets emptied by remove.",
+      stub: `private class HIterator implements Iterator<E> {
+    // instance variables, constructor, hasNext, next, and remove
+
+}`,
+      answer: `private class HIterator implements Iterator<E> {
+    private int numToReturn;
+    private int bucketIndex;
+    private Iterator<E> currentIterator;
+
+    private HIterator() {
+        numToReturn = size;
+        if (numToReturn > 0) {
+            findNextBucket();
+        }
+    }
+
+    private void findNextBucket() {
+        while (con[bucketIndex] == null) {
+            bucketIndex++;
+        }
+        currentIterator = con[bucketIndex].iterator();
+    }
+
+    public boolean hasNext() {
+        return numToReturn > 0;
+    }
+
+    public E next() {
+        numToReturn--;
+        if (!currentIterator.hasNext()) {
+            bucketIndex++;
+            findNextBucket();
+        }
+        return currentIterator.next();
+    }
+
+    public void remove() {
+        currentIterator.remove();
+        size--;
+        if (con[bucketIndex].size() == 0) {
+            con[bucketIndex] = null;
+        }
+    }
+}`,
+      rubric: [
+        { label: "Declares useful private iterator state and initializes it correctly", points: 3 },
+        { label: "hasNext is correct, O(1), and does not mutate iterator state", points: 3 },
+        { label: "next finds and uses bucket iterators correctly across buckets", points: 5 },
+        { label: "next returns the correct element", points: 2 },
+        { label: "remove delegates to the current bucket iterator and updates outer size", points: 2 },
+        { label: "remove nulls emptied buckets and avoids disallowed List operations or extra structures", points: 2 },
+      ],
+    },
+  ],
+};
+
 function splitTracingQuestion(question: Question): Question[] {
   function splitPairedLegalPrompts(code: string) {
     return code
@@ -1194,7 +1939,7 @@ Meeting m2 = new Classroom(10, 10); // legal or syntax error`,
   return [question];
 }
 
-const exams = [examOne, examTwo].map((exam) => ({
+const exams = [examOne, examTwo, cs314ExamOne, cs314ExamTwo, cs314ExamThree].map((exam) => ({
   ...exam,
   questions: exam.questions.flatMap(splitTracingQuestion),
 }));
@@ -1301,9 +2046,11 @@ function normalizeAnswer(value: string) {
     .replace(/\s*,\s*/g, ",")
     .replace(/[;]/g, " ")
     .replace(/\s+/g, " ")
+    .replace(/^error$/i, "COMPILE ERROR")
     .replace(/^syntax error$/i, "COMPILE ERROR")
     .replace(/^compile error$/i, "COMPILE ERROR")
     .replace(/^runtime error$/i, "RUNTIME ERROR")
+    .replace(/^compiles$/i, "legal")
     .toLowerCase();
 }
 
@@ -1452,6 +2199,7 @@ export default function Home() {
 
   const exam = exams.find((item) => item.id === selectedExamId) ?? exams[0];
   const question = exam.questions[index];
+  const totalSections = exams.reduce((sum, item) => sum + item.questions.length, 0);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -1711,17 +2459,16 @@ export default function Home() {
         <section className="menu-hero">
           <div>
             <p className="eyebrow">DigitalExams</p>
-            <h1>CS 312 Practice Exam Workspace</h1>
+            <h1>CS Practice Exam Workspace</h1>
             <p className="lede">
-              Practice with the two UT Austin CS 312 sample CBEs. Objective tracing and expression
-              problems auto-grade; programming problems use the official rubric for self-grading after
-              submission.
+              Practice with UT Austin CS sample and Fall 2025 exams. Objective short-answer problems
+              auto-grade; programming problems use the official rubric and local Java tests where available.
             </p>
           </div>
           <div className="menu-summary">
             <FileText aria-hidden />
-            <span>2 exams</span>
-            <span>16 sections</span>
+            <span>{exams.length} exams</span>
+            <span>{totalSections} sections</span>
             <span>Monaco Java editor</span>
           </div>
         </section>
