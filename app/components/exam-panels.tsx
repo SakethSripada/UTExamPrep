@@ -25,12 +25,8 @@ export function JavaRunnerPanel({
         <div>
           <h2>
             <Terminal size={18} />
-            Local Java Tests
+            Tests
           </h2>
-          <p>
-            Tests run on this computer through the local Next server using the installed JDK. Code is not
-            uploaded.
-          </p>
         </div>
         <button
           className="primary-button"
@@ -44,16 +40,16 @@ export function JavaRunnerPanel({
 
       <div className={`java-status ${status?.available ? "available" : "missing"}`}>
         <ShieldCheck size={17} />
-        <span>{status?.message ?? "Checking local Java availability..."}</span>
+        <span>{status?.message ?? "Checking Java runner availability..."}</span>
       </div>
-      {!hasEditedCode ? <p className="java-hint">Edit the starter code to enable local tests.</p> : null}
+      {!hasEditedCode ? <p className="java-hint">Edit the starter code to enable tests.</p> : null}
 
       {result ? (
         <div className={`java-result ${result.ok ? "passed" : "failed"}`}>
           <strong>{result.message}</strong>
           {typeof result.passed === "number" && typeof result.total === "number" ? (
             <span className="java-estimate">
-              Local test estimate: {result.passed}/{result.total} checks passed
+              Test estimate: {result.passed}/{result.total} checks passed
             </span>
           ) : null}
           {result.stdout ? <pre>{result.stdout}</pre> : null}

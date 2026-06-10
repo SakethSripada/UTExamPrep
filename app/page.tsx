@@ -98,7 +98,7 @@ export default function Home() {
         if (!cancelled) {
           setJavaStatus({
             available: false,
-            message: "Local Java status could not be checked.",
+            message: "Java runner status could not be checked.",
           });
         }
       });
@@ -300,7 +300,7 @@ export default function Home() {
       const result = {
         ok: false,
         phase: "request",
-        message: "Add code before running local tests.",
+        message: "Add code before running tests.",
       };
       setJavaRuns((current) => ({ ...current, [item.id]: result }));
       return result;
@@ -322,7 +322,7 @@ export default function Home() {
       const result = {
         ok: false,
         phase: "network",
-        message: "Could not reach the local Java runner.",
+        message: "Could not reach the Java runner.",
       };
       setJavaRuns((current) => ({
         ...current,
@@ -428,6 +428,7 @@ export default function Home() {
                 <button
                   className={`map-item ${qIndex === index ? "active" : ""}`}
                   key={item.id}
+                  aria-current={qIndex === index ? "step" : undefined}
                   onClick={() => {
                     setIndex(qIndex);
                     setReferenceOpen(false);
@@ -678,4 +679,3 @@ export default function Home() {
     </main>
   );
 }
-

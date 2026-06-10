@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The standalone Go runner service is built and tested on its own.
+    "runner/**",
   ]),
 ]);
 
