@@ -156,6 +156,16 @@ cd runner
 RUNNER_AUTH_TOKEN=devtoken SANDBOX_MODE=none go run .
 ```
 
+Or use the repo scripts from the project root:
+
+```powershell
+.\scripts\run-local-runner.ps1
+```
+
+```bash
+./scripts/run-local-runner.sh
+```
+
 The runner listens on `http://localhost:8080` by default. `SANDBOX_MODE=none`
 is for local development only; it requires a local JDK on your `PATH`.
 
