@@ -145,6 +145,41 @@ Vercel Web Analytics on the site itself.
 
 ## Run it
 
+### Local dev quick start
+
+Use two terminals: one for the Java runner and one for the Next.js app.
+
+Terminal 1 — start the runner:
+
+```bash
+cd runner
+RUNNER_AUTH_TOKEN=devtoken SANDBOX_MODE=none go run .
+```
+
+The runner listens on `http://localhost:8080` by default. `SANDBOX_MODE=none`
+is for local development only; it requires a local JDK on your `PATH`.
+
+Terminal 2 — point the app at the runner, then start Next.js:
+
+```bash
+cat > .env.local <<'EOF'
+JAVA_RUNNER_URL=http://localhost:8080
+JAVA_RUNNER_TOKEN=devtoken
+EOF
+
+npm run dev
+```
+
+Open `http://localhost:3000`, pick an exam, and use a coding question. If port
+`3000` is already busy, Next.js will print the alternate local URL.
+
+Optional smoke checks:
+
+```bash
+curl -s localhost:8080/healthz
+curl -s localhost:8080/api/run -H 'Authorization: Bearer devtoken'
+```
+
 ### Docker (recommended; matches production)
 
 ```bash
