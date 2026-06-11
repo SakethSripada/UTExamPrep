@@ -289,23 +289,16 @@ button:disabled {
 }
 
 .topbar-title {
-  display: grid;
-  gap: 2px;
   min-width: 0;
 }
 
 .topbar-title span {
   overflow: hidden;
   color: #111827;
+  display: block;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.topbar-title strong {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
 }
 
 .topbar-actions {

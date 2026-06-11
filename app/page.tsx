@@ -396,10 +396,6 @@ export default function Home() {
           </button>
           <div className="topbar-title">
             <span>{exam.title}</span>
-            <strong>
-              {mode === "review" ? "Review" : "In progress"} · Question {index + 1} of{" "}
-              {exam.questions.length}
-            </strong>
           </div>
         </div>
         {mode === "exam" ? <ExamTimer /> : <div className="topbar-center" />}
