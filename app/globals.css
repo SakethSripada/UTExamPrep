@@ -59,8 +59,9 @@ button:disabled {
 .menu-shell {
   display: grid;
   align-content: start;
-  gap: 22px;
-  padding: clamp(48px, 7vh, 96px) clamp(18px, 4vw, 56px) 48px;
+  gap: clamp(16px, 3vh, 22px);
+  min-height: 100dvh;
+  padding: clamp(28px, 6vh, 72px) clamp(18px, 4vw, 56px) clamp(22px, 4vh, 42px);
 }
 
 .menu-hero {
@@ -73,6 +74,13 @@ button:disabled {
   margin: 0 auto;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--line);
+}
+
+.menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 10px;
 }
 
 .eyebrow {
@@ -100,10 +108,10 @@ button:disabled {
 
 .lede {
   max-width: 760px;
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   color: #4b5563;
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .menu-summary {
@@ -123,7 +131,7 @@ button:disabled {
 
 .exam-list {
   display: grid;
-  gap: 12px;
+  gap: 0;
   max-width: 1180px;
   width: 100%;
   margin: 0 auto;
@@ -132,9 +140,9 @@ button:disabled {
 .exam-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 20px;
+  gap: 18px;
   align-items: center;
-  padding: 20px 0;
+  padding: clamp(14px, 2.4vh, 20px) 0;
   border-bottom: 1px solid var(--line);
 }
 
@@ -148,6 +156,32 @@ button:disabled {
 .exam-row span {
   margin: 6px 0 0;
   color: var(--muted);
+}
+
+.request-exam-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  max-width: 1180px;
+  width: 100%;
+  margin: clamp(4px, 1vh, 10px) auto 0;
+  padding: 16px 0 0;
+}
+
+.request-exam-strip h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.request-exam-strip p {
+  max-width: 700px;
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .topbar {
@@ -1127,6 +1161,19 @@ button:disabled {
   box-shadow: 0 24px 70px rgba(17, 24, 39, 0.28);
 }
 
+.request-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 18px;
+  width: min(760px, calc(100vw - clamp(24px, 6vw, 64px)));
+  max-height: calc(100dvh - clamp(24px, 6vw, 64px));
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(17, 24, 39, 0.28);
+}
+
 .modal-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1135,14 +1182,16 @@ button:disabled {
   padding: clamp(20px, 3vw, 30px) clamp(20px, 3vw, 30px) 0;
 }
 
-.submit-modal h2 {
+.submit-modal h2,
+.request-modal h2 {
   margin: 0;
   color: #111827;
   font-size: clamp(25px, 4vw, 40px);
   line-height: 1.08;
 }
 
-.submit-modal p {
+.submit-modal p,
+.request-modal p {
   max-width: 850px;
   margin: 12px 0 0;
   color: var(--muted);
@@ -1240,6 +1289,101 @@ button:disabled {
   background: #ffffff;
 }
 
+.request-form {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 clamp(20px, 3vw, 30px) clamp(18px, 3vw, 28px);
+}
+
+.request-form label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.request-form input,
+.request-form textarea {
+  min-width: 0;
+  width: 100%;
+  padding: 11px 12px;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 400;
+}
+
+.request-form textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.request-form input:focus,
+.request-form textarea:focus {
+  border-color: var(--brand);
+  outline: 2px solid rgba(15, 93, 127, 0.18);
+}
+
+.request-form input:disabled,
+.request-form textarea:disabled {
+  color: #667085;
+  background: #eef1f5;
+  border-color: var(--line);
+}
+
+.file-drop {
+  padding: 16px;
+  color: #1f2937;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
+  border-radius: 6px;
+}
+
+.file-drop svg {
+  color: var(--brand);
+}
+
+.request-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.request-form .modal-actions {
+  margin: 2px clamp(-30px, -3vw, -20px) clamp(-28px, -3vw, -18px);
+}
+
+.request-success {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  overflow: auto;
+  padding: 0 clamp(20px, 3vw, 30px) clamp(22px, 3vw, 30px);
+}
+
+.request-success strong {
+  color: #111827;
+  font-size: 20px;
+}
+
+.request-success p {
+  margin: 0;
+  font-size: 15px;
+}
+
+.form-error {
+  margin: -2px 0 0;
+  color: var(--bad);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .review-panel {
   display: grid;
   gap: 20px;
@@ -1313,8 +1457,23 @@ button:disabled {
 @media (max-width: 860px) {
   .menu-hero,
   .exam-row,
+  .request-exam-strip,
   .workbench {
     grid-template-columns: 1fr;
+  }
+
+  .menu-hero {
+    align-items: start;
+  }
+
+  .menu-actions,
+  .request-exam-strip .primary-button {
+    justify-self: stretch;
+  }
+
+  .menu-actions .secondary-button,
+  .request-exam-strip .primary-button {
+    flex: 1;
   }
 
   .menu-summary {
@@ -1394,7 +1553,25 @@ button:disabled {
 
 @media (max-width: 560px) {
   .menu-shell {
-    padding: 28px 16px;
+    padding: 24px 16px;
+  }
+
+  .menu-hero h1 {
+    font-size: clamp(29px, 10vw, 36px);
+  }
+
+  .lede {
+    font-size: 15px;
+  }
+
+  .menu-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .exam-row .primary-button,
+  .request-exam-strip .primary-button {
+    width: 100%;
   }
 
   .question-header,
@@ -1411,7 +1588,8 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .submit-modal {
+  .submit-modal,
+  .request-modal {
     width: calc(100vw - 20px);
     max-height: calc(100dvh - 20px);
   }
@@ -1446,6 +1624,18 @@ button:disabled {
     width: 100%;
   }
 
+  .request-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .request-form {
+    padding: 0 14px 16px;
+  }
+
+  .request-form .modal-actions {
+    margin: 0 -14px -16px;
+  }
+
   .floating-reference-button {
     right: 12px;
     bottom: 12px;
@@ -1461,5 +1651,39 @@ button:disabled {
 
   .floating-reference-heading strong {
     white-space: normal;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 861px) {
+  .menu-shell {
+    gap: 14px;
+    padding-top: 26px;
+    padding-bottom: 24px;
+  }
+
+  .menu-hero {
+    padding-bottom: 16px;
+  }
+
+  .menu-hero h1 {
+    font-size: clamp(30px, 3.3vw, 40px);
+  }
+
+  .lede {
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .exam-row {
+    padding: 13px 0;
+  }
+
+  .exam-row h2 {
+    font-size: 19px;
+  }
+
+  .request-exam-strip {
+    padding-top: 12px;
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import {
   BookOpen,
@@ -9,9 +10,12 @@ import {
   ChevronRight,
   ClipboardCheck,
   Code2,
+  FileText,
   Flag,
   Home as HomeIcon,
   RotateCcw,
+  Send,
+  Upload,
   Terminal,
   X,
 } from "lucide-react";
@@ -68,6 +72,10 @@ export default function Home() {
   const [submitRunning, setSubmitRunning] = useState(false);
   const [pendingTargetId, setPendingTargetId] = useState<string | null>(null);
   const [referenceOpen, setReferenceOpen] = useState(false);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
+  const [examRequestSent, setExamRequestSent] = useState(false);
+  const [examRequestSubmitting, setExamRequestSubmitting] = useState(false);
+  const [examRequestError, setExamRequestError] = useState<string | null>(null);
 
   const exam = exams.find((item) => item.id === selectedExamId) ?? exams[0];
   const question = exam.questions[index];
@@ -311,6 +319,28 @@ export default function Home() {
     setSavedExamIds((current) => current.filter((examId) => examId !== selectedExamId));
   }
 
+  async function submitExamRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setExamRequestSubmitting(true);
+    setExamRequestError(null);
+    try {
+      const response = await fetch("/api/exam-requests", {
+        method: "POST",
+        body: new FormData(event.currentTarget),
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(result.error ?? "Could not submit the request.");
+      }
+      event.currentTarget.reset();
+      setExamRequestSent(true);
+    } catch (error) {
+      setExamRequestError(error instanceof Error ? error.message : "Could not submit the request.");
+    } finally {
+      setExamRequestSubmitting(false);
+    }
+  }
+
   async function runJavaTests(item: Question): Promise<JavaRunResult | null> {
     const code = ((answers[item.id] as string | undefined) ?? item.stub ?? "").trim();
     if (!hasEditedCodeAnswer(item, answers)) {
@@ -356,10 +386,16 @@ export default function Home() {
           <div>
             <h1> UT Austin CS Practice Exams</h1>
           </div>
-          <button className="secondary-button" onClick={resetAllExams}>
-            <RotateCcw size={17} />
-            Reset All
-          </button>
+          <div className="menu-actions">
+            <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
+              <Upload size={17} />
+              Add an Exam
+            </button>
+            <button className="secondary-button" onClick={resetAllExams}>
+              <RotateCcw size={17} />
+              Reset All
+            </button>
+          </div>
         </section>
 
         <section className="exam-list" aria-label="Available exams">
@@ -383,6 +419,105 @@ export default function Home() {
             );
           })}
         </section>
+
+        {requestModalOpen ? (
+          <div className="modal-backdrop" role="presentation">
+            <section className="request-modal" role="dialog" aria-modal="true" aria-labelledby="exam-request-title">
+              <div className="modal-heading">
+                <div>
+                  <h2 id="exam-request-title">Add an Exam</h2>
+                  <p>Upload the PDF and add whatever details help identify the class and instructor.</p>
+                </div>
+                <button
+                  className="modal-close"
+                  aria-label="Close request dialog"
+                  onClick={() => {
+                    setRequestModalOpen(false);
+                    setExamRequestSent(false);
+                    setExamRequestError(null);
+                  }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {examRequestSent ? (
+                <div className="request-success">
+                  <strong>Request submitted.</strong>
+                  <p>The PDF and details were saved locally in the exam request inbox.</p>
+                  <button
+                    className="primary-button"
+                    onClick={() => {
+                      setRequestModalOpen(false);
+                      setExamRequestSent(false);
+                      setExamRequestError(null);
+                    }}
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <form className="request-form" onSubmit={submitExamRequest}>
+                  <label className="file-drop">
+                    <Upload size={22} />
+                    <span>PDF file</span>
+                    <input type="file" name="pdf" accept="application/pdf,.pdf" required disabled={examRequestSubmitting} />
+                  </label>
+
+                  <div className="request-field-grid">
+                    <label>
+                      <span>Exam name</span>
+                      <input name="examName" placeholder="Midterm 2, Final, Sample CBE..." required disabled={examRequestSubmitting} />
+                    </label>
+                    <label>
+                      <span>Course</span>
+                      <input name="course" placeholder="CS 312" required disabled={examRequestSubmitting} />
+                    </label>
+                    <label>
+                      <span>Teacher</span>
+                      <input name="teacher" placeholder="Instructor name" disabled={examRequestSubmitting} />
+                    </label>
+                    <label>
+                      <span>Term</span>
+                      <input name="term" placeholder="Fall 2025" disabled={examRequestSubmitting} />
+                    </label>
+                  </div>
+
+                  <label>
+                    <span>Anything else?</span>
+                    <textarea
+                      name="notes"
+                      rows={4}
+                      placeholder="Solutions included, topics covered, preferred title..."
+                      disabled={examRequestSubmitting}
+                    />
+                  </label>
+
+                  {examRequestError ? <p className="form-error">{examRequestError}</p> : null}
+
+                  <div className="modal-actions">
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      disabled={examRequestSubmitting}
+                      onClick={() => {
+                        setRequestModalOpen(false);
+                        setExamRequestSent(false);
+                        setExamRequestError(null);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button className="primary-button" type="submit" disabled={examRequestSubmitting}>
+                      <Send size={17} />
+                      {examRequestSubmitting ? "Submitting" : "Submit Request"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </section>
+          </div>
+        ) : null}
       </main>
     );
   }
