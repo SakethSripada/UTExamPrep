@@ -58,10 +58,11 @@ button:disabled {
 
 .menu-shell {
   display: grid;
-  align-content: start;
+  grid-template-rows: auto auto auto;
+  align-content: safe center;
   gap: clamp(16px, 3vh, 22px);
   min-height: 100dvh;
-  padding: clamp(28px, 6vh, 72px) clamp(18px, 4vw, 56px) clamp(22px, 4vh, 42px);
+  padding: clamp(24px, 5vh, 56px) clamp(18px, 4vw, 56px);
 }
 
 .menu-hero {
@@ -1553,7 +1554,7 @@ button:disabled {
 
 @media (max-width: 560px) {
   .menu-shell {
-    padding: 24px 16px;
+    padding: 22px 16px;
   }
 
   .menu-hero h1 {
@@ -1656,9 +1657,10 @@ button:disabled {
 
 @media (max-height: 760px) and (min-width: 861px) {
   .menu-shell {
+    align-content: safe center;
     gap: 14px;
-    padding-top: 26px;
-    padding-bottom: 24px;
+    padding-top: 22px;
+    padding-bottom: 22px;
   }
 
   .menu-hero {

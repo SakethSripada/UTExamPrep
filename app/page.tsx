@@ -419,7 +419,6 @@ export default function Home() {
             );
           })}
         </section>
-
         {requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">
             <section className="request-modal" role="dialog" aria-modal="true" aria-labelledby="exam-request-title">
