@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DigitalExams">
-  <rect width="64" height="64" rx="14" fill="#0b5c7a"/>
-  <path fill="#ffffff" d="M20 10h19l11 11v33H20z"/>
-  <path fill="#c7eef9" d="M38 10v12h12z"/>
-  <path fill="#073f55" d="M26 27h18v4H26zm0 8h18v4H26zm0 8h10v4H26z"/>
-  <path fill="#f7b955" d="M17 37l7 7 16-17 5 5-21 22-12-12z"/>
-  <path fill="#073f55" fill-opacity=".18" d="M20 54h30V21l-4-4v33H20z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DigitalExams exam prep">
+  <rect width="64" height="64" rx="14" fill="#12343b"/>
+  <path fill="#e9fbff" d="M17 9h25l8 8v34c0 3-2 5-5 5H17c-3 0-5-2-5-5V14c0-3 2-5 5-5z"/>
+  <path fill="#9edbe4" d="M42 9v9h8z"/>
+  <path fill="#d8eef2" d="M20 23h17v4H20zm0 10h12v4H20zm0 10h9v4h-9z"/>
+  <path fill="#18a77c" d="m23 38 4 4 9-10 4 4-13 14-8-8z"/>
+  <circle cx="47" cy="43" r="11" fill="#f6c85f"/>
+  <path fill="#12343b" d="M46 35h3v9l6 3-2 4-7-4z"/>
+  <path fill="#ff7a59" d="m12 51 30-30 7 7-30 30-8 2z"/>
+  <path fill="#fff2c8" d="m42 21 4-4 7 7-4 4z"/>
+  <path fill="#12343b" d="m11 60 2-9 6 6z"/>
 </svg>

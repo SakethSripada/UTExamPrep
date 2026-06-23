@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DigitalExams">
-  <rect width="64" height="64" rx="14" fill="#0b5c7a"/>
-  <path fill="#ffffff" d="M20 10h19l11 11v33H20z"/>
-  <path fill="#c7eef9" d="M38 10v12h12z"/>
-  <path fill="#073f55" d="M26 27h18v4H26zm0 8h18v4H26zm0 8h10v4H26z"/>
-  <path fill="#f7b955" d="M17 37l7 7 16-17 5 5-21 22-12-12z"/>
-  <path fill="#073f55" fill-opacity=".18" d="M20 54h30V21l-4-4v33H20z"/>
-</svg>

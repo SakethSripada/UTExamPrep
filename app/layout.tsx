@@ -16,10 +16,8 @@ export const metadata: Metadata = {
   title: "DigitalExams | CS 312 Practice",
   description: "A digital practice exam workspace for UT Austin CS 312 sample exams.",
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
+    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    shortcut: ["/favicon.ico"],
   },
 };
 
