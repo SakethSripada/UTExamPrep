@@ -29,6 +29,7 @@ const (
 type runRequest struct {
 	QuestionID string `json:"questionId"`
 	Code       string `json:"code"`
+	Language   string `json:"language"`
 }
 
 type runResponse struct {
@@ -42,9 +43,10 @@ type runResponse struct {
 }
 
 type statusResponse struct {
-	Available bool   `json:"available"`
-	Message   string `json:"message"`
-	Sandbox   string `json:"sandbox"`
+	Available bool     `json:"available"`
+	Message   string   `json:"message"`
+	Sandbox   string   `json:"sandbox"`
+	Languages []string `json:"languages,omitempty"`
 }
 
 var resultPattern = regexp.MustCompile(`RESULT\s+(\d+)/(\d+)`)
@@ -222,18 +224,21 @@ func (s *server) requireAuth(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func (s *server) handleStatus(w http.ResponseWriter, _ *http.Request) {
-	if !s.sandbox.javaAvailable() {
+	languages := s.sandbox.availableLanguages()
+	if len(languages) == 0 {
 		writeJSON(w, http.StatusOK, statusResponse{
 			Available: false,
-			Message:   "The Java runner is up, but no JDK was found on it.",
+			Message:   "The code runner is up, but no supported language runtime was found on it.",
 			Sandbox:   string(s.sandbox.mode),
+			Languages: languages,
 		})
 		return
 	}
 	writeJSON(w, http.StatusOK, statusResponse{
 		Available: true,
-		Message:   fmt.Sprintf("Java runner ready: %s; runtime: %s", s.sandbox.javacVersion, s.sandbox.javaVersion),
+		Message:   fmt.Sprintf("Code runner ready: %s", strings.Join(s.sandbox.runtimeMessages(), "; ")),
 		Sandbox:   string(s.sandbox.mode),
+		Languages: languages,
 	})
 }
 
@@ -260,8 +265,12 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, runResponse{OK: false, Phase: "request", Message: "Invalid JSON request."})
 		return
 	}
+	language := strings.ToLower(strings.TrimSpace(req.Language))
+	if language == "" {
+		language = "java"
+	}
 	if req.QuestionID == "" || strings.TrimSpace(req.Code) == "" {
-		writeJSON(w, http.StatusBadRequest, runResponse{OK: false, Phase: "request", Message: "Missing question id or Java code."})
+		writeJSON(w, http.StatusBadRequest, runResponse{OK: false, Phase: "request", Message: "Missing question id or code."})
 		return
 	}
 	if len(req.Code) > maxCodeLength {
@@ -269,14 +278,14 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files, ok := buildHarness(req.QuestionID, req.Code)
+	files, ok := buildHarnessForLanguage(req.QuestionID, language, req.Code)
 	if !ok {
-		writeJSON(w, http.StatusNotFound, runResponse{OK: false, Phase: "unsupported", Message: "No Java tests are available for this question."})
+		writeJSON(w, http.StatusNotFound, runResponse{OK: false, Phase: "unsupported", Message: "No tests are available for this question and language."})
 		return
 	}
 
-	if !s.sandbox.javaAvailable() {
-		writeJSON(w, http.StatusOK, runResponse{OK: false, Phase: "java", Message: "The Java runner has no working JDK."})
+	if !s.sandbox.languageAvailable(language) {
+		writeJSON(w, http.StatusOK, runResponse{OK: false, Phase: "java", Message: "The runner has no working runtime for this language."})
 		return
 	}
 
@@ -291,13 +300,13 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.metrics.record(device, ip)
-	resp := s.execute(req.QuestionID, files)
-	log.Printf("run question=%s phase=%s ok=%t client=%s elapsed=%s",
-		req.QuestionID, resp.Phase, resp.OK, logClient(device, ip), time.Since(start).Round(time.Millisecond))
+	resp := s.execute(language, files)
+	log.Printf("run question=%s language=%s phase=%s ok=%t client=%s elapsed=%s",
+		req.QuestionID, language, resp.Phase, resp.OK, logClient(device, ip), time.Since(start).Round(time.Millisecond))
 	writeJSON(w, http.StatusOK, resp)
 }
 
-func (s *server) execute(questionID string, files map[string]string) runResponse {
+func (s *server) execute(language string, files map[string]string) runResponse {
 	workdir, err := os.MkdirTemp(s.workRoot, "run-")
 	if err != nil {
 		log.Printf("error: creating workdir: %v", err)
@@ -322,6 +331,10 @@ func (s *server) execute(questionID string, files map[string]string) runResponse
 		}
 	}
 
+	if language == "python" {
+		return responseFromRun(s.sandbox.runPythonTests(workdir, s.runTimeout))
+	}
+
 	compile := s.sandbox.compile(names, workdir, s.compileTimeout)
 	if compile.startErr != nil {
 		log.Printf("error: starting javac: %v", compile.startErr)
@@ -344,6 +357,14 @@ func (s *server) execute(questionID string, files map[string]string) runResponse
 		return runResponse{OK: false, Phase: "internal", Message: "The runner could not start the tests."}
 	}
 
+	return responseFromRun(run)
+}
+
+func responseFromRun(run execResult) runResponse {
+	if run.startErr != nil {
+		log.Printf("error: starting tests: %v", run.startErr)
+		return runResponse{OK: false, Phase: "internal", Message: "The runner could not start the tests."}
+	}
 	passed, total, found := parseResult(run.stdout)
 	// A genuine full pass requires a clean exit and a complete, matching
 	// RESULT line — an early System.exit(0) does not count.

@@ -1,4 +1,8 @@
-export type QuestionType = "short" | "code";
+export type QuestionType = "short" | "code" | "choice" | "free-response";
+
+export type CodeLanguage = "java" | "python";
+
+export type GradingMode = "auto" | "code" | "self" | "hybrid";
 
 export type Rubric = {
   label: string;
@@ -10,18 +14,34 @@ export type Question = {
   title: string;
   points: number;
   type: QuestionType;
+  gradingMode?: GradingMode;
   prompt: string;
   reference?: string;
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   code?: string;
   stub?: string;
+  language?: CodeLanguage;
   answer?: string;
   answers?: string[];
   answerPoints?: number[];
+  choices?: Choice[];
+  correctChoiceIds?: string[];
+  allowMultiple?: boolean;
+  officialSolution?: string;
+  sourceNote?: string;
   rubric?: Rubric[];
   // A short-answer part that was thrown out after the exam. It renders inline in
   // sequence (e.g. as "E") with an explanatory note and no answer input, and its
   // points are awarded to everyone automatically.
   thrownOut?: ThrownOutPart;
+};
+
+export type Choice = {
+  id: string;
+  text: string;
 };
 
 export type ThrownOutPart = {
@@ -35,7 +55,35 @@ export type Exam = {
   id: string;
   title: string;
   subtitle: string;
+  course?: string;
+  subject?: string;
+  term?: string;
+  examType?: string;
+  sourceNotice?: string;
+  sourceFiles?: ExamSourceFile[];
   questions: Question[];
+};
+
+export type ExamSourceFile = {
+  label: string;
+  path?: string;
+  url?: string;
+  role: "exam" | "solution" | "support";
+};
+
+export type ExamCatalogEntry = {
+  id: string;
+  title: string;
+  subtitle: string;
+  course: string;
+  subject: string;
+  term: string;
+  examType: string;
+  questionCount: number;
+  points: number;
+  autoGraded: boolean;
+  sourceNotice?: string;
+  status?: "ready" | "source-qc" | "digitizing";
 };
 
 export type AnswerState = Record<string, string | string[]>;

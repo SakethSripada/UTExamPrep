@@ -43,7 +43,14 @@ func declassify(code string) string {
 // buildHarness returns the Java source files for a question with the
 // student's code spliced in, or false if the question has no tests.
 func buildHarness(questionID, code string) (map[string]string, bool) {
+	return buildHarnessForLanguage(questionID, "java", code)
+}
+
+func buildHarnessForLanguage(questionID, language, code string) (map[string]string, bool) {
 	if !questionIDPattern.MatchString(questionID) {
+		return nil, false
+	}
+	if language != "java" && language != "python" {
 		return nil, false
 	}
 	dir := "questions/" + questionID
@@ -65,6 +72,16 @@ func buildHarness(questionID, code string) (map[string]string, bool) {
 	files := make(map[string]string, len(entries))
 	for _, entry := range entries {
 		if entry.IsDir() || entry.Name() == "manifest.json" {
+			continue
+		}
+		ext := ""
+		if dot := strings.LastIndexByte(entry.Name(), '.'); dot >= 0 {
+			ext = entry.Name()[dot+1:]
+		}
+		if language == "java" && ext != "java" {
+			continue
+		}
+		if language == "python" && ext != "py" {
 			continue
 		}
 		data, err := questionsFS.ReadFile(dir + "/" + entry.Name())

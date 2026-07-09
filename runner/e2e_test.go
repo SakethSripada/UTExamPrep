@@ -40,7 +40,12 @@ func e2eServer(t *testing.T) *server {
 
 func postRun(t *testing.T, handler http.Handler, questionID, code string) (int, runResponse) {
 	t.Helper()
-	body, err := json.Marshal(runRequest{QuestionID: questionID, Code: code})
+	return postRunLanguage(t, handler, questionID, "java", code)
+}
+
+func postRunLanguage(t *testing.T, handler http.Handler, questionID, language, code string) (int, runResponse) {
+	t.Helper()
+	body, err := json.Marshal(runRequest{QuestionID: questionID, Language: language, Code: code})
 	if err != nil {
 		t.Fatalf("marshal: %v", err)
 	}
@@ -50,6 +55,31 @@ func postRun(t *testing.T, handler http.Handler, questionID, code string) (int, 
 		t.Fatalf("unmarshal %q: %v", rec.Body, err)
 	}
 	return rec.Code, resp
+}
+
+func TestPythonSmokePasses(t *testing.T) {
+	box, err := newSandbox(os.Getenv("SANDBOX_MODE"))
+	if err != nil {
+		t.Fatalf("newSandbox: %v", err)
+	}
+	if !box.pythonAvailable() {
+		t.Skip("no Python 3 available; skipping Python end-to-end test")
+	}
+	srv := newServer(serverConfig{
+		sandbox:        box,
+		compileTimeout: 60 * time.Second,
+		runTimeout:     10 * time.Second,
+		queueTimeout:   5 * time.Minute,
+		concurrency:    1,
+		devicePerMin:   100_000, deviceBurst: 100_000,
+		ipPerMin: 100_000, ipBurst: 100_000,
+		globalPerMin: 100_000, globalBurst: 100_000,
+		rateMaxKeys: 1000,
+	})
+	_, resp := postRunLanguage(t, srv.routes(), "py-smoke", "python", "def double(value):\n    return value * 2\n")
+	if !resp.OK || resp.Phase != "test" {
+		t.Fatalf("Python smoke failed: %+v", resp)
+	}
 }
 
 // TestReferenceSolutionsAllPass is the grading-accuracy gate: the official

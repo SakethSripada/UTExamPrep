@@ -144,6 +144,60 @@ export function ReviewPanel({
     );
   }
 
+  if (question.type === "choice") {
+    return (
+      <section className="review-panel">
+        <h2>
+          <ListChecks size={18} />
+          Official Answers
+        </h2>
+        <p>
+          Correct choice{question.correctChoiceIds?.length === 1 ? "" : "s"}:{" "}
+          <strong>{question.correctChoiceIds?.join(", ") ?? "See official solution."}</strong>
+        </p>
+        {question.officialSolution || question.answer ? <CodeBlock code={question.officialSolution ?? question.answer} className="solution" /> : null}
+      </section>
+    );
+  }
+
+  if (question.type === "free-response") {
+    return (
+      <section className="review-panel">
+        <h2>
+          <ListChecks size={18} />
+          Self-Grade
+        </h2>
+        <label className="manual-score">
+          <span>Your score for this problem</span>
+          <input
+            type="number"
+            min="0"
+            max={question.points}
+            step="0.5"
+            value={manual[question.id] ?? 0}
+            onChange={(event) =>
+              setManual((current) => ({
+                ...current,
+                [question.id]: Number(event.target.value),
+              }))
+            }
+          />
+          <strong>/ {question.points}</strong>
+        </label>
+        <div className="rubric">
+          {question.rubric?.map((item) => (
+            <div key={item.label}>
+              <span>{item.label}</span>
+              <strong>{item.points}</strong>
+            </div>
+          ))}
+        </div>
+        <h3>Official solution</h3>
+        <CodeBlock code={question.officialSolution ?? question.answer} className="solution" />
+      </section>
+    );
+  }
+
   return (
     <section className="review-panel">
       <h2>

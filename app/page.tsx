@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import {
@@ -10,7 +11,6 @@ import {
   ChevronRight,
   ClipboardCheck,
   Code2,
-  FileText,
   Flag,
   Home as HomeIcon,
   RotateCcw,
@@ -19,11 +19,11 @@ import {
   Terminal,
   X,
 } from "lucide-react";
-import { exams } from "@/app/data/exams";
+import { examCatalog, loadExam } from "@/app/data/exams";
 import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
 import { InlineProseContent, MixedContent } from "@/app/components/mixed-content";
-import type { AnswerState, Exam, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
+import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import {
   answerPlaceholder,
   buildObjectiveParts,
@@ -38,8 +38,11 @@ import {
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
-  loading: () => <div className="editor-loading">Loading Java editor...</div>,
+  loading: () => <div className="editor-loading">Loading code editor...</div>,
 });
+
+const catalogExamIds = examCatalog.map((item) => item.id);
+const readyExamCount = examCatalog.filter((item) => item.status !== "source-qc").length;
 
 // A stable, anonymous per-browser id. It is never tied to a login; the runner
 // uses it only for fair per-user rate limiting (so students sharing a campus
@@ -58,7 +61,10 @@ function deviceHeaders(): Record<string, string> {
   }
 }
 export default function Home() {
-  const [selectedExamId, setSelectedExamId] = useState(exams[0].id);
+  const [selectedExamId, setSelectedExamId] = useState(examCatalog[0].id);
+  const [exam, setExam] = useState<Exam | null>(null);
+  const [loadingExamId, setLoadingExamId] = useState<string | null>(null);
+  const [examLoadError, setExamLoadError] = useState<string | null>(null);
   const [mode, setMode] = useState<"menu" | "exam" | "review">("menu");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerState>({});
@@ -76,24 +82,62 @@ export default function Home() {
   const [examRequestSent, setExamRequestSent] = useState(false);
   const [examRequestSubmitting, setExamRequestSubmitting] = useState(false);
   const [examRequestError, setExamRequestError] = useState<string | null>(null);
+  const [subjectFilter, setSubjectFilter] = useState("All");
+  const [courseFilter, setCourseFilter] = useState("All");
 
-  const exam = exams.find((item) => item.id === selectedExamId) ?? exams[0];
-  const question = exam.questions[index];
+  const question = exam?.questions[index] ?? null;
+  const subjects = ["All", ...Array.from(new Set(examCatalog.map((item) => item.subject))).sort()];
+  const courses = [
+    "All",
+    ...Array.from(
+      new Set(
+        examCatalog
+          .filter((item) => subjectFilter === "All" || item.subject === subjectFilter)
+          .map((item) => item.course),
+      ),
+    ).sort(),
+  ];
+  const visibleExams = examCatalog.filter(
+    (item) =>
+      (subjectFilter === "All" || item.subject === subjectFilter) &&
+      (courseFilter === "All" || item.course === courseFilter),
+  );
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const persisted = readPersistedExam(exams[0].id);
-      setAnswers(persisted.answers ?? {});
-      setManual(persisted.manual ?? {});
-      setFlags(persisted.flags ?? {});
-      setSavedExamIds(readSavedExamIds());
-      setStorageReady(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
+    let cancelled = false;
+    async function loadInitialExam() {
+      try {
+        const loaded = await loadExam(examCatalog[0].id);
+        if (cancelled) {
+          return;
+        }
+        const persisted = readPersistedExam(loaded.id, loaded);
+        setExam(loaded);
+        setAnswers(persisted.answers ?? {});
+        setManual(persisted.manual ?? {});
+        setFlags(persisted.flags ?? {});
+      } catch {
+        if (!cancelled) {
+          setExamLoadError("The first exam could not be loaded. The catalog is still available.");
+        }
+      } finally {
+        if (!cancelled) {
+          setSavedExamIds(readSavedExamIds(catalogExamIds));
+          setStorageReady(true);
+        }
+      }
+    }
+    void loadInitialExam();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
     if (!storageReady) {
+      return;
+    }
+    if (!exam) {
       return;
     }
     if (
@@ -101,14 +145,14 @@ export default function Home() {
       Object.keys(manual).length === 0 &&
       Object.keys(flags).length === 0
     ) {
-      clearPersistedExam(selectedExamId);
+      clearPersistedExam(exam.id);
       return;
     }
     window.localStorage.setItem(
-      `digitalexams:${selectedExamId}`,
+      `digitalexams:${exam.id}`,
       JSON.stringify({ answers, manual, flags }),
     );
-  }, [answers, flags, manual, selectedExamId, storageReady]);
+  }, [answers, exam, flags, manual, storageReady]);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,6 +191,9 @@ export default function Home() {
   }, [index, pendingTargetId]);
 
   const totals = (() => {
+    if (!exam) {
+      return { autoEarned: 0, autoPossible: 0, manualEarned: 0, manualPossible: 0, earned: 0, possible: 0 };
+    }
     let autoEarned = 0;
     let autoPossible = 0;
     let manualEarned = 0;
@@ -165,6 +212,14 @@ export default function Home() {
             autoEarned += item.answerPoints?.[answerIndex] ?? item.points / item.answers!.length;
           }
         });
+      } else if (item.type === "choice" && item.correctChoiceIds?.length) {
+        autoPossible += item.points;
+        const value = answers[item.id];
+        const given = Array.isArray(value) ? value : typeof value === "string" && value ? [value] : [];
+        const expected = item.correctChoiceIds;
+        if (given.length === expected.length && expected.every((choiceId) => given.includes(choiceId))) {
+          autoEarned += item.points;
+        }
       } else {
         manualPossible += item.points;
         manualEarned += Math.min(item.points, Math.max(0, manual[item.id] ?? 0));
@@ -185,6 +240,13 @@ export default function Home() {
       const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
       return item.answers?.every((_, answerIndex) => Boolean(userAnswers[answerIndex]?.trim())) ?? false;
     }
+    if (item.type === "choice") {
+      const value = answers[item.id];
+      return Array.isArray(value) ? value.length > 0 : Boolean(value);
+    }
+    if (item.type === "free-response") {
+      return Boolean(manual[item.id] || ((answers[item.id] as string | undefined) ?? "").trim());
+    }
     return hasEditedCodeAnswer(item, answers);
   }
 
@@ -192,12 +254,25 @@ export default function Home() {
     if (item.type === "short") {
       return Boolean(((answers[item.id] as string[] | undefined) ?? []).some((answer) => answer?.trim()));
     }
+    if (item.type === "choice") {
+      const value = answers[item.id];
+      return Array.isArray(value) ? value.length > 0 : Boolean(value);
+    }
+    if (item.type === "free-response") {
+      return Boolean(((answers[item.id] as string | undefined) ?? "").trim());
+    }
     return hasEditedCodeAnswer(item, answers);
   }
 
   function getMissingParts(item: Question) {
     if (item.type === "code") {
       return questionAnswered(item) ? [] : [{ label: "Code response", targetId: `${item.id}-editor` }];
+    }
+    if (item.type === "choice") {
+      return questionAnswered(item) ? [] : [{ label: "Selected answer", targetId: `${item.id}-choices` }];
+    }
+    if (item.type === "free-response") {
+      return questionAnswered(item) ? [] : [{ label: "Self-graded response", targetId: `${item.id}-free-response` }];
     }
     const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
     return buildObjectiveParts(item)
@@ -209,13 +284,15 @@ export default function Home() {
       }));
   }
 
-  const incompleteSections: IncompleteSection[] = exam.questions
-    .map((item, questionIndex) => ({
-      question: item,
-      questionIndex,
-      missingParts: getMissingParts(item),
-    }))
-    .filter((section) => section.missingParts.length > 0);
+  const incompleteSections: IncompleteSection[] = exam
+    ? exam.questions
+        .map((item, questionIndex) => ({
+          question: item,
+          questionIndex,
+          missingParts: getMissingParts(item),
+        }))
+        .filter((section) => section.missingParts.length > 0)
+    : [];
 
   function setShortAnswer(questionId: string, answerIndex: number, value: string) {
     setAnswers((current) => {
@@ -238,23 +315,64 @@ export default function Home() {
     });
   }
 
-  function startExam(target: Exam) {
-    const persisted = readPersistedExam(target.id);
-    setSelectedExamId(target.id);
-    setAnswers(persisted.answers ?? {});
-    setManual(persisted.manual ?? {});
-    setFlags(persisted.flags ?? {});
-    setMode("exam");
-    setIndex(0);
-    setReferenceOpen(false);
+  function setChoiceAnswer(item: Question, choiceId: string, checked: boolean) {
+    setAnswers((current) => {
+      if (item.allowMultiple) {
+        const previous = Array.isArray(current[item.id]) ? ([...(current[item.id] as string[])] as string[]) : [];
+        const next = checked ? Array.from(new Set([...previous, choiceId])) : previous.filter((id) => id !== choiceId);
+        if (next.length === 0) {
+          const copy = { ...current };
+          delete copy[item.id];
+          return copy;
+        }
+        return { ...current, [item.id]: next };
+      }
+      return { ...current, [item.id]: checked ? choiceId : "" };
+    });
+  }
+
+  function setFreeResponse(questionId: string, value: string) {
+    setAnswers((current) => {
+      if (!value.trim()) {
+        const next = { ...current };
+        delete next[questionId];
+        return next;
+      }
+      return { ...current, [questionId]: value };
+    });
+  }
+
+  async function startExam(target: ExamCatalogEntry) {
+    setExamLoadError(null);
+    setLoadingExamId(target.id);
+    try {
+      const loaded = await loadExam(target.id);
+      const persisted = readPersistedExam(loaded.id, loaded);
+      setSelectedExamId(loaded.id);
+      setExam(loaded);
+      setAnswers(persisted.answers ?? {});
+      setManual(persisted.manual ?? {});
+      setFlags(persisted.flags ?? {});
+      setJavaRuns({});
+      setMode("exam");
+      setIndex(0);
+      setReferenceOpen(false);
+    } catch {
+      setExamLoadError(`Could not load ${target.title}.`);
+    } finally {
+      setLoadingExamId(null);
+    }
   }
 
   function returnToMenu() {
-    setSavedExamIds(readSavedExamIds());
+    setSavedExamIds(readSavedExamIds(catalogExamIds));
     setMode("menu");
   }
 
   async function finalizeSubmit() {
+    if (!exam) {
+      return;
+    }
     setSubmitRunning(true);
     try {
       if (javaStatus?.available) {
@@ -284,6 +402,9 @@ export default function Home() {
   }
 
   function requestSubmit() {
+    if (!exam) {
+      return;
+    }
     if (incompleteSections.length > 0) {
       setSubmitModalOpen(true);
       return;
@@ -297,7 +418,7 @@ export default function Home() {
   }
 
   function resetAllExams() {
-    clearAllPersistedExams();
+    clearAllPersistedExams(catalogExamIds);
     setAnswers({});
     setManual({});
     setFlags({});
@@ -308,6 +429,9 @@ export default function Home() {
   }
 
   function resetExam() {
+    if (!exam) {
+      return;
+    }
     setAnswers({});
     setManual({});
     setFlags({});
@@ -315,8 +439,8 @@ export default function Home() {
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
-    clearPersistedExam(selectedExamId);
-    setSavedExamIds((current) => current.filter((examId) => examId !== selectedExamId));
+    clearPersistedExam(exam.id);
+    setSavedExamIds((current) => current.filter((examId) => examId !== exam.id));
   }
 
   async function submitExamRequest(event: FormEvent<HTMLFormElement>) {
@@ -357,7 +481,7 @@ export default function Home() {
       const response = await fetch("/api/java/run", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...deviceHeaders() },
-        body: JSON.stringify({ questionId: item.id, code }),
+        body: JSON.stringify({ questionId: item.id, code, language: item.language ?? "java" }),
       });
       const result = (await response.json()) as JavaRunResult;
       setJavaRuns((current) => ({ ...current, [item.id]: result }));
@@ -384,7 +508,8 @@ export default function Home() {
       <main className="exam-shell menu-shell">
         <section className="menu-hero">
           <div>
-            <h1> UT Austin CS Practice Exams</h1>
+            <h1>UT Austin Practice Exams</h1>
+            <p className="lede">{readyExamCount} verified digitized exams are ready to practice.</p>
           </div>
           <div className="menu-actions">
             <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
@@ -398,22 +523,58 @@ export default function Home() {
           </div>
         </section>
 
+        {examLoadError ? <p className="catalog-error">{examLoadError}</p> : null}
+
+        <section className="catalog-filters" aria-label="Exam filters">
+          <label>
+            <span>Subject</span>
+            <select
+              value={subjectFilter}
+              onChange={(event) => {
+                setSubjectFilter(event.target.value);
+                setCourseFilter("All");
+              }}
+            >
+              {subjects.map((subject) => (
+                <option key={subject} value={subject}>
+                  {subject}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Course</span>
+            <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
+              {courses.map((course) => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+          </label>
+        </section>
+
         <section className="exam-list" aria-label="Available exams">
-          {exams.map((item) => {
+          {visibleExams.map((item) => {
             const saved = savedExamIds.includes(item.id);
+            const loading = loadingExamId === item.id;
             return (
               <article className="exam-row" key={item.id}>
                 <div>
-                  <h2>{item.title}</h2>
+                  <div className="exam-row-heading">
+                    <h2>{item.title}</h2>
+                    <span className={`status-pill ${item.status ?? "ready"}`}>{item.status ?? "ready"}</span>
+                  </div>
                   <p>{item.subtitle}</p>
                   <span>
-                    {item.questions.length} sections, {item.questions.reduce((sum, q) => sum + q.points, 0)}{" "}
-                    points
+                    {item.subject} · {item.course} · {item.term} · {item.examType} · {item.questionCount}{" "}
+                    sections · {item.points} points · {item.autoGraded ? "auto-graded where possible" : "self-graded"}
                   </span>
+                  {item.sourceNotice ? <small className="source-notice">{item.sourceNotice}</small> : null}
                 </div>
-                <button className="primary-button" onClick={() => startExam(item)}>
+                <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
                   <BookOpen size={18} />
-                  {saved ? "Resume" : "Start"}
+                  {loading ? "Loading" : saved ? "Resume" : "Start"}
                 </button>
               </article>
             );
@@ -517,6 +678,21 @@ export default function Home() {
             </section>
           </div>
         ) : null}
+      </main>
+    );
+  }
+
+  if (!exam || !question) {
+    return (
+      <main className="exam-shell loading-shell">
+        <section className="loading-panel">
+          <h1>Loading exam</h1>
+          <p>Preparing the selected practice exam.</p>
+          <button className="secondary-button" onClick={returnToMenu}>
+            <HomeIcon size={17} />
+            Back to Menu
+          </button>
+        </section>
       </main>
     );
   }
@@ -652,6 +828,17 @@ export default function Home() {
               <MixedContent content={question.reference} />
             </section>
           ) : null}
+          {question.image ? (
+            <figure className="question-figure">
+              <Image
+                src={question.image}
+                alt={question.imageAlt ?? ""}
+                width={question.imageWidth ?? 300}
+                height={question.imageHeight ?? 325}
+                sizes="(max-width: 900px) 100vw, 850px"
+              />
+            </figure>
+          ) : null}
 
           {question.type === "short" && question.answers ? (
             <div className="objective-list">
@@ -705,14 +892,58 @@ export default function Home() {
                 );
               })}
             </div>
-          ) : (
+          ) : null}
+
+          {question.type === "choice" && question.choices ? (
+            <div className="choice-list" id={`${question.id}-choices`}>
+              {question.choices.map((choice) => {
+                const value = answers[question.id];
+                const selected = Array.isArray(value) ? value.includes(choice.id) : value === choice.id;
+                const submitted = mode === "review";
+                const correct = Boolean(question.correctChoiceIds?.includes(choice.id));
+                return (
+                  <label
+                    className={`choice-option-row ${submitted && correct ? "correct" : ""} ${
+                      submitted && selected && !correct ? "incorrect" : ""
+                    }`}
+                    key={choice.id}
+                  >
+                    <input
+                      type={question.allowMultiple ? "checkbox" : "radio"}
+                      name={question.id}
+                      value={choice.id}
+                      checked={selected}
+                      disabled={mode === "review"}
+                      onChange={(event) => setChoiceAnswer(question, choice.id, event.target.checked)}
+                    />
+                    <strong>{choice.id}</strong>
+                    <span>{choice.text}</span>
+                  </label>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {question.type === "free-response" ? (
+            <section className="free-response" id={`${question.id}-free-response`}>
+              <textarea
+                value={(answers[question.id] as string | undefined) ?? ""}
+                disabled={mode === "review"}
+                onChange={(event) => setFreeResponse(question.id, event.target.value)}
+                placeholder="Work the problem here, then self-score against the official solution after submitting."
+                rows={10}
+              />
+            </section>
+          ) : null}
+
+          {question.type === "code" ? (
             <div className="editor-wrap" id={`${question.id}-editor`}>
               <MonacoEditor
                 key={`${selectedExamId}-${question.id}`}
                 height="430px"
-                defaultLanguage="java"
-                language="java"
-                path={`${selectedExamId}/${question.id}.java`}
+                defaultLanguage={question.language ?? "java"}
+                language={question.language ?? "java"}
+                path={`${selectedExamId}/${question.id}.${question.language === "python" ? "py" : "java"}`}
                 theme="vs"
                 value={(answers[question.id] as string | undefined) ?? question.stub ?? ""}
                 onChange={(value) => setCodeAnswer(question, value)}
@@ -728,7 +959,7 @@ export default function Home() {
                 }}
               />
             </div>
-          )}
+          ) : null}
 
           {question.type === "code" ? (
             <JavaRunnerPanel

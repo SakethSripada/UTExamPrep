@@ -59,6 +59,9 @@ func TestHarnessParity(t *testing.T) {
 	}
 
 	for _, id := range questionIDs() {
+		if _, ok := buildHarness(id, "class X {}"); !ok {
+			continue
+		}
 		if _, ok := fixtures[id]; !ok {
 			t.Errorf("%s: question registered but missing from fixtures; regenerate testdata", id)
 		}
@@ -116,6 +119,26 @@ func TestBuildHarnessSplicesCode(t *testing.T) {
 	}
 	if !found {
 		t.Fatal("StudentSolution.java missing")
+	}
+}
+
+func TestBuildHarnessForLanguagePython(t *testing.T) {
+	files, ok := buildHarnessForLanguage("py-smoke", "python", "def double(value):\n    return value * 2\n")
+	if !ok {
+		t.Fatalf("buildHarnessForLanguage returned no Python harness")
+	}
+	got := files["TestRunner.py"]
+	if !strings.Contains(got, "def double(value):") {
+		t.Fatalf("student code was not inserted into Python harness:\n%s", got)
+	}
+	if strings.Contains(got, studentCodeMarker) {
+		t.Fatalf("student marker was not replaced in Python harness")
+	}
+}
+
+func TestBuildHarnessForLanguageRejectsWrongLanguage(t *testing.T) {
+	if _, ok := buildHarnessForLanguage("py-smoke", "java", "class X {}"); ok {
+		t.Fatalf("Python-only harness was returned for Java")
 	}
 }
 

@@ -1,0 +1,66 @@
+Problem 1:
+13
+
+Problem 2:
+5 4 3 2 1 
+
+Problem 3:
+{1, 2, 3, 4, 5}
+
+
+Problem 4:
+Gives an error
+
+Problem 5:
+{'a': 3, 'c': 4, 'd': 2}
+
+6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 
+E  B  B  A  D   D   C   A   C   A
+
+For programming problems there are always a variety of possible solutions.
+
+16.
+
+An earlier posted solution had an unnecessary clause in this involving
+isdigit.  That was relevant to an earlier version of this problem, but
+not the current one.
+
+def transformString( s ):
+   if not s:
+      return ""
+   elif s[0].islower():
+      return s[0].upper() + transformString( s[1:] )
+   elif s[0].isupper():
+      return s[0].lower() + transformString( s[1:] )
+   else:
+      return s[0] + transformString( s[1:] )
+
+17. 
+
+class ShoppingLine:
+   def __init__( self, initialLine ):
+      self.__line = initialLine
+
+   def __len__( self ):
+      count =  0
+      for pair in self.__line:
+         count += pair[1]
+      return count
+
+   def join( self, name, itemCount ):
+      self.__line.append( (name, itemCount) )
+   
+   def checkout( self ):
+      if not self.__line:
+         return None
+      else:
+         name, count = self.__line.pop(0)
+         return name
+
+   def __str__( self ):
+      out = "Line: " + str(self.__line)
+      return out
+
+
+   def __len__( self ):
+      return len(self.__line)

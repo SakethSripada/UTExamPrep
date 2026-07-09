@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DigitalExams | CS 312 Practice",
-  description: "A digital practice exam workspace for UT Austin CS 312 sample exams.",
+  title: "DigitalExams | UT Austin Practice",
+  description: "A digital practice exam workspace for public UT Austin exam materials.",
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }],
     shortcut: ["/favicon.ico"],

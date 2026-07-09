@@ -123,8 +123,9 @@ export async function POST(request: Request) {
 
   const questionId = body.questionId;
   const code = body.code ?? "";
+  const language = body.language === "python" ? "python" : "java";
   if (!questionId || !code.trim()) {
-    return json({ ok: false, phase: "request", message: "Missing question id or Java code." }, 400);
+    return json({ ok: false, phase: "request", message: "Missing question id or code." }, 400);
   }
   if (code.length > MAX_CODE_LENGTH) {
     return json({ ok: false, phase: "request", message: "Code is too large to run." }, 413);
@@ -143,7 +144,7 @@ export async function POST(request: Request) {
     const result = await forward("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...headers },
-      body: JSON.stringify({ questionId, code }),
+      body: JSON.stringify({ questionId, code, language }),
     });
     if (!result) {
       return json({ ok: false, phase: "java", message: "The Java runner is not configured." });

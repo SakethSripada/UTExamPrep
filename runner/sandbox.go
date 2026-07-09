@@ -53,11 +53,13 @@ type sandbox struct {
 	prlimitPath string
 	tmpfsSize   bool // bwrap supports --size for --tmpfs
 
-	javaHome     string
-	javacPath    string
-	javaPath     string
-	javacVersion string
-	javaVersion  string
+	javaHome      string
+	javacPath     string
+	javaPath      string
+	javacVersion  string
+	javaVersion   string
+	pythonPath    string
+	pythonVersion string
 	// extraBinds are directories outside /usr that the JDK reaches through
 	// symlinks (e.g. Debian sends conf/security and cacerts into /etc).
 	// They are bound read-only at their real paths so those links resolve.
@@ -77,11 +79,49 @@ func (s *sandbox) javaAvailable() bool {
 	return s.javacPath != "" && s.javaPath != ""
 }
 
+func (s *sandbox) pythonAvailable() bool {
+	return s.pythonPath != ""
+}
+
+func (s *sandbox) languageAvailable(language string) bool {
+	switch language {
+	case "java":
+		return s.javaAvailable()
+	case "python":
+		return s.pythonAvailable()
+	default:
+		return false
+	}
+}
+
+func (s *sandbox) availableLanguages() []string {
+	var languages []string
+	if s.javaAvailable() {
+		languages = append(languages, "java")
+	}
+	if s.pythonAvailable() {
+		languages = append(languages, "python")
+	}
+	return languages
+}
+
+func (s *sandbox) runtimeMessages() []string {
+	var messages []string
+	if s.javaAvailable() {
+		messages = append(messages, fmt.Sprintf("java %s", s.javacVersion))
+	}
+	if s.pythonAvailable() {
+		messages = append(messages, s.pythonVersion)
+	}
+	return messages
+}
+
 // newSandbox resolves the JDK and picks the strongest working isolation mode.
 // requestedMode is "auto", "bwrap", or "none".
 func newSandbox(requestedMode string) (*sandbox, error) {
 	s := &sandbox{mode: modeNone}
 	s.resolveJava()
+	s.resolvePython()
 
 	switch requestedMode {
 	case "none":
@@ -156,6 +196,27 @@ func (s *sandbox) resolveJava() {
 	s.extraBinds = computeExtraBinds(s.javaHome)
 }
 
+func (s *sandbox) resolvePython() {
+	for _, name := range []string{"python3", "python"} {
+		python, err := exec.LookPath(name)
+		if err != nil {
+			continue
+		}
+		if resolved, err := filepath.EvalSymlinks(python); err == nil {
+			python = resolved
+		}
+		if !isExecutable(python) {
+			continue
+		}
+		version := commandOutput(python, "--version")
+		if strings.HasPrefix(version, "Python 3.") {
+			s.pythonPath = python
+			s.pythonVersion = version
+			return
+		}
+	}
+}
+
 // computeExtraBinds finds directories the JDK depends on that live outside
 // JAVA_HOME and /usr. Some distributions (Debian/Ubuntu) relocate the JDK's
 // security config and trust store into /etc and symlink back; those targets
@@ -210,7 +271,11 @@ func isExecutable(path string) bool {
 }
 
 func commandVersion(path string) string {
-	cmd := exec.Command(path, "-version")
+	return commandOutput(path, "-version")
+}
+
+func commandOutput(path string, args ...string) string {
+	cmd := exec.Command(path, args...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &out
@@ -367,6 +432,19 @@ func (s *sandbox) runTests(workdir string, timeout time.Duration) execResult {
 		"-Djava.awt.headless=true",
 		"-cp", ".",
 		"TestRunner",
+	}
+	cpuSeconds := int(timeout/time.Second) + 3
+	return runWithLimits(s.wrap(argv, workdir, false, cpuSeconds), workdir, s.baseEnv(), timeout)
+}
+
+// runPythonTests executes TestRunner.py inside the sandbox. -I isolates Python
+// from user site config and -B prevents writes to __pycache__ in read-only mode.
+func (s *sandbox) runPythonTests(workdir string, timeout time.Duration) execResult {
+	argv := []string{
+		s.pythonPath,
+		"-I",
+		"-B",
+		"TestRunner.py",
 	}
 	cpuSeconds := int(timeout/time.Second) + 3
 	return runWithLimits(s.wrap(argv, workdir, false, cpuSeconds), workdir, s.baseEnv(), timeout)

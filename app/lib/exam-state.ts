@@ -1,5 +1,4 @@
 import type { AnswerState, Exam, ObjectivePart, PersistedExam, Question } from "@/app/lib/exam-types";
-import { exams } from "@/app/data/exams";
 
 export function isSameCode(left: string | undefined, right: string | undefined) {
   return normalizeCode(left ?? "") === normalizeCode(right ?? "");
@@ -7,10 +6,6 @@ export function isSameCode(left: string | undefined, right: string | undefined) 
 
 export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
   const next: AnswerState = {};
-  const codeStubs = exams
-    .flatMap((item) => item.questions)
-    .filter((question) => question.type === "code" && question.stub)
-    .map((question) => question.stub ?? "");
 
   for (const question of exam.questions) {
     const value = answers[question.id];
@@ -25,9 +20,7 @@ export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
       continue;
     }
 
-    const isOwnStarter = isSameCode(value, question.stub);
-    const isOtherStarter = codeStubs.some((stub) => !isSameCode(stub, question.stub) && isSameCode(value, stub));
-    if (!isOwnStarter && !isOtherStarter) {
+    if (!isSameCode(value, question.stub)) {
       next[question.id] = value;
     }
   }
@@ -35,7 +28,7 @@ export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
   return next;
 }
 
-export function readPersistedExam(examId: string): PersistedExam {
+export function readPersistedExam(examId: string, exam?: Exam): PersistedExam {
   if (typeof window === "undefined") {
     return {};
   }
@@ -45,18 +38,17 @@ export function readPersistedExam(examId: string): PersistedExam {
   }
 
   const persisted = JSON.parse(saved) as PersistedExam;
-  const exam = exams.find((item) => item.id === examId);
   return {
     ...persisted,
     answers: exam ? sanitizeAnswersForExam(exam, persisted.answers) : persisted.answers,
   };
 }
 
-export function readSavedExamIds() {
+export function readSavedExamIds(examIds: string[]) {
   if (typeof window === "undefined") {
     return [];
   }
-  return exams.filter((item) => window.localStorage.getItem(`digitalexams:${item.id}`)).map((item) => item.id);
+  return examIds.filter((examId) => window.localStorage.getItem(`digitalexams:${examId}`));
 }
 
 export function clearPersistedExam(examId: string) {
@@ -66,12 +58,12 @@ export function clearPersistedExam(examId: string) {
   window.localStorage.removeItem(`digitalexams:${examId}`);
 }
 
-export function clearAllPersistedExams() {
+export function clearAllPersistedExams(examIds: string[]) {
   if (typeof window === "undefined") {
     return;
   }
-  for (const item of exams) {
-    clearPersistedExam(item.id);
+  for (const examId of examIds) {
+    clearPersistedExam(examId);
   }
 }
 
@@ -226,4 +218,3 @@ export function answerPlaceholder(part: ObjectivePart) {
   }
   return "Type answer";
 }
-
