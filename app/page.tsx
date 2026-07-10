@@ -22,7 +22,7 @@ import {
 import { examCatalog, loadExam } from "@/app/data/exams";
 import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
-import { InlineProseContent, MixedContent } from "@/app/components/mixed-content";
+import { InlineProseContent, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import {
   answerPlaceholder,
@@ -86,6 +86,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const question = exam?.questions[index] ?? null;
+  const isComputerScience = exam?.subject === "Computer Science";
   const subjects = ["All", ...Array.from(new Set(examCatalog.map((item) => item.subject))).sort()];
   const courses = [
     "All",
@@ -391,7 +392,11 @@ export default function Home() {
     try {
       if (javaStatus?.available) {
         const codeQuestions = exam.questions.filter(
-          (item) => item.type === "code" && hasEditedCodeAnswer(item, answers),
+          (item) =>
+            item.type === "code" &&
+            item.runnable !== false &&
+            hasEditedCodeAnswer(item, answers) &&
+            (!javaStatus.languages || javaStatus.languages.includes(item.language ?? "java")),
         );
         const results = await Promise.all(
           codeQuestions.map(async (item) => ({
@@ -480,6 +485,9 @@ export default function Home() {
   }
 
   async function runJavaTests(item: Question): Promise<JavaRunResult | null> {
+    if (item.runnable === false) {
+      return null;
+    }
     const code = ((answers[item.id] as string | undefined) ?? item.stub ?? "").trim();
     if (!hasEditedCodeAnswer(item, answers)) {
       const result = {
@@ -719,7 +727,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`exam-shell ${mode === "review" ? "review-shell" : ""}`}>
+    <main className={`exam-shell ${mode === "review" ? "review-shell" : ""} ${isComputerScience ? "cs-exam" : "science-exam"}`}>
       <header className="topbar">
         <div className="topbar-left">
           <button className="icon-button" aria-label="Back to menu" onClick={returnToMenu}>
@@ -757,7 +765,7 @@ export default function Home() {
               {totals.earned.toFixed(1)} / {totals.possible}
             </strong>
             <small>
-              Short answer {totals.autoEarned.toFixed(1)}/{totals.autoPossible}; coding{" "}
+              Auto-graded {totals.autoEarned.toFixed(1)}/{totals.autoPossible}; self-graded{" "}
               {totals.manualEarned}/{totals.manualPossible}
             </small>
           </div>
@@ -842,11 +850,19 @@ export default function Home() {
             </button>
           </div>
 
-          <InlineProseContent content={question.prompt} className="prompt" />
+          {isComputerScience ? (
+            <InlineProseContent content={question.prompt} className="prompt" />
+          ) : (
+            <ScientificContent content={question.prompt} className="prompt" />
+          )}
           {question.reference ? (
             <section className="reference-panel">
               <h2>Reference for this section</h2>
-              <MixedContent content={question.reference} />
+              {isComputerScience ? (
+                <MixedContent content={question.reference} language={question.language} />
+              ) : (
+                <ScientificContent content={question.reference} />
+              )}
             </section>
           ) : null}
           {question.image ? (
@@ -883,12 +899,8 @@ export default function Home() {
                           : "incorrect"
                       }
                     >
-                      {isCorrect(
-                        ((answers[question.id] as string[] | undefined) ?? [])[0] ?? "",
-                        question.answers[0],
-                      )
-                        ? "Correct"
-                        : question.answers[0]}
+                      Correct answer:{" "}
+                      {isComputerScience ? question.answers[0] : <ScientificText text={question.answers[0]} />}
                     </strong>
                   ) : null}
                 </label>
@@ -922,7 +934,15 @@ export default function Home() {
                   <section className="objective-part" id={partTargetId} key={`${question.id}-${answerIndex}`}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
-                      <MixedContent content={part.code.trim()} forceCode={question.title.includes("Expressions")} />
+                      {isComputerScience ? (
+                        <MixedContent
+                          content={part.code.trim()}
+                          forceCode={question.title.includes("Expressions")}
+                          language={question.language}
+                        />
+                      ) : (
+                        <ScientificContent content={part.code.trim()} className="structured-science-content" />
+                      )}
                     </div>
                     <label className="answer-line">
                       <span>Answer {part.label}</span>
@@ -934,7 +954,12 @@ export default function Home() {
                       />
                       {submitted ? (
                         <strong className={correct ? "correct" : "incorrect"}>
-                          {correct ? "Correct" : question.answers![answerIndex]}
+                          Correct answer:{" "}
+                          {isComputerScience ? (
+                            question.answers![answerIndex]
+                          ) : (
+                            <ScientificText text={question.answers![answerIndex]} />
+                          )}
                         </strong>
                       ) : null}
                     </label>
@@ -967,7 +992,7 @@ export default function Home() {
                       onChange={(event) => setChoiceAnswer(question, choice.id, event.target.checked)}
                     />
                     <strong>{choice.id}</strong>
-                    <span>{choice.text}</span>
+                    <span>{isComputerScience ? choice.text : <ScientificText text={choice.text} />}</span>
                   </label>
                 );
               })}
@@ -980,7 +1005,7 @@ export default function Home() {
                 value={(answers[question.id] as string | undefined) ?? ""}
                 disabled={mode === "review"}
                 onChange={(event) => setFreeResponse(question.id, event.target.value)}
-                placeholder="Work the problem here, then self-score against the official solution after submitting."
+                placeholder="Work the problem here, then self-score against the correct answer after submitting."
                 rows={10}
               />
             </section>
@@ -1021,7 +1046,14 @@ export default function Home() {
             />
           ) : null}
 
-          {mode === "review" ? <ReviewPanel question={question} manual={manual} setManual={setManual} /> : null}
+          {mode === "review" ? (
+            <ReviewPanel
+              question={question}
+              manual={manual}
+              setManual={setManual}
+              isComputerScience={Boolean(isComputerScience)}
+            />
+          ) : null}
 
           <div className="question-footer">
             <button
@@ -1083,7 +1115,11 @@ export default function Home() {
                 <X size={18} />
               </button>
             </div>
-            <MixedContent content={question.reference} />
+            {isComputerScience ? (
+              <MixedContent content={question.reference} language={question.language} />
+            ) : (
+              <ScientificContent content={question.reference} />
+            )}
           </aside>
         </>
       ) : null}

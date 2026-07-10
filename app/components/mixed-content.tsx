@@ -1,11 +1,20 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import type { ContentSegment } from "@/app/lib/exam-types";
+import type { ReactNode } from "react";
+import type { CodeLanguage, ContentSegment } from "@/app/lib/exam-types";
 
-export function CodeBlock({ code, className = "" }: { code?: string; className?: string }) {
+export function CodeBlock({
+  code,
+  className = "",
+  language = "java",
+}: {
+  code?: string;
+  className?: string;
+  language?: CodeLanguage;
+}) {
   return (
     <SyntaxHighlighter
-      language="java"
+      language={language}
       style={oneLight}
       className={`code-display ${className}`}
       customStyle={{
@@ -54,14 +63,15 @@ function isProseMarker(line: string) {
   return false;
 }
 
-// Net change in brace depth for a code line, ignoring trailing line comments.
-function netBraceDelta(line: string) {
+// Net change in brace/paren depth for a code line, ignoring trailing line
+// comments. Unbalanced parens keep multi-line signatures inside a code block.
+function netDelta(line: string, open: string, close: string) {
   const code = line.replace(/\/\/.*$/, "");
   let delta = 0;
   for (const char of code) {
-    if (char === "{") {
+    if (char === open) {
       delta += 1;
-    } else if (char === "}") {
+    } else if (char === close) {
       delta -= 1;
     }
   }
@@ -76,10 +86,13 @@ function isLikelyCodeLine(line: string) {
   if (isProseMarker(line)) {
     return false;
   }
-  if (/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new)\b/.test(trimmed)) {
+  if (/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new|void|int|long|double|float|boolean|char|struct|typedef|unsigned|#include|#define)\b/.test(trimmed)) {
     return true;
   }
-  if (/^[}\])]/.test(trimmed) || /;/.test(trimmed)) {
+  // A sentence can contain a semicolon mid-line; only an ending semicolon or
+  // brace (ignoring a trailing line comment) marks a statement.
+  const withoutComment = trimmed.replace(/\/\/.*$/, "").trimEnd();
+  if (/^[}\])]/.test(trimmed) || /[;{}]$/.test(withoutComment)) {
     return true;
   }
   if (/^(\/\*|\*\/|\/\/|\*)/.test(trimmed)) {
@@ -192,25 +205,44 @@ function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
   let currentKind: ContentSegment["kind"] | null = null;
   let currentLines: string[] = [];
   let inBlockComment = false;
+  let inFence = false;
   let braceDepth = 0;
+  let parenDepth = 0;
 
   const flush = () => {
-    const text = currentLines.join("\n").trim();
-    if (currentKind && text) {
-      segments.push({ kind: currentKind, text });
+    const text = currentLines.join("\n").trimEnd();
+    if (currentKind && text.trim()) {
+      segments.push({ kind: currentKind, text: currentKind === "code" ? text.replace(/^\n+/, "") : text.trim() });
     }
     currentKind = null;
     currentLines = [];
     braceDepth = 0;
+    parenDepth = 0;
   };
 
   for (const line of content.split("\n")) {
+    // Explicit ``` fences force a code block (used for ASCII diagrams and
+    // tables whose lines do not look like code on their own).
+    if (line.trim().startsWith("```")) {
+      flush();
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) {
+      if (currentKind !== "code") {
+        flush();
+        currentKind = "code";
+      }
+      currentLines.push(line);
+      continue;
+    }
     const startsBlockComment = line.includes("/*") && !line.includes("*/");
     let nextKind: ContentSegment["kind"] = inBlockComment || isLikelyCodeLine(line) ? "code" : "text";
     // Keep contiguous code blocks intact: a line inside an open brace block
-    // (e.g. enum constants like "NORTH, SOUTH, EAST") stays code even when it
-    // does not look like code on its own. Explicit prose markers still break out.
-    if (currentKind === "code" && braceDepth > 0 && line.trim() && !isProseMarker(line)) {
+    // (e.g. enum constants like "NORTH, SOUTH, EAST") or an unclosed argument
+    // list (a multi-line method signature) stays code even when it does not
+    // look like code on its own. Explicit prose markers still break out.
+    if (currentKind === "code" && (braceDepth > 0 || parenDepth > 0) && line.trim() && !isProseMarker(line)) {
       nextKind = "code";
     }
     if (!line.trim()) {
@@ -227,7 +259,8 @@ function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
     currentKind = nextKind;
     currentLines.push(line);
     if (nextKind === "code" && !inBlockComment) {
-      braceDepth += netBraceDelta(line);
+      braceDepth += netDelta(line, "{", "}");
+      parenDepth = Math.max(0, parenDepth + netDelta(line, "(", ")"));
     }
     if (inBlockComment && line.includes("*/")) {
       inBlockComment = false;
@@ -244,17 +277,19 @@ export function MixedContent({
   content,
   forceCode = false,
   className = "",
+  language = "java",
 }: {
   content?: string;
   forceCode?: boolean;
   className?: string;
+  language?: CodeLanguage;
 }) {
   const segments = splitMixedContent(content, forceCode);
   return (
     <div className={`mixed-content ${className}`}>
       {segments.map((segment, index) =>
         segment.kind === "code" ? (
-          <CodeBlock code={segment.text} key={`${segment.kind}-${index}`} />
+          <CodeBlock code={segment.text} language={language} key={`${segment.kind}-${index}`} />
         ) : (
           <div className="mixed-prose" key={`${segment.kind}-${index}`}>
             {segment.text.split("\n").map((line, lineIndex) => (
@@ -281,3 +316,84 @@ export function InlineProseContent({ content, className = "" }: { content?: stri
   );
 }
 
+const subscriptMap: Record<string, string> = {
+  "₀": "0",
+  "₁": "1",
+  "₂": "2",
+  "₃": "3",
+  "₄": "4",
+  "₅": "5",
+  "₆": "6",
+  "₇": "7",
+  "₈": "8",
+  "₉": "9",
+  "₊": "+",
+  "₋": "−",
+};
+
+const superscriptMap: Record<string, string> = {
+  "⁰": "0",
+  "¹": "1",
+  "²": "2",
+  "³": "3",
+  "⁴": "4",
+  "⁵": "5",
+  "⁶": "6",
+  "⁷": "7",
+  "⁸": "8",
+  "⁹": "9",
+  "⁺": "+",
+  "⁻": "−",
+};
+
+function scientificNodes(text: string) {
+  const nodes: ReactNode[] = [];
+  let plain = "";
+  const flush = () => {
+    if (plain) nodes.push(plain);
+    plain = "";
+  };
+
+  for (let index = 0; index < text.length; ) {
+    const character = text[index];
+    const map = subscriptMap[character] ? subscriptMap : superscriptMap[character] ? superscriptMap : null;
+    if (map) {
+      flush();
+      let value = "";
+      while (index < text.length && map[text[index]]) {
+        value += map[text[index]];
+        index += 1;
+      }
+      const Tag = map === subscriptMap ? "sub" : "sup";
+      nodes.push(<Tag key={`script-${index}`}>{value}</Tag>);
+      continue;
+    }
+    if (character === "^" && /^[+\-−]?\d+/.test(text.slice(index + 1))) {
+      flush();
+      const exponent = text.slice(index + 1).match(/^[+\-−]?\d+/)?.[0] ?? "";
+      nodes.push(<sup key={`exponent-${index}`}>{exponent.replace("-", "−")}</sup>);
+      index += exponent.length + 1;
+      continue;
+    }
+    plain += character;
+    index += 1;
+  }
+  flush();
+  return nodes;
+}
+
+export function ScientificText({ text }: { text: string }) {
+  return <span className="scientific-notation">{scientificNodes(text)}</span>;
+}
+
+export function ScientificContent({ content, className = "" }: { content?: string; className?: string }) {
+  return (
+    <div className={`scientific-content ${className}`}>
+      {(content ?? "").split("\n").map((line, index) => (
+        <p key={index}>
+          <ScientificText text={line} />
+        </p>
+      ))}
+    </div>
+  );
+}

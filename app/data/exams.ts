@@ -1,11 +1,9 @@
 import type { Exam, ExamCatalogEntry } from "@/app/lib/exam-types";
 import { splitTracingQuestion } from "./split-tracing";
-
-type ExamModule = Record<string, Exam>;
+import { archivedCsCatalog } from "./generated-cs-catalog";
 
 type ExamRegistryEntry = ExamCatalogEntry & {
-  load: () => Promise<ExamModule>;
-  exportName: string;
+  load: () => Promise<Exam>;
 };
 
 const registry: ExamRegistryEntry[] = [
@@ -21,8 +19,7 @@ const registry: ExamRegistryEntry[] = [
     points: 100,
     autoGraded: true,
     status: "ready",
-    load: () => import("./exam-one"),
-    exportName: "examOne",
+    load: async () => (await import("./exam-one")).examOne,
   },
   {
     id: "sample-2",
@@ -36,8 +33,7 @@ const registry: ExamRegistryEntry[] = [
     points: 100,
     autoGraded: true,
     status: "ready",
-    load: () => import("./exam-two"),
-    exportName: "examTwo",
+    load: async () => (await import("./exam-two")).examTwo,
   },
   {
     id: "cs314-fall-2025-e1",
@@ -51,8 +47,7 @@ const registry: ExamRegistryEntry[] = [
     points: 100,
     autoGraded: true,
     status: "ready",
-    load: () => import("./cs314-exam-one"),
-    exportName: "cs314ExamOne",
+    load: async () => (await import("./cs314-exam-one")).cs314ExamOne,
   },
   {
     id: "cs314-fall-2025-e2",
@@ -66,8 +61,7 @@ const registry: ExamRegistryEntry[] = [
     points: 100,
     autoGraded: true,
     status: "ready",
-    load: () => import("./cs314-exam-two"),
-    exportName: "cs314ExamTwo",
+    load: async () => (await import("./cs314-exam-two")).cs314ExamTwo,
   },
   {
     id: "cs314-fall-2025-e3",
@@ -81,8 +75,7 @@ const registry: ExamRegistryEntry[] = [
     points: 100,
     autoGraded: true,
     status: "ready",
-    load: () => import("./cs314-exam-three"),
-    exportName: "cs314ExamThree",
+    load: async () => (await import("./cs314-exam-three")).cs314ExamThree,
   },
   {
     id: "ch301-practice",
@@ -96,8 +89,7 @@ const registry: ExamRegistryEntry[] = [
     points: 23,
     autoGraded: true,
     status: "ready",
-    load: () => import("./chemistry-ch301"),
-    exportName: "ch301Practice",
+    load: async () => (await import("./chemistry-ch301")).ch301Practice,
   },
   {
     id: "bio311c-2007-exam-1",
@@ -111,9 +103,17 @@ const registry: ExamRegistryEntry[] = [
     points: 70,
     autoGraded: true,
     status: "ready",
-    load: () => import("./biology-2007-exam-one"),
-    exportName: "bio311c2007ExamOne",
+    load: async () => (await import("./biology-2007-exam-one")).bio311c2007ExamOne,
   },
+  ...archivedCsCatalog.map(
+    (entry): ExamRegistryEntry => ({
+      ...entry,
+      load: async () => {
+        const { archivedCsExams } = await import("./generated-cs-archive");
+        return archivedCsExams[entry.id];
+      },
+    }),
+  ),
 ];
 
 export const examCatalog: ExamCatalogEntry[] = registry.map((entry) => ({
@@ -133,8 +133,7 @@ export const examCatalog: ExamCatalogEntry[] = registry.map((entry) => ({
 
 export async function loadExam(examId: string) {
   const entry = registry.find((item) => item.id === examId) ?? registry[0];
-  const loadedModule = await entry.load();
-  const exam = loadedModule[entry.exportName];
+  const exam = await entry.load();
   return {
     ...exam,
     course: exam.course ?? entry.course,

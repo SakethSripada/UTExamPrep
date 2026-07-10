@@ -729,6 +729,22 @@ button:disabled {
   line-height: 1.65;
 }
 
+.prompt .mixed-prose {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.science-exam .prompt {
+  max-width: 980px;
+  font-size: clamp(19px, 1.7vw, 22px);
+  line-height: 1.62;
+}
+
+.science-exam .question-header h1 {
+  font-size: clamp(28px, 3.2vw, 38px);
+}
+
 .thrown-out-note {
   margin: 0;
   color: #5f6b7a;
@@ -843,7 +859,8 @@ button:disabled {
   white-space: nowrap;
 }
 
-.floating-reference-panel > .mixed-content {
+.floating-reference-panel > .mixed-content,
+.floating-reference-panel > .scientific-content {
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -870,6 +887,10 @@ button:disabled {
 
 .floating-reference-panel .mixed-prose {
   font-size: 15px;
+}
+
+.floating-reference-panel .scientific-content {
+  font-size: 16px;
 }
 
 .code-display {
@@ -917,6 +938,46 @@ button:disabled {
 
 .mixed-prose p {
   margin: 0;
+}
+
+.scientific-content {
+  display: grid;
+  gap: 8px;
+  color: #263645;
+  line-height: 1.6;
+}
+
+.scientific-content p {
+  margin: 0;
+}
+
+.scientific-notation {
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.scientific-notation sub,
+.scientific-notation sup {
+  position: relative;
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+.scientific-notation sub {
+  bottom: -0.18em;
+}
+
+.scientific-notation sup {
+  top: -0.34em;
+}
+
+.structured-science-content {
+  grid-column: 2;
+  padding: 12px 14px;
+  font-size: 16px;
+  background: #f8fafc;
+  border: 1px solid #d9e0e8;
+  border-radius: 6px;
 }
 
 .inline-code {
@@ -1052,6 +1113,19 @@ button:disabled {
 .choice-option-row span {
   color: #2f3744;
   line-height: 1.45;
+}
+
+.science-exam .choice-list {
+  gap: 12px;
+}
+
+.science-exam .choice-option-row {
+  padding: 15px 16px;
+}
+
+.science-exam .choice-option-row span {
+  font-size: 17px;
+  line-height: 1.55;
 }
 
 .choice-option-row.correct {
@@ -1293,6 +1367,17 @@ button:disabled {
   margin: -4px 0 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+.historical-code-panel p {
+  max-width: 820px;
+}
+
+.correct-answer-copy,
+.solution-copy {
+  color: #263645;
+  font-size: 17px;
+  line-height: 1.6;
 }
 
 .java-result {
@@ -1640,6 +1725,22 @@ button:disabled {
 }
 
 .solution {
+  background: #ffffff;
+}
+
+.review-panel .solution-notes {
+  display: grid;
+  gap: 4px;
+}
+
+.review-panel .solution-notes .mixed-prose {
+  color: #263645;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.review-panel .solution-notes .code-display {
+  margin: 6px 0;
   background: #ffffff;
 }
 

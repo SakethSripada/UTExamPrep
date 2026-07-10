@@ -24,6 +24,10 @@ export type Question = {
   code?: string;
   stub?: string;
   language?: CodeLanguage;
+  // Historical programming questions can require course-only types or
+  // pseudocode. They still use the full editor/submission/review workflow,
+  // but only questions with a registered executable harness enable Run Tests.
+  runnable?: boolean;
   answer?: string;
   answers?: string[];
   answerPoints?: number[];

@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
-import { CodeBlock } from "@/app/components/mixed-content";
+import { CodeBlock, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 
 export function JavaRunnerPanel({
   question,
@@ -20,6 +20,25 @@ export function JavaRunnerPanel({
   const result = runState && !("loading" in runState) ? runState : null;
   const language = question.language ?? "java";
   const languageAvailable = Boolean(status?.available && (!status.languages || status.languages.includes(language)));
+
+  if (question.runnable === false) {
+    return (
+      <section className="java-panel historical-code-panel">
+        <div className="java-panel-header">
+          <div>
+            <h2>
+              <Terminal size={18} />
+              Code response
+            </h2>
+            <p>
+              This archived problem depends on course-specific types or pseudocode. Your editor response is saved and
+              submitted normally; compare it with the official solution in review mode.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="java-panel">
@@ -133,35 +152,47 @@ export function ReviewPanel({
   question,
   manual,
   setManual,
+  isComputerScience = true,
 }: {
   question: Question;
   manual: ManualState;
   setManual: Dispatch<SetStateAction<ManualState>>;
+  isComputerScience?: boolean;
 }) {
   if (question.type === "short") {
     return (
       <section className="review-panel">
         <h2>
           <ListChecks size={18} />
-          Official Answers
+          Correct answers
         </h2>
-        <p>Each item is auto-scored. Spelling and type markers such as quotes still matter.</p>
+        <p>Each item is auto-scored. Review the correct answer shown beside each response above.</p>
+        {question.officialSolution ? (
+          isComputerScience ? (
+            <MixedContent content={question.officialSolution} language={question.language} className="solution-notes" />
+          ) : (
+            <ScientificContent content={question.officialSolution} className="solution-copy" />
+          )
+        ) : null}
       </section>
     );
   }
 
   if (question.type === "choice") {
+    const correct = (question.correctChoiceIds ?? []).map((choiceId) => {
+      const choice = question.choices?.find((item) => item.id === choiceId);
+      return choice ? `${choiceId} — ${choice.text}` : choiceId;
+    });
     return (
       <section className="review-panel">
         <h2>
           <ListChecks size={18} />
-          Official Answers
+          Correct answer{correct.length === 1 ? "" : "s"}
         </h2>
-        <p>
-          Correct choice{question.correctChoiceIds?.length === 1 ? "" : "s"}:{" "}
-          <strong>{question.correctChoiceIds?.join(", ") ?? "See official solution."}</strong>
+        <p className="correct-answer-copy">
+          <strong>Correct answer{correct.length === 1 ? "" : "s"}: </strong>
+          {isComputerScience ? correct.join("; ") : <ScientificText text={correct.join("; ")} />}
         </p>
-        {question.officialSolution || question.answer ? <CodeBlock code={question.officialSolution ?? question.answer} className="solution" /> : null}
       </section>
     );
   }
@@ -198,8 +229,16 @@ export function ReviewPanel({
             </div>
           ))}
         </div>
-        <h3>Official solution</h3>
-        <CodeBlock code={question.officialSolution ?? question.answer} className="solution" />
+        <h3>Correct answer</h3>
+        {isComputerScience ? (
+          <MixedContent
+            content={question.officialSolution ?? question.answer}
+            language={question.language}
+            className="solution-notes"
+          />
+        ) : (
+          <ScientificContent content={question.officialSolution ?? question.answer} className="solution-copy" />
+        )}
       </section>
     );
   }
@@ -236,7 +275,7 @@ export function ReviewPanel({
         ))}
       </div>
       <h3>Official solution</h3>
-      <CodeBlock code={question.answer} className="solution" />
+      <MixedContent content={question.answer} language={question.language} className="solution-notes" />
     </section>
   );
 }

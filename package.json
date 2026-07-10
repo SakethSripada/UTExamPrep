@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:archive": "node scripts/generate-cs-archive.mjs",
+    "validate:exams": "node scripts/validate-exam-archive.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

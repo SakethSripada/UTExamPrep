@@ -53,7 +53,7 @@ const questions: Question[] = multipleChoice.map(([prompt, optionText, correct],
     prompt,
     choices: optionText.map((text, choiceIndex) => ({ id: String.fromCharCode(65 + choiceIndex), text })),
     correctChoiceIds: [correct],
-    officialSolution: `Official key: ${correct}`,
+    officialSolution: `Correct answer: ${correct}`,
     sourceNote: `${sourcePath}, question ${number}`,
     ...(number === 6
       ? {

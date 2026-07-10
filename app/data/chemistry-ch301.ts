@@ -151,6 +151,6 @@ export const ch301Practice: Exam = {
       ["C"],
     ),
     short(22, "What intermolecular force is expected between H₂S molecules in a liquid sample?", "dipole-dipole forces"),
-    short(23, "Order C₂H₆, H₂S, H₂O, and NaI from lowest to highest melting point.", "C2H6, H2S, H2O, NaI"),
+    short(23, "Order C₂H₆, H₂S, H₂O, and NaI from lowest to highest melting point.", "C₂H₆, H₂S, H₂O, NaI"),
   ],
 };

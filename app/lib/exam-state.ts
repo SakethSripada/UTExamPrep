@@ -134,7 +134,7 @@ function looseTextAnswer(value: string) {
     .trim();
 }
 
-export function isCorrect(given: string, expected: string) {
+function isCorrectSingle(given: string, expected: string) {
   const user = normalizeAnswer(given);
   const official = normalizeAnswer(expected);
   if (official === "-4.0" && (user === "-4.0" || user === "-5.0")) {
@@ -152,6 +152,16 @@ export function isCorrect(given: string, expected: string) {
     return true;
   }
   return user === official;
+}
+
+export function isCorrect(given: string, expected: string) {
+  if (isCorrectSingle(given, expected)) {
+    return true;
+  }
+  // Archived answer keys often accept alternatives ("1999 or 2000",
+  // "50,000,000,000 or 50 billion"); credit a match against any of them.
+  const alternatives = expected.split(/\s+(?:or|OR)\s+/);
+  return alternatives.length > 1 && alternatives.some((alternative) => isCorrectSingle(given, alternative));
 }
 
 export function normalizeCode(value: string) {
