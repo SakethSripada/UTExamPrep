@@ -1,6 +1,6 @@
 import type { JavaRunRequest } from "./types";
 
-// This route is a thin proxy in front of the standalone Java runner service
+// This route is a thin proxy in front of the standalone code runner service
 // (see runner/). The runner compiles and executes untrusted submissions in a
 // sandbox; Vercel's serverless runtime cannot do that itself. The request and
 // response shapes are passed through unchanged so the frontend is unaware of
@@ -93,17 +93,17 @@ export async function GET() {
   if (!base) {
     return json({
       available: false,
-      message: "The Java runner is not configured. Set JAVA_RUNNER_URL to enable test execution.",
+      message: "The code runner is not configured. Set JAVA_RUNNER_URL to enable test execution.",
     });
   }
   try {
     const result = await forward("/api/run", { method: "GET" });
     if (!result) {
-      return json({ available: false, message: "The Java runner is not configured." });
+      return json({ available: false, message: "The code runner is not configured." });
     }
     return json(result.data, result.status);
   } catch {
-    return json({ available: false, message: "The Java runner could not be reached." });
+    return json({ available: false, message: "The code runner could not be reached." });
   }
 }
 
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
 
   const questionId = body.questionId;
   const code = body.code ?? "";
-  const language = body.language === "python" ? "python" : "java";
+  const language = body.language === "python" || body.language === "c" ? body.language : "java";
   if (!questionId || !code.trim()) {
     return json({ ok: false, phase: "request", message: "Missing question id or code." }, 400);
   }
@@ -135,8 +135,8 @@ export async function POST(request: Request) {
   if (!base) {
     return json({
       ok: false,
-      phase: "java",
-      message: "The Java runner is not configured. Set JAVA_RUNNER_URL to enable test execution.",
+      phase: "runtime",
+      message: "The code runner is not configured. Set JAVA_RUNNER_URL to enable test execution.",
     });
   }
 
@@ -147,10 +147,10 @@ export async function POST(request: Request) {
       body: JSON.stringify({ questionId, code, language }),
     });
     if (!result) {
-      return json({ ok: false, phase: "java", message: "The Java runner is not configured." });
+      return json({ ok: false, phase: "runtime", message: "The code runner is not configured." });
     }
     return json(result.data, result.status);
   } catch {
-    return json({ ok: false, phase: "java", message: "The Java runner could not be reached." });
+    return json({ ok: false, phase: "runtime", message: "The code runner could not be reached." });
   }
 }

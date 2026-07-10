@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="180" viewBox="0 0 420 180" role="img" aria-labelledby="title desc">
+  <title id="title">Structural formula of acetic acid</title>
+  <desc id="desc">A methyl carbon bonded to a carboxylic acid group.</desc>
+  <rect width="420" height="180" rx="16" fill="#f8fafc"/>
+  <g stroke="#263645" stroke-width="4" stroke-linecap="round">
+    <path d="M105 90H180"/>
+    <path d="M205 78L270 42"/>
+    <path d="M211 90L276 54"/>
+    <path d="M210 98L270 132"/>
+    <path d="M305 132H355"/>
+    <path d="M82 73L52 50"/>
+    <path d="M82 105L52 130"/>
+    <path d="M92 66V30"/>
+  </g>
+  <g fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" text-anchor="middle">
+    <text x="92" y="101">C</text>
+    <text x="195" y="101">C</text>
+    <text x="292" y="52">O</text>
+    <text x="292" y="143">O</text>
+    <text x="375" y="143">H</text>
+    <text x="38" y="49">H</text>
+    <text x="38" y="145">H</text>
+    <text x="92" y="26">H</text>
+  </g>
+</svg>

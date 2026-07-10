@@ -16,6 +16,15 @@ export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
       continue;
     }
 
+    if (question.type === "choice") {
+      if (Array.isArray(value)) {
+        next[question.id] = value.filter((choiceId): choiceId is string => typeof choiceId === "string");
+      } else if (typeof value === "string" && value) {
+        next[question.id] = value;
+      }
+      continue;
+    }
+
     if (typeof value !== "string" || !value.trim()) {
       continue;
     }
@@ -70,6 +79,19 @@ export function clearAllPersistedExams(examIds: string[]) {
 export function normalizeAnswer(value: string) {
   return value
     .trim()
+    .replace(/[×·]/g, "x")
+    .replace(/[−–—]/g, "-")
+    .replace(/⁻/g, "-")
+    .replace(/[⁰₀]/g, "0")
+    .replace(/[¹₁]/g, "1")
+    .replace(/[²₂]/g, "2")
+    .replace(/[³₃]/g, "3")
+    .replace(/[⁴₄]/g, "4")
+    .replace(/[⁵₅]/g, "5")
+    .replace(/[⁶₆]/g, "6")
+    .replace(/[⁷₇]/g, "7")
+    .replace(/[⁸₈]/g, "8")
+    .replace(/[⁹₉]/g, "9")
     .replace(/\s*,\s*/g, ",")
     .replace(/[;]/g, " ")
     .replace(/\s+/g, " ")
@@ -81,10 +103,52 @@ export function normalizeAnswer(value: string) {
     .toLowerCase();
 }
 
+function numericAnswer(value: string) {
+  const normalized = normalizeAnswer(value)
+    .replace(/\s+/g, " ")
+    .replace(/\s*\^\s*/g, "^");
+  const match = normalized.match(
+    /^([+-]?(?:\d+(?:\.\d*)?|\.\d+))(?:\s*(?:e|x\s*10\^?)\s*([+-]?\d+))?\s*([a-z][a-z0-9 /.*^-]*)?$/,
+  );
+  if (!match) {
+    return null;
+  }
+  const coefficient = Number(match[1]);
+  const exponent = Number(match[2] ?? 0);
+  if (!Number.isFinite(coefficient) || !Number.isFinite(exponent)) {
+    return null;
+  }
+  return {
+    value: coefficient * 10 ** exponent,
+    unit: (match[3] ?? "").replace(/[.*]/g, "").replace(/\s+/g, " ").trim(),
+  };
+}
+
+function looseTextAnswer(value: string) {
+  return normalizeAnswer(value)
+    .replace(/σ/g, "sigma")
+    .replace(/π/g, "pi")
+    .replace(/(?<=[a-z])-(?=[a-z])/g, " ")
+    .replace(/[,;]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function isCorrect(given: string, expected: string) {
   const user = normalizeAnswer(given);
   const official = normalizeAnswer(expected);
   if (official === "-4.0" && (user === "-4.0" || user === "-5.0")) {
+    return true;
+  }
+  const userNumber = numericAnswer(given);
+  const officialNumber = numericAnswer(expected);
+  if (userNumber && officialNumber && userNumber.unit === officialNumber.unit) {
+    const scale = Math.max(1, Math.abs(officialNumber.value));
+    if (Math.abs(userNumber.value - officialNumber.value) <= scale * 1e-9) {
+      return true;
+    }
+  }
+  if (!official.includes("[") && looseTextAnswer(given) === looseTextAnswer(expected)) {
     return true;
   }
   return user === official;

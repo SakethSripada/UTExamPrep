@@ -60,6 +60,8 @@ type sandbox struct {
 	javaVersion   string
 	pythonPath    string
 	pythonVersion string
+	gccPath       string
+	gccVersion    string
 	// extraBinds are directories outside /usr that the JDK reaches through
 	// symlinks (e.g. Debian sends conf/security and cacerts into /etc).
 	// They are bound read-only at their real paths so those links resolve.
@@ -83,12 +85,18 @@ func (s *sandbox) pythonAvailable() bool {
 	return s.pythonPath != ""
 }
 
+func (s *sandbox) cAvailable() bool {
+	return s.gccPath != ""
+}
+
 func (s *sandbox) languageAvailable(language string) bool {
 	switch language {
 	case "java":
 		return s.javaAvailable()
 	case "python":
 		return s.pythonAvailable()
+	case "c":
+		return s.cAvailable()
 	default:
 		return false
 	}
@@ -102,6 +110,9 @@ func (s *sandbox) availableLanguages() []string {
 	if s.pythonAvailable() {
 		languages = append(languages, "python")
 	}
+	if s.cAvailable() {
+		languages = append(languages, "c")
+	}
 	return languages
 }
 
@@ -113,6 +124,9 @@ func (s *sandbox) runtimeMessages() []string {
 	if s.pythonAvailable() {
 		messages = append(messages, s.pythonVersion)
 	}
+	if s.cAvailable() {
+		messages = append(messages, s.gccVersion)
+	}
 	return messages
 }
 
@@ -122,6 +136,7 @@ func newSandbox(requestedMode string) (*sandbox, error) {
 	s := &sandbox{mode: modeNone}
 	s.resolveJava()
 	s.resolvePython()
+	s.resolveC()
 
 	switch requestedMode {
 	case "none":
@@ -215,6 +230,28 @@ func (s *sandbox) resolvePython() {
 			return
 		}
 	}
+}
+
+func (s *sandbox) resolveC() {
+	gcc, err := exec.LookPath("gcc")
+	if err != nil {
+		return
+	}
+	if resolved, err := filepath.EvalSymlinks(gcc); err == nil {
+		gcc = resolved
+	}
+	if !isExecutable(gcc) {
+		return
+	}
+	version := commandOutput(gcc, "--version")
+	if version == "" {
+		return
+	}
+	s.gccPath = gcc
+	if newline := strings.IndexByte(version, '\n'); newline >= 0 {
+		version = version[:newline]
+	}
+	s.gccVersion = version
 }
 
 // computeExtraBinds finds directories the JDK depends on that live outside
@@ -446,6 +483,29 @@ func (s *sandbox) runPythonTests(workdir string, timeout time.Duration) execResu
 		"-B",
 		"TestRunner.py",
 	}
+	cpuSeconds := int(timeout/time.Second) + 3
+	return runWithLimits(s.wrap(argv, workdir, false, cpuSeconds), workdir, s.baseEnv(), timeout)
+}
+
+// compileC builds the C harness with strict diagnostics and a bounded output
+// binary. The harness is compiled inside the same isolated workspace as Java.
+func (s *sandbox) compileC(files []string, workdir string, timeout time.Duration) execResult {
+	argv := []string{
+		s.gccPath,
+		"-std=c17",
+		"-Wall",
+		"-Wextra",
+		"-Werror=implicit-function-declaration",
+		"-O0",
+		"-o", "TestRunner",
+	}
+	argv = append(argv, files...)
+	cpuSeconds := int(timeout/time.Second) + 5
+	return runWithLimits(s.wrap(argv, workdir, true, cpuSeconds), workdir, s.baseEnv(), timeout)
+}
+
+func (s *sandbox) runCTests(workdir string, timeout time.Duration) execResult {
+	argv := []string{"./TestRunner"}
 	cpuSeconds := int(timeout/time.Second) + 3
 	return runWithLimits(s.wrap(argv, workdir, false, cpuSeconds), workdir, s.baseEnv(), timeout)
 }

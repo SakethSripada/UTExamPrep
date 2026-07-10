@@ -82,6 +82,27 @@ func TestPythonSmokePasses(t *testing.T) {
 	}
 }
 
+func TestCSmokePasses(t *testing.T) {
+	box, err := newSandbox(os.Getenv("SANDBOX_MODE"))
+	if err != nil {
+		t.Fatalf("newSandbox: %v", err)
+	}
+	if !box.cAvailable() {
+		t.Skip("no C compiler available; skipping C end-to-end test")
+	}
+	srv := newServer(serverConfig{
+		sandbox: box, compileTimeout: 60 * time.Second, runTimeout: 10 * time.Second,
+		queueTimeout: 5 * time.Minute, concurrency: 1,
+		devicePerMin: 100_000, deviceBurst: 100_000,
+		ipPerMin: 100_000, ipBurst: 100_000,
+		globalPerMin: 100_000, globalBurst: 100_000, rateMaxKeys: 1000,
+	})
+	_, resp := postRunLanguage(t, srv.routes(), "c-smoke", "c", "int double_value(int value) { return value * 2; }")
+	if !resp.OK || resp.Phase != "test" {
+		t.Fatalf("C smoke failed: %+v", resp)
+	}
+}
+
 // TestReferenceSolutionsAllPass is the grading-accuracy gate: the official
 // answer to every question must compile, run, and pass every test.
 func TestReferenceSolutionsAllPass(t *testing.T) {

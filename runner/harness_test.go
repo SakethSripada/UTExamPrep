@@ -142,6 +142,20 @@ func TestBuildHarnessForLanguageRejectsWrongLanguage(t *testing.T) {
 	}
 }
 
+func TestBuildHarnessForLanguageC(t *testing.T) {
+	files, ok := buildHarnessForLanguage("c-smoke", "c", "int double_value(int value) { return value * 2; }")
+	if !ok {
+		t.Fatalf("buildHarnessForLanguage returned no C harness")
+	}
+	got := files["TestRunner.c"]
+	if !strings.Contains(got, "int double_value(int value)") {
+		t.Fatalf("student code was not inserted into C harness:\n%s", got)
+	}
+	if strings.Contains(got, studentCodeMarker) {
+		t.Fatalf("student marker was not replaced in C harness")
+	}
+}
+
 func TestDeclassify(t *testing.T) {
 	got := declassify("public class Yak extends Critter { public class YakHelper {} }")
 	want := "class Yak extends Critter { public class YakHelper {} }"

@@ -50,7 +50,7 @@ func buildHarnessForLanguage(questionID, language, code string) (map[string]stri
 	if !questionIDPattern.MatchString(questionID) {
 		return nil, false
 	}
-	if language != "java" && language != "python" {
+	if language != "java" && language != "python" && language != "c" {
 		return nil, false
 	}
 	dir := "questions/" + questionID
@@ -82,6 +82,9 @@ func buildHarnessForLanguage(questionID, language, code string) (map[string]stri
 			continue
 		}
 		if language == "python" && ext != "py" {
+			continue
+		}
+		if language == "c" && ext != "c" && ext != "h" {
 			continue
 		}
 		data, err := questionsFS.ReadFile(dir + "/" + entry.Name())

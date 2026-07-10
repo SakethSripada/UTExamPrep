@@ -285,7 +285,7 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !s.sandbox.languageAvailable(language) {
-		writeJSON(w, http.StatusOK, runResponse{OK: false, Phase: "java", Message: "The runner has no working runtime for this language."})
+		writeJSON(w, http.StatusOK, runResponse{OK: false, Phase: "runtime", Message: "The runner has no working runtime for this language."})
 		return
 	}
 
@@ -293,7 +293,7 @@ func (s *server) handleRun(w http.ResponseWriter, r *http.Request) {
 	case s.slots <- struct{}{}:
 		defer func() { <-s.slots }()
 	case <-time.After(s.queueTimeout):
-		writeJSON(w, http.StatusServiceUnavailable, runResponse{OK: false, Phase: "busy", Message: "The Java runner is busy. Try again in a moment."})
+		writeJSON(w, http.StatusServiceUnavailable, runResponse{OK: false, Phase: "busy", Message: "The code runner is busy. Try again in a moment."})
 		return
 	case <-r.Context().Done():
 		return
@@ -333,6 +333,21 @@ func (s *server) execute(language string, files map[string]string) runResponse {
 
 	if language == "python" {
 		return responseFromRun(s.sandbox.runPythonTests(workdir, s.runTimeout))
+	}
+	if language == "c" {
+		compile := s.sandbox.compileC(names, workdir, s.compileTimeout)
+		if compile.startErr != nil {
+			log.Printf("error: starting C compiler: %v", compile.startErr)
+			return runResponse{OK: false, Phase: "internal", Message: "The runner could not start the compiler."}
+		}
+		if compile.exitCode != 0 {
+			message := "Compilation failed."
+			if compile.timedOut {
+				message = "Compilation timed out."
+			}
+			return runResponse{OK: false, Phase: "compile", Message: message, Stdout: compile.stdout, Stderr: compile.stderr}
+		}
+		return responseFromRun(s.sandbox.runCTests(workdir, s.runTimeout))
 	}
 
 	compile := s.sandbox.compile(names, workdir, s.compileTimeout)

@@ -18,6 +18,8 @@ export function JavaRunnerPanel({
 }) {
   const isLoading = Boolean(runState && "loading" in runState);
   const result = runState && !("loading" in runState) ? runState : null;
+  const language = question.language ?? "java";
+  const languageAvailable = Boolean(status?.available && (!status.languages || status.languages.includes(language)));
 
   return (
     <section className="java-panel">
@@ -31,7 +33,7 @@ export function JavaRunnerPanel({
         <button
           className="primary-button"
           onClick={onRun}
-          disabled={isLoading || status?.available === false || !question.stub || !hasEditedCode}
+          disabled={isLoading || !languageAvailable || !question.stub || !hasEditedCode}
         >
           <Play size={17} />
           {isLoading ? "Running" : "Run Tests"}
@@ -40,7 +42,11 @@ export function JavaRunnerPanel({
 
       <div className={`java-status ${status?.available ? "available" : "missing"}`}>
         <ShieldCheck size={17} />
-        <span>{status?.message ?? "Checking Java runner availability..."}</span>
+        <span>
+          {status && status.available && status.languages && !status.languages.includes(language)
+            ? `${language.toUpperCase()} execution is not available on this runner.`
+            : status?.message ?? "Checking code runner availability..."}
+        </span>
       </div>
       {!hasEditedCode ? <p className="java-hint">Edit the starter code to enable tests.</p> : null}
 

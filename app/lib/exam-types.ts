@@ -1,6 +1,6 @@
 export type QuestionType = "short" | "code" | "choice" | "free-response";
 
-export type CodeLanguage = "java" | "python";
+export type CodeLanguage = "java" | "python" | "c";
 
 export type GradingMode = "auto" | "code" | "self" | "hybrid";
 
@@ -93,6 +93,7 @@ export type FlagState = Record<string, boolean>;
 export type JavaStatus = {
   available: boolean;
   message: string;
+  languages?: CodeLanguage[];
 };
 
 export type JavaRunResult = {

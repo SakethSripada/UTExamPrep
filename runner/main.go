@@ -35,6 +35,12 @@ func main() {
 	} else {
 		log.Printf("WARNING: no JDK found; submissions will be rejected until one is installed")
 	}
+	if box.pythonAvailable() {
+		log.Printf("python: %s (%s)", box.pythonVersion, box.pythonPath)
+	}
+	if box.cAvailable() {
+		log.Printf("c compiler: %s (%s)", box.gccVersion, box.gccPath)
+	}
 	log.Printf("sandbox mode: %s", box.mode)
 	log.Printf("questions registered: %d", len(questionIDs()))
 

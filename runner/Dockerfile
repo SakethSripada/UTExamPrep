@@ -18,7 +18,7 @@ FROM eclipse-temurin:21-jdk-jammy
 # prlimit; tini reaps zombies left by killed submissions. ca-certificates is
 # only for the service's own outbound needs (none today, kept minimal).
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends bubblewrap util-linux tini curl python3 \
+    && apt-get install -y --no-install-recommends bubblewrap util-linux tini curl python3 gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Unprivileged service account. Untrusted code runs as this same uid inside

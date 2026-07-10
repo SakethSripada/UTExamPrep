@@ -42,7 +42,6 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 });
 
 const catalogExamIds = examCatalog.map((item) => item.id);
-const readyExamCount = examCatalog.filter((item) => item.status !== "source-qc").length;
 
 // A stable, anonymous per-browser id. It is never tied to a login; the runner
 // uses it only for fair per-user rate limiting (so students sharing a campus
@@ -84,6 +83,7 @@ export default function Home() {
   const [examRequestError, setExamRequestError] = useState<string | null>(null);
   const [subjectFilter, setSubjectFilter] = useState("All");
   const [courseFilter, setCourseFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const question = exam?.questions[index] ?? null;
   const subjects = ["All", ...Array.from(new Set(examCatalog.map((item) => item.subject))).sort()];
@@ -100,7 +100,18 @@ export default function Home() {
   const visibleExams = examCatalog.filter(
     (item) =>
       (subjectFilter === "All" || item.subject === subjectFilter) &&
-      (courseFilter === "All" || item.course === courseFilter),
+      (courseFilter === "All" || item.course === courseFilter) &&
+      `${item.title} ${item.course} ${item.term} ${item.examType}`
+        .toLowerCase()
+        .includes(searchQuery.trim().toLowerCase()),
+  );
+  const groupedExams = Array.from(
+    visibleExams.reduce((groups, item) => {
+      const group = groups.get(item.course) ?? [];
+      group.push(item);
+      groups.set(item.course, group);
+      return groups;
+    }, new Map<string, ExamCatalogEntry[]>()),
   );
 
   useEffect(() => {
@@ -167,7 +178,7 @@ export default function Home() {
         if (!cancelled) {
           setJavaStatus({
             available: false,
-            message: "Java runner status could not be checked.",
+            message: "Code runner status could not be checked.",
           });
         }
       });
@@ -275,6 +286,9 @@ export default function Home() {
       return questionAnswered(item) ? [] : [{ label: "Self-graded response", targetId: `${item.id}-free-response` }];
     }
     const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
+    if (!item.code) {
+      return userAnswers[0]?.trim() ? [] : [{ label: "Answer", targetId: `${item.id}-answer` }];
+    }
     return buildObjectiveParts(item)
       .filter((part) => part.kind === "answer")
       .filter((part) => !userAnswers[part.answerIndex ?? 0]?.trim())
@@ -485,7 +499,7 @@ export default function Home() {
       });
       const result = (await response.json()) as JavaRunResult;
       setJavaRuns((current) => ({ ...current, [item.id]: result }));
-      if (result.phase === "java") {
+      if (result.phase === "runtime" || result.phase === "java") {
         setJavaStatus({ available: false, message: result.message });
       }
       return result;
@@ -493,7 +507,7 @@ export default function Home() {
       const result = {
         ok: false,
         phase: "network",
-        message: "Could not reach the Java runner.",
+        message: "Could not reach the code runner.",
       };
       setJavaRuns((current) => ({
         ...current,
@@ -509,7 +523,7 @@ export default function Home() {
         <section className="menu-hero">
           <div>
             <h1>UT Austin Practice Exams</h1>
-            <p className="lede">{readyExamCount} verified digitized exams are ready to practice.</p>
+            <p className="lede">Choose a course and start practicing.</p>
           </div>
           <div className="menu-actions">
             <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
@@ -526,6 +540,15 @@ export default function Home() {
         {examLoadError ? <p className="catalog-error">{examLoadError}</p> : null}
 
         <section className="catalog-filters" aria-label="Exam filters">
+          <label className="catalog-search">
+            <span>Find an exam</span>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search by course, term, or exam"
+            />
+          </label>
           <label>
             <span>Subject</span>
             <select
@@ -555,30 +578,28 @@ export default function Home() {
         </section>
 
         <section className="exam-list" aria-label="Available exams">
-          {visibleExams.map((item) => {
-            const saved = savedExamIds.includes(item.id);
-            const loading = loadingExamId === item.id;
-            return (
-              <article className="exam-row" key={item.id}>
-                <div>
-                  <div className="exam-row-heading">
-                    <h2>{item.title}</h2>
-                    <span className={`status-pill ${item.status ?? "ready"}`}>{item.status ?? "ready"}</span>
-                  </div>
-                  <p>{item.subtitle}</p>
-                  <span>
-                    {item.subject} · {item.course} · {item.term} · {item.examType} · {item.questionCount}{" "}
-                    sections · {item.points} points · {item.autoGraded ? "auto-graded where possible" : "self-graded"}
-                  </span>
-                  {item.sourceNotice ? <small className="source-notice">{item.sourceNotice}</small> : null}
-                </div>
-                <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
-                  <BookOpen size={18} />
-                  {loading ? "Loading" : saved ? "Resume" : "Start"}
-                </button>
-              </article>
-            );
-          })}
+          {groupedExams.map(([course, items]) => (
+            <section className="course-group" key={course}>
+              <h2>{course}</h2>
+              {items.map((item) => {
+                const saved = savedExamIds.includes(item.id);
+                const loading = loadingExamId === item.id;
+                return (
+                  <article className="exam-row" key={item.id}>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.subtitle}</p>
+                    </div>
+                    <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
+                      <BookOpen size={18} />
+                      {loading ? "Loading" : saved ? "Resume" : "Start"}
+                    </button>
+                  </article>
+                );
+              })}
+            </section>
+          ))}
+          {groupedExams.length === 0 ? <p className="empty-catalog">No exams match those filters.</p> : null}
         </section>
         {requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">
@@ -842,7 +863,36 @@ export default function Home() {
 
           {question.type === "short" && question.answers ? (
             <div className="objective-list">
-              {buildObjectiveParts(question).map((part, partIndex) => {
+              {!question.code ? (
+                <label className="single-answer" id={`${question.id}-answer`}>
+                  <span>Your answer</span>
+                  <input
+                    disabled={mode === "review"}
+                    value={((answers[question.id] as string[] | undefined) ?? [])[0] ?? ""}
+                    onChange={(event) => setShortAnswer(question.id, 0, event.target.value)}
+                    placeholder="Type your answer"
+                  />
+                  {mode === "review" ? (
+                    <strong
+                      className={
+                        isCorrect(
+                          ((answers[question.id] as string[] | undefined) ?? [])[0] ?? "",
+                          question.answers[0],
+                        )
+                          ? "correct"
+                          : "incorrect"
+                      }
+                    >
+                      {isCorrect(
+                        ((answers[question.id] as string[] | undefined) ?? [])[0] ?? "",
+                        question.answers[0],
+                      )
+                        ? "Correct"
+                        : question.answers[0]}
+                    </strong>
+                  ) : null}
+                </label>
+              ) : buildObjectiveParts(question).map((part, partIndex) => {
                 if (part.kind === "context") {
                   return (
                     <section className="context-block" key={`${question.id}-context-${partIndex}`}>
@@ -943,7 +993,7 @@ export default function Home() {
                 height="430px"
                 defaultLanguage={question.language ?? "java"}
                 language={question.language ?? "java"}
-                path={`${selectedExamId}/${question.id}.${question.language === "python" ? "py" : "java"}`}
+                path={`${selectedExamId}/${question.id}.${question.language === "python" ? "py" : question.language === "c" ? "c" : "java"}`}
                 theme="vs"
                 value={(answers[question.id] as string | undefined) ?? question.stub ?? ""}
                 onChange={(value) => setCodeAnswer(question, value)}
