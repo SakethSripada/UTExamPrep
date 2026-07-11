@@ -2520,12 +2520,13 @@ textarea:focus-visible {
 
 /* The homepage is intentionally quieter than the exam workspace. */
 .menu-shell {
+  --home-content-width: 1440px;
   padding: 0 20px 52px;
   background: #ffffff;
 }
 
 .site-header {
-  width: min(960px, 100%);
+  width: min(var(--home-content-width), 100%);
   min-height: 64px;
 }
 
@@ -2555,7 +2556,7 @@ textarea:focus-visible {
 
 .menu-hero {
   display: block;
-  width: min(960px, 100%);
+  width: min(var(--home-content-width), 100%);
   padding: 32px 0 22px;
   border-bottom: 0;
 }
@@ -2580,7 +2581,7 @@ textarea:focus-visible {
 .catalog-error,
 .catalog-panel,
 .exam-list {
-  width: min(960px, 100%);
+  width: min(var(--home-content-width), 100%);
 }
 
 .catalog-panel {
@@ -2691,7 +2692,7 @@ textarea:focus-visible {
 }
 
 .menu-footer {
-  width: min(960px, 100%);
+  width: min(var(--home-content-width), 100%);
   margin: 36px auto 0;
   padding-top: 16px;
   color: #7b746e;
