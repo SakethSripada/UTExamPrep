@@ -157,8 +157,47 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function codeVocabulary(segments: ContentSegment[]) {
+export function codeVocabulary(segments: ContentSegment[]) {
   const terms = new Set<string>();
+  const reservedWords = new Set([
+    "abstract",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "continue",
+    "default",
+    "do",
+    "else",
+    "enum",
+    "extends",
+    "final",
+    "finally",
+    "for",
+    "if",
+    "implements",
+    "import",
+    "instanceof",
+    "interface",
+    "new",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "static",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "throws",
+    "try",
+    "void",
+    "while",
+  ]);
+  const add = (term: string | undefined) => {
+    if (term && !reservedWords.has(term.toLowerCase())) terms.add(term);
+  };
   for (const segment of segments) {
     if (segment.kind !== "code") {
       continue;
@@ -169,18 +208,18 @@ function codeVocabulary(segments: ContentSegment[]) {
       .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, " ");
 
     for (const match of source.matchAll(/\b(?:class|interface|enum)\s+([A-Za-z_]\w*)/g)) {
-      terms.add(match[1]);
+      add(match[1]);
     }
     for (const match of source.matchAll(
       /\b(?:[A-Z][A-Za-z0-9_]*(?:\s*<[^;=(){}]+>)?(?:\[\])?|byte|short|int|long|float|double|boolean|char|var)\s+(?:\[\]\s*)?([A-Za-z_]\w*)\b/g,
     )) {
-      terms.add(match[1]);
+      add(match[1]);
     }
     for (const match of source.matchAll(/\.\s*([A-Za-z_]\w*)\b|\b([A-Za-z_]\w*)\s*\(/g)) {
-      terms.add(match[1] ?? match[2]);
+      add(match[1] ?? match[2]);
     }
     for (const match of source.matchAll(/\b(?:[A-Z][A-Za-z0-9_]*|[A-Z][A-Z0-9_]{1,})\b/g)) {
-      terms.add(match[0]);
+      add(match[0]);
     }
   }
   return terms;

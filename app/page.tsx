@@ -24,6 +24,7 @@ import { examCatalog, loadExam } from "@/app/data/exams";
 import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
 import { InlineProseContent, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
+import { QuestionDiagramVisual } from "@/app/components/question-diagram";
 import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import {
   answerPlaceholder,
@@ -48,8 +49,7 @@ function BrandLockup() {
   return (
     <div className="brand-lockup" aria-label="DigitalExams, UT Austin practice archive">
       <span className="brand-mark" aria-hidden="true">
-        <BookOpen size={27} strokeWidth={1.8} />
-        <span className="brand-horns" />
+        <Image src="/brand/mark.svg" alt="" width={90} height={70} priority />
       </span>
       <span className="brand-name">
         <strong>DigitalExams</strong>
@@ -919,6 +919,9 @@ export default function Home() {
               />
             </figure>
           ) : null}
+          {question.diagrams?.map((diagram, diagramIndex) => (
+            <QuestionDiagramVisual diagram={diagram} key={`${question.id}-diagram-${diagramIndex}`} />
+          ))}
 
           {question.type === "short" && question.answers ? (
             <div className="objective-list">

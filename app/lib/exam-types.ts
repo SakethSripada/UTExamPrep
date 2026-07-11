@@ -21,6 +21,7 @@ export type Question = {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  diagrams?: QuestionDiagram[];
   code?: string;
   stub?: string;
   language?: CodeLanguage;
@@ -41,6 +42,40 @@ export type Question = {
   // sequence (e.g. as "E") with an explanatory note and no answer input, and its
   // points are awarded to everyone automatically.
   thrownOut?: ThrownOutPart;
+};
+
+export type QuestionDiagram = TreeDiagram | LinkedListDiagram | SourceDiagram;
+
+export type SourceDiagram = {
+  kind: "source";
+  src: string;
+  alt: string;
+  title?: string;
+  description?: string;
+  width: number;
+  height: number;
+};
+
+export type TreeDiagram = {
+  kind: "tree";
+  title?: string;
+  description?: string;
+  root: string;
+  nodes: Array<{
+    id: string;
+    label: string;
+    left?: string;
+    right?: string;
+    tone?: "red" | "black" | "neutral";
+  }>;
+};
+
+export type LinkedListDiagram = {
+  kind: "linked-list";
+  title?: string;
+  description?: string;
+  values: string[];
+  nullLabel?: string;
 };
 
 export type Choice = {

@@ -65,7 +65,7 @@ textarea:focus-visible {
 
 .exam-shell {
   min-height: 100vh;
-  background: var(--background);
+  background: #f8fafc;
 }
 
 .menu-shell {
@@ -112,13 +112,13 @@ textarea:focus-visible {
 }
 
 .brand-mark::after {
-  position: absolute;
-  right: 7px;
-  bottom: 7px;
-  left: 7px;
-  height: 2px;
-  background: rgb(255 249 241 / 72%);
-  content: "";
+  display: none;
+}
+
+.brand-mark img {
+  display: block;
+  width: 34px;
+  height: auto;
 }
 
 .brand-name {
@@ -1030,8 +1030,8 @@ textarea:focus-visible {
   max-width: 900px;
   margin: 20px 0;
   color: #2f3744;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.68;
 }
 
 .prompt .mixed-prose {
@@ -1208,8 +1208,8 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: 6px;
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -1237,12 +1237,110 @@ textarea:focus-visible {
   display: grid;
   gap: 6px;
   color: #334155;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .mixed-prose p {
   margin: 0;
+}
+
+.question-diagram {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 860px);
+  margin: 22px 0;
+  padding: 16px;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.question-diagram figcaption {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 780;
+}
+
+.question-diagram p {
+  margin: 0;
+  color: #526170;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tree-diagram,
+.linked-list-diagram {
+  display: block;
+  min-width: 320px;
+  max-width: 100%;
+  height: auto;
+}
+
+.source-diagram {
+  width: 100%;
+  height: auto;
+  border: 1px solid #e2e8f0;
+}
+
+.tree-edge,
+.list-arrow,
+.list-divider {
+  fill: none;
+  stroke: #64748b;
+  stroke-width: 1.6;
+}
+
+.tree-node circle {
+  fill: #ffffff;
+  stroke: #334155;
+  stroke-width: 1.8;
+}
+
+.tree-node text,
+.list-value,
+.list-head-label,
+.list-null {
+  fill: #1e293b;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.tree-node.red circle {
+  fill: #b42318;
+  stroke: #8a1710;
+}
+
+.tree-node.red text {
+  fill: #ffffff;
+}
+
+.tree-node.black circle {
+  fill: #1f2937;
+  stroke: #111827;
+}
+
+.tree-node.black text {
+  fill: #ffffff;
+}
+
+.list-cell {
+  fill: #f8fafc;
+  stroke: #475569;
+  stroke-width: 1.5;
+}
+
+.list-head-label {
+  text-anchor: start;
+  font-size: 12px;
+}
+
+.list-null {
+  text-anchor: start;
+  font-size: 12px;
 }
 
 .scientific-content {
@@ -2442,19 +2540,8 @@ textarea:focus-visible {
   display: none;
 }
 
-.brand-mark svg {
-  display: block;
-}
-
-.brand-horns {
-  position: absolute;
-  top: 13px;
-  left: 50%;
-  width: 17px;
-  height: 11px;
-  background: #fff9f1;
-  clip-path: polygon(0 0, 24% 23%, 39% 24%, 50% 43%, 61% 24%, 76% 23%, 100% 0, 88% 38%, 67% 50%, 62% 100%, 38% 100%, 33% 50%, 12% 38%);
-  transform: translateX(-50%);
+.brand-mark img {
+  width: 29px;
 }
 
 .brand-name strong {

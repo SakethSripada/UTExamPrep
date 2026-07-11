@@ -1,6 +1,5 @@
 import type { Exam, ExamCatalogEntry } from "@/app/lib/exam-types";
 import { splitTracingQuestion } from "./split-tracing";
-import { archivedCsCatalog } from "./generated-cs-catalog";
 
 type ExamRegistryEntry = ExamCatalogEntry & {
   load: () => Promise<Exam>;
@@ -105,15 +104,6 @@ const registry: ExamRegistryEntry[] = [
     status: "ready",
     load: async () => (await import("./biology-2007-exam-one")).bio311c2007ExamOne,
   },
-  ...archivedCsCatalog.map(
-    (entry): ExamRegistryEntry => ({
-      ...entry,
-      load: async () => {
-        const { archivedCsExams } = await import("./generated-cs-archive");
-        return archivedCsExams[entry.id];
-      },
-    }),
-  ),
 ];
 
 export const examCatalog: ExamCatalogEntry[] = registry.map((entry) => ({

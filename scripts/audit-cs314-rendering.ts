@@ -12,7 +12,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 
 async function generatedValue<T>(fileName: string): Promise<T> {
   const source = await readFile(path.join(repoRoot, "app", "data", fileName), "utf8");
-  return JSON.parse(source.replace(/^.*?= /s, "").replace(/;\s*$/, "")) as T;
+  return JSON.parse(source.replace(/^[\s\S]*?= /, "").replace(/;\s*$/, "")) as T;
 }
 
 function assertUnclosedSnippetReturnsToProse() {
