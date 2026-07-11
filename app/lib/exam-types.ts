@@ -9,6 +9,15 @@ export type Rubric = {
   points: number;
 };
 
+// Hand-authored MathML is used for source equations that need more than a
+// subscript or superscript. Keeping an accessible plain-language label next to
+// the markup makes the formulas useful to screen-reader users as well.
+export type MathFormula = {
+  ariaLabel: string;
+  mathml: string;
+  caption?: string;
+};
+
 export type Question = {
   id: string;
   title: string;
@@ -16,6 +25,7 @@ export type Question = {
   type: QuestionType;
   gradingMode?: GradingMode;
   prompt: string;
+  formulas?: MathFormula[];
   reference?: string;
   image?: string;
   imageAlt?: string;
@@ -36,8 +46,18 @@ export type Question = {
   correctChoiceIds?: string[];
   allowMultiple?: boolean;
   officialSolution?: string;
+  solutionFormulas?: MathFormula[];
   sourceNote?: string;
   rubric?: Rubric[];
+  // Some source questions award credit for a final result and for the
+  // accompanying explanation. The result remains auto-graded while the
+  // student’s typed reasoning is kept for review and self-scoring.
+  workPrompt?: string;
+  workPlaceholder?: string;
+  workRows?: number;
+  workRequired?: boolean;
+  workPoints?: number;
+  workRubric?: Rubric[];
   // A short-answer part that was thrown out after the exam. It renders inline in
   // sequence (e.g. as "E") with an explanatory note and no answer input, and its
   // points are awarded to everyone automatically.

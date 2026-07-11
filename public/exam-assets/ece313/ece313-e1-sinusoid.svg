@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title description">
+  <title id="title">Five-cycle sinusoidal signal</title>
+  <desc id="description">A sinusoid from minus eight to twelve milliseconds with amplitude two, peaks every four milliseconds, and vertical values from minus two to two.</desc>
+  <style>
+    .axis { stroke: #253546; stroke-width: 2; }
+    .grid { stroke: #d8e0e8; stroke-width: 1; }
+    .curve { fill: none; stroke: #111827; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .tick { fill: #344054; font: 19px ui-sans-serif, system-ui, sans-serif; }
+    .label { fill: #1f2d3d; font: 25px Georgia, serif; font-style: italic; }
+    .note { fill: #334155; font: 20px ui-sans-serif, system-ui, sans-serif; }
+  </style>
+  <rect width="1000" height="560" fill="#ffffff"/>
+  <rect x="100" y="60" width="800" height="330" fill="#fbfdff" stroke="#536579" stroke-width="1.5"/>
+  <g class="grid">
+    <path d="M100 60H900 M100 101.25H900 M100 142.5H900 M100 183.75H900 M100 225H900 M100 266.25H900 M100 307.5H900 M100 348.75H900 M100 390H900"/>
+    <path d="M100 60V390 M180 60V390 M260 60V390 M340 60V390 M420 60V390 M500 60V390 M580 60V390 M660 60V390 M740 60V390 M820 60V390 M900 60V390"/>
+  </g>
+  <g class="axis">
+    <path d="M100 225H900 M100 60V390"/>
+  </g>
+  <path class="curve" d="M100 225
+    C105 133,119 60,140 60 C161 60,175 133,180 225
+    C185 317,199 390,220 390 C241 390,255 317,260 225
+    C265 133,279 60,300 60 C321 60,335 133,340 225
+    C345 317,359 390,380 390 C401 390,415 317,420 225
+    C425 133,439 60,460 60 C481 60,495 133,500 225
+    C505 317,519 390,540 390 C561 390,575 317,580 225
+    C585 133,599 60,620 60 C641 60,655 133,660 225
+    C665 317,679 390,700 390 C721 390,735 317,740 225
+    C745 133,759 60,780 60 C801 60,815 133,820 225
+    C825 317,839 390,860 390 C881 390,895 317,900 225"/>
+  <g class="tick" text-anchor="end">
+    <text x="89" y="67">2</text><text x="89" y="108">1.5</text><text x="89" y="149">1</text>
+    <text x="89" y="190">0.5</text><text x="89" y="232">0</text><text x="89" y="273">−0.5</text>
+    <text x="89" y="314">−1</text><text x="89" y="355">−1.5</text><text x="89" y="397">−2</text>
+  </g>
+  <g class="tick" text-anchor="middle">
+    <text x="100" y="419">−8</text><text x="180" y="419">−6</text><text x="260" y="419">−4</text>
+    <text x="340" y="419">−2</text><text x="420" y="419">0</text><text x="500" y="419">2</text>
+    <text x="580" y="419">4</text><text x="660" y="419">6</text><text x="740" y="419">8</text>
+    <text x="820" y="419">10</text><text x="900" y="419">12</text>
+  </g>
+  <text class="label" x="500" y="465" text-anchor="middle">milliseconds</text>
+  <rect x="298" y="490" width="404" height="48" rx="5" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text class="note" x="500" y="521" text-anchor="middle">1 millisecond = 10⁻³ seconds</text>
+</svg>

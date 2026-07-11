@@ -23,6 +23,7 @@ import {
 import { examCatalog, loadExam } from "@/app/data/exams";
 import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
+import { MathFormulaBlock } from "@/app/components/math-formula";
 import { InlineProseContent, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import { QuestionDiagramVisual } from "@/app/components/question-diagram";
 import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
@@ -36,6 +37,7 @@ import {
   isSameCode,
   readPersistedExam,
   readSavedExamIds,
+  workResponseKey,
 } from "@/app/lib/exam-state";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -47,12 +49,12 @@ const catalogExamIds = examCatalog.map((item) => item.id);
 
 function BrandLockup() {
   return (
-    <div className="brand-lockup" aria-label="DigitalExams, UT Austin practice archive">
+    <div className="brand-lockup" aria-label="UTExamPrep, UT Austin practice archive">
       <span className="brand-mark" aria-hidden="true">
         <Image src="/brand/mark.svg" alt="" width={90} height={70} priority />
       </span>
       <span className="brand-name">
-        <strong>DigitalExams</strong>
+        <strong>UTExamPrep</strong>
       </span>
     </div>
   );
@@ -63,8 +65,10 @@ function BrandLockup() {
 // IP aren't throttled together) and for a rough unique-user count.
 function deviceHeaders(): Record<string, string> {
   try {
-    const key = "digitalexams:deviceId";
-    let id = window.localStorage.getItem(key);
+    const key = "utexamprep:deviceId";
+    // Carry the anonymous rate-limit id forward when someone returns after the
+    // product rename, so their browser remains a single fair-use identity.
+    let id = window.localStorage.getItem(key) ?? window.localStorage.getItem("digitalexams:deviceId");
     if (!id) {
       id = crypto.randomUUID();
       window.localStorage.setItem(key, id);
@@ -176,7 +180,7 @@ export default function Home() {
       return;
     }
     window.localStorage.setItem(
-      `digitalexams:${exam.id}`,
+      `utexamprep:${exam.id}`,
       JSON.stringify({ answers, manual, flags }),
     );
   }, [answers, exam, flags, manual, storageReady]);
@@ -228,7 +232,10 @@ export default function Home() {
 
     for (const item of exam.questions) {
       if (item.type === "short" && item.answers) {
-        autoPossible += item.points;
+        const workPoints = Math.min(item.points, Math.max(0, item.workPoints ?? 0));
+        autoPossible += item.points - workPoints;
+        manualPossible += workPoints;
+        manualEarned += Math.min(workPoints, Math.max(0, manual[item.id] ?? 0));
         // Points for a thrown-out part are awarded to everyone automatically.
         if (item.thrownOut) {
           autoEarned += item.thrownOut.points;
@@ -236,7 +243,7 @@ export default function Home() {
         const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
         item.answers.forEach((expected, answerIndex) => {
           if (isCorrect(userAnswers[answerIndex] ?? "", expected)) {
-            autoEarned += item.answerPoints?.[answerIndex] ?? item.points / item.answers!.length;
+            autoEarned += item.answerPoints?.[answerIndex] ?? (item.points - workPoints) / item.answers!.length;
           }
         });
       } else if (item.type === "choice" && item.correctChoiceIds?.length) {
@@ -265,7 +272,9 @@ export default function Home() {
   function questionAnswered(item: Question) {
     if (item.type === "short") {
       const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
-      return item.answers?.every((_, answerIndex) => Boolean(userAnswers[answerIndex]?.trim())) ?? false;
+      const hasEveryResult = item.answers?.every((_, answerIndex) => Boolean(userAnswers[answerIndex]?.trim())) ?? false;
+      const hasRequiredWork = !item.workRequired || Boolean((answers[workResponseKey(item.id)] as string | undefined)?.trim());
+      return hasEveryResult && hasRequiredWork;
     }
     if (item.type === "choice") {
       const value = answers[item.id];
@@ -279,7 +288,10 @@ export default function Home() {
 
   function questionHasPartialAnswer(item: Question) {
     if (item.type === "short") {
-      return Boolean(((answers[item.id] as string[] | undefined) ?? []).some((answer) => answer?.trim()));
+      return Boolean(
+        ((answers[item.id] as string[] | undefined) ?? []).some((answer) => answer?.trim()) ||
+          (answers[workResponseKey(item.id)] as string | undefined)?.trim(),
+      );
     }
     if (item.type === "choice") {
       const value = answers[item.id];
@@ -302,16 +314,21 @@ export default function Home() {
       return questionAnswered(item) ? [] : [{ label: "Self-graded response", targetId: `${item.id}-free-response` }];
     }
     const userAnswers = (answers[item.id] as string[] | undefined) ?? [];
-    if (!item.code) {
-      return userAnswers[0]?.trim() ? [] : [{ label: "Answer", targetId: `${item.id}-answer` }];
+    const missing = !item.code
+      ? userAnswers[0]?.trim()
+        ? []
+        : [{ label: "Answer", targetId: `${item.id}-answer` }]
+      : buildObjectiveParts(item)
+          .filter((part) => part.kind === "answer")
+          .filter((part) => !userAnswers[part.answerIndex ?? 0]?.trim())
+          .map((part) => ({
+            label: `Part ${part.label}`,
+            targetId: `${item.id}-part-${part.label}`,
+          }));
+    if (item.workRequired && !(answers[workResponseKey(item.id)] as string | undefined)?.trim()) {
+      missing.push({ label: "Reasoning", targetId: `${item.id}-work` });
     }
-    return buildObjectiveParts(item)
-      .filter((part) => part.kind === "answer")
-      .filter((part) => !userAnswers[part.answerIndex ?? 0]?.trim())
-      .map((part) => ({
-        label: `Part ${part.label}`,
-        targetId: `${item.id}-part-${part.label}`,
-      }));
+    return missing;
   }
 
   const incompleteSections: IncompleteSection[] = exam
@@ -329,6 +346,18 @@ export default function Home() {
       const list = [...(((current[questionId] as string[] | undefined) ?? []) as string[])];
       list[answerIndex] = value;
       return { ...current, [questionId]: list };
+    });
+  }
+
+  function setWorkResponse(questionId: string, value: string) {
+    const key = workResponseKey(questionId);
+    setAnswers((current) => {
+      if (!value.trim()) {
+        const next = { ...current };
+        delete next[key];
+        return next;
+      }
+      return { ...current, [key]: value };
     });
   }
 
@@ -559,7 +588,6 @@ export default function Home() {
 
         <section className="menu-hero" aria-labelledby="home-title">
           <h1 id="home-title">Practice exams</h1>
-          <p className="lede">Past and practice exams for UT Austin courses.</p>
         </section>
 
         {examLoadError ? <p className="catalog-error">{examLoadError}</p> : null}
@@ -615,7 +643,6 @@ export default function Home() {
               <header className="course-heading">
                 <div>
                   <h2>{course}</h2>
-                  <p>{items[0]?.subject} · {items.length} {items.length === 1 ? "exam" : "exams"}</p>
                 </div>
               </header>
               {items.map((item) => {
@@ -625,7 +652,6 @@ export default function Home() {
                   <article className="exam-row" key={item.id}>
                     <div className="exam-row-copy">
                       <h3>{item.title}</h3>
-                      <p>{item.subtitle}</p>
                     </div>
                     <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
                       <BookOpen size={18} />
@@ -639,9 +665,6 @@ export default function Home() {
           {groupedExams.length === 0 ? <p className="empty-catalog">No exams match those filters.</p> : null}
         </section>
 
-        <footer className="menu-footer">
-          Unofficial student resource. Not affiliated with or endorsed by The University of Texas at Austin.
-        </footer>
         {requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">
             <section className="request-modal" role="dialog" aria-modal="true" aria-labelledby="exam-request-title">
@@ -898,6 +921,7 @@ export default function Home() {
           ) : (
             <ScientificContent content={question.prompt} className="prompt" />
           )}
+          {question.formulas?.map((formula) => <MathFormulaBlock formula={formula} key={formula.ariaLabel} />)}
           {question.reference ? (
             <section className="reference-panel">
               <h2>Reference for this section</h2>
@@ -954,7 +978,7 @@ export default function Home() {
                 if (part.kind === "context") {
                   return (
                     <section className="context-block" key={`${question.id}-context-${partIndex}`}>
-                      <h2>Shared context</h2>
+                      <h2>{isComputerScience ? "Shared context" : "Use these labels"}</h2>
                       <MixedContent content={part.code} />
                     </section>
                   );
@@ -1013,6 +1037,22 @@ export default function Home() {
                 );
               })}
             </div>
+          ) : null}
+
+          {question.type === "short" && question.workPrompt ? (
+            <section className="short-answer-work" id={`${question.id}-work`}>
+              <label>
+                <strong>{question.workRequired ? "Show your work (required)" : "Show your work"}</strong>
+                <p>{question.workPrompt}</p>
+                <textarea
+                  disabled={mode === "review"}
+                  value={(answers[workResponseKey(question.id)] as string | undefined) ?? ""}
+                  onChange={(event) => setWorkResponse(question.id, event.target.value)}
+                  placeholder={question.workPlaceholder ?? "Write your derivation or explanation here."}
+                  rows={question.workRows ?? 8}
+                />
+              </label>
+            </section>
           ) : null}
 
           {question.type === "choice" && question.choices ? (

@@ -1,7 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
-import { CodeBlock, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
+import { MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
+import { MathFormulaBlock } from "@/app/components/math-formula";
 
 export function JavaRunnerPanel({
   question,
@@ -164,9 +165,43 @@ export function ReviewPanel({
       <section className="review-panel">
         <h2>
           <ListChecks size={18} />
-          Correct answers
+          Correct answers{question.workPoints ? " and reasoning" : ""}
         </h2>
-        <p>Each item is auto-scored. Review the correct answer shown beside each response above.</p>
+        <p>
+          Each result field is auto-scored. Review the correct answer shown beside each response above.
+          {question.workPoints
+            ? " Then use the official solution to self-score the explanation you recorded during the exam."
+            : ""}
+        </p>
+        {question.workPoints ? (
+          <>
+            <label className="manual-score">
+              <span>Reasoning and work score</span>
+              <input
+                type="number"
+                min="0"
+                max={question.workPoints}
+                step="0.5"
+                value={manual[question.id] ?? 0}
+                onChange={(event) =>
+                  setManual((current) => ({
+                    ...current,
+                    [question.id]: Number(event.target.value),
+                  }))
+                }
+              />
+              <strong>/ {question.workPoints}</strong>
+            </label>
+            <div className="rubric">
+              {question.workRubric?.map((item) => (
+                <div key={item.label}>
+                  <span>{item.label}</span>
+                  <strong>{item.points}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : null}
         {question.officialSolution ? (
           isComputerScience ? (
             <MixedContent content={question.officialSolution} language={question.language} className="solution-notes" />
@@ -174,6 +209,7 @@ export function ReviewPanel({
             <ScientificContent content={question.officialSolution} className="solution-copy" />
           )
         ) : null}
+        {question.solutionFormulas?.map((formula) => <MathFormulaBlock formula={formula} key={formula.ariaLabel} />)}
       </section>
     );
   }

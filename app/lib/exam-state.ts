@@ -1,5 +1,16 @@
 import type { AnswerState, Exam, ObjectivePart, PersistedExam, Question } from "@/app/lib/exam-types";
 
+const storagePrefix = "utexamprep";
+const legacyStoragePrefix = "digitalexams";
+
+function storageKey(examId: string, prefix = storagePrefix) {
+  return `${prefix}:${examId}`;
+}
+
+export function workResponseKey(questionId: string) {
+  return `${questionId}:work`;
+}
+
 export function isSameCode(left: string | undefined, right: string | undefined) {
   return normalizeCode(left ?? "") === normalizeCode(right ?? "");
 }
@@ -9,6 +20,11 @@ export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
 
   for (const question of exam.questions) {
     const value = answers[question.id];
+    const workKey = workResponseKey(question.id);
+    const work = answers[workKey];
+    if (question.workPrompt && typeof work === "string" && work.trim()) {
+      next[workKey] = work;
+    }
     if (question.type === "short") {
       if (Array.isArray(value)) {
         next[question.id] = value;
@@ -41,9 +57,18 @@ export function readPersistedExam(examId: string, exam?: Exam): PersistedExam {
   if (typeof window === "undefined") {
     return {};
   }
-  const saved = window.localStorage.getItem(`digitalexams:${examId}`);
+  const currentKey = storageKey(examId);
+  const saved =
+    window.localStorage.getItem(currentKey) ??
+    window.localStorage.getItem(storageKey(examId, legacyStoragePrefix));
   if (!saved) {
     return {};
+  }
+
+  // Preserve existing work from the prior product name without leaving future
+  // reads tied to the legacy namespace.
+  if (!window.localStorage.getItem(currentKey)) {
+    window.localStorage.setItem(currentKey, saved);
   }
 
   const persisted = JSON.parse(saved) as PersistedExam;
@@ -57,14 +82,19 @@ export function readSavedExamIds(examIds: string[]) {
   if (typeof window === "undefined") {
     return [];
   }
-  return examIds.filter((examId) => window.localStorage.getItem(`digitalexams:${examId}`));
+  return examIds.filter(
+    (examId) =>
+      window.localStorage.getItem(storageKey(examId)) ||
+      window.localStorage.getItem(storageKey(examId, legacyStoragePrefix)),
+  );
 }
 
 export function clearPersistedExam(examId: string) {
   if (typeof window === "undefined") {
     return;
   }
-  window.localStorage.removeItem(`digitalexams:${examId}`);
+  window.localStorage.removeItem(storageKey(examId));
+  window.localStorage.removeItem(storageKey(examId, legacyStoragePrefix));
 }
 
 export function clearAllPersistedExams(examIds: string[]) {
@@ -81,6 +111,9 @@ export function normalizeAnswer(value: string) {
     .trim()
     .replace(/[×·]/g, "x")
     .replace(/[−–—]/g, "-")
+    .replace(/≠/g, "!=")
+    .replace(/δ/g, "delta")
+    .replace(/ŵ/g, "omega")
     .replace(/⁻/g, "-")
     .replace(/[⁰₀]/g, "0")
     .replace(/[¹₁]/g, "1")
@@ -125,13 +158,28 @@ function numericAnswer(value: string) {
 }
 
 function looseTextAnswer(value: string) {
-  return normalizeAnswer(value)
+  const normalized = normalizeAnswer(value)
     .replace(/σ/g, "sigma")
     .replace(/π/g, "pi")
+    .replace(/θ/g, "theta")
+    .replace(/ω/g, "omega")
+    .replace(/ₖ/g, "_k")
+    .replace(/\\(?:left|right|mathrm|operatorname)/g, "")
+    .replace(/\\(?:pi|theta|omega)/g, (match) => match.slice(1))
+    .replace(/[{}]/g, "")
     .replace(/(?<=[a-z])-(?=[a-z])/g, " ")
-    .replace(/[,;]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+    .replace(/[,;]/g, " ");
+
+  // Formula answers are notation rather than prose. Treat harmless spacing
+  // differences (for example `x[-1] = 0` versus `x[-1]=0`) as equivalent,
+  // while preserving word boundaries for ordinary short answers.
+  if (
+    ["=", "^", "(", "[", "sin", "cos", "delta", "stft"].some((marker) => normalized.includes(marker))
+  ) {
+    return normalized.replace(/\s+/g, "").trim();
+  }
+
+  return normalized.replace(/\s+/g, " ").trim();
 }
 
 function isCorrectSingle(given: string, expected: string) {
@@ -148,7 +196,8 @@ function isCorrectSingle(given: string, expected: string) {
       return true;
     }
   }
-  if (!official.includes("[") && looseTextAnswer(given) === looseTextAnswer(expected)) {
+  const formulaLike = ["=", "^", "delta", "sin", "cos"].some((marker) => official.includes(marker));
+  if ((!official.includes("[") || formulaLike) && looseTextAnswer(given) === looseTextAnswer(expected)) {
     return true;
   }
   return user === official;

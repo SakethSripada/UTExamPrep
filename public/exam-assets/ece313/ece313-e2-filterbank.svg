@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1490" role="img" aria-labelledby="title description">
+  <title id="title">Multirate filterbank diagrams and responses</title>
+  <desc id="description">Four impulse-response stem charts, six labeled magnitude response curves, and six cascaded analysis and synthesis block diagrams for the ECE 313 multirate filtering problem.</desc>
+  <style>
+    .axis { stroke: #263645; stroke-width: 1.5; }
+    .grid { stroke: #d9e1e8; stroke-width: 1; }
+    .stem { stroke: #172b3a; stroke-width: 2; }
+    .dot { fill: #111827; }
+    .title { fill: #172b3a; font: 700 20px ui-sans-serif, system-ui, sans-serif; }
+    .label { fill: #172b3a; font: 21px Georgia, serif; }
+    .tick { fill: #526170; font: 15px ui-sans-serif, system-ui, sans-serif; }
+    .block { fill: #fff; stroke: #334155; stroke-width: 1.2; }
+    .blocktext { fill: #172b3a; font: italic 20px Georgia, serif; text-anchor: middle; dominant-baseline: middle; }
+    .rowline { stroke: #cbd5e1; stroke-width: 1; }
+    .arrow { stroke: #172b3a; stroke-width: 1.8; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs><marker id="arrowhead" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#172b3a"/></marker></defs>
+  <rect width="1600" height="1490" fill="#fff"/>
+  <text x="800" y="38" text-anchor="middle" class="label">Analysis and synthesis filters, magnitude responses, and system block diagrams</text>
+
+  <!-- Manually recreated impulse-response stems -->
+  <g transform="translate(55 90)">
+    <text x="145" y="-22" text-anchor="middle" class="title">Lowpass analysis (Lₐ)</text>
+    <rect x="0" y="0" width="290" height="205" fill="#fbfdff" stroke="#64748b"/>
+    <path class="grid" d="M0 50H290 M0 102H290 M0 153H290 M36 0V205 M108 0V205 M180 0V205 M252 0V205"/><path class="axis" d="M0 153H290"/>
+    <g class="stem"><path d="M12 153V153 M30 153V153 M48 153V157 M66 153V150 M84 153V145 M102 153V164 M120 153V167 M138 153V105 M156 153V57 M174 153V105 M192 153V167 M210 153V164 M228 153V145 M246 153V150 M264 153V157 M282 153V153"/></g>
+    <g class="dot"><circle cx="12" cy="153" r="4"/><circle cx="30" cy="153" r="4"/><circle cx="48" cy="157" r="4"/><circle cx="66" cy="150" r="4"/><circle cx="84" cy="145" r="4"/><circle cx="102" cy="164" r="4"/><circle cx="120" cy="167" r="4"/><circle cx="138" cy="105" r="4"/><circle cx="156" cy="57" r="4"/><circle cx="174" cy="105" r="4"/><circle cx="192" cy="167" r="4"/><circle cx="210" cy="164" r="4"/><circle cx="228" cy="145" r="4"/><circle cx="246" cy="150" r="4"/><circle cx="264" cy="157" r="4"/><circle cx="282" cy="153" r="4"/></g>
+    <text x="145" y="232" text-anchor="middle" class="tick">n [samples]</text><text x="-20" y="106" text-anchor="middle" class="tick" transform="rotate(-90 -20 106)">impulse response</text>
+  </g>
+  <g transform="translate(435 90)">
+    <text x="145" y="-22" text-anchor="middle" class="title">Highpass analysis (Hₐ)</text>
+    <rect x="0" y="0" width="290" height="205" fill="#fbfdff" stroke="#64748b"/><path class="grid" d="M0 50H290 M0 102H290 M0 153H290 M36 0V205 M108 0V205 M180 0V205 M252 0V205"/><path class="axis" d="M0 82H290"/>
+    <g class="stem"><path d="M12 82V82 M30 82V82 M48 82V82 M66 82V87 M84 82V95 M102 82V78 M120 82V45 M138 82V162 M156 82V45 M174 82V78 M192 82V95 M210 82V87 M228 82V82 M246 82V82 M264 82V82 M282 82V82"/></g>
+    <g class="dot"><circle cx="12" cy="82" r="4"/><circle cx="30" cy="82" r="4"/><circle cx="48" cy="82" r="4"/><circle cx="66" cy="87" r="4"/><circle cx="84" cy="95" r="4"/><circle cx="102" cy="78" r="4"/><circle cx="120" cy="45" r="4"/><circle cx="138" cy="162" r="4"/><circle cx="156" cy="45" r="4"/><circle cx="174" cy="78" r="4"/><circle cx="192" cy="95" r="4"/><circle cx="210" cy="87" r="4"/><circle cx="228" cy="82" r="4"/><circle cx="246" cy="82" r="4"/><circle cx="264" cy="82" r="4"/><circle cx="282" cy="82" r="4"/></g>
+    <text x="145" y="232" text-anchor="middle" class="tick">n [samples]</text><text x="-20" y="106" text-anchor="middle" class="tick" transform="rotate(-90 -20 106)">impulse response</text>
+  </g>
+  <g transform="translate(815 90)">
+    <text x="145" y="-22" text-anchor="middle" class="title">Lowpass synthesis (Lₛ)</text>
+    <rect x="0" y="0" width="290" height="205" fill="#fbfdff" stroke="#64748b"/><path class="grid" d="M0 50H290 M0 102H290 M0 153H290 M36 0V205 M108 0V205 M180 0V205 M252 0V205"/><path class="axis" d="M0 153H290"/>
+    <g class="stem"><path d="M12 153V153 M30 153V153 M48 153V148 M66 153V164 M84 153V160 M102 153V106 M120 153V50 M138 153V106 M156 153V160 M174 153V164 M192 153V153 M210 153V153 M228 153V153 M246 153V153 M264 153V153 M282 153V153"/></g>
+    <g class="dot"><circle cx="12" cy="153" r="4"/><circle cx="30" cy="153" r="4"/><circle cx="48" cy="148" r="4"/><circle cx="66" cy="164" r="4"/><circle cx="84" cy="160" r="4"/><circle cx="102" cy="106" r="4"/><circle cx="120" cy="50" r="4"/><circle cx="138" cy="106" r="4"/><circle cx="156" cy="160" r="4"/><circle cx="174" cy="164" r="4"/><circle cx="192" cy="153" r="4"/><circle cx="210" cy="153" r="4"/><circle cx="228" cy="153" r="4"/><circle cx="246" cy="153" r="4"/><circle cx="264" cy="153" r="4"/><circle cx="282" cy="153" r="4"/></g>
+    <text x="145" y="232" text-anchor="middle" class="tick">n [samples]</text><text x="-20" y="106" text-anchor="middle" class="tick" transform="rotate(-90 -20 106)">impulse response</text>
+  </g>
+  <g transform="translate(1195 90)">
+    <text x="145" y="-22" text-anchor="middle" class="title">Highpass synthesis (Hₛ)</text>
+    <rect x="0" y="0" width="290" height="205" fill="#fbfdff" stroke="#64748b"/><path class="grid" d="M0 50H290 M0 102H290 M0 153H290 M36 0V205 M108 0V205 M180 0V205 M252 0V205"/><path class="axis" d="M0 82H290"/>
+    <g class="stem"><path d="M12 82V82 M30 82V82 M48 82V82 M66 82V87 M84 82V94 M102 82V68 M120 82V40 M138 82V171 M156 82V40 M174 82V68 M192 82V94 M210 82V87 M228 82V82 M246 82V82 M264 82V82 M282 82V82"/></g>
+    <g class="dot"><circle cx="12" cy="82" r="4"/><circle cx="30" cy="82" r="4"/><circle cx="48" cy="82" r="4"/><circle cx="66" cy="87" r="4"/><circle cx="84" cy="94" r="4"/><circle cx="102" cy="68" r="4"/><circle cx="120" cy="40" r="4"/><circle cx="138" cy="171" r="4"/><circle cx="156" cy="40" r="4"/><circle cx="174" cy="68" r="4"/><circle cx="192" cy="94" r="4"/><circle cx="210" cy="87" r="4"/><circle cx="228" cy="82" r="4"/><circle cx="246" cy="82" r="4"/><circle cx="264" cy="82" r="4"/><circle cx="282" cy="82" r="4"/></g>
+    <text x="145" y="232" text-anchor="middle" class="tick">n [samples]</text><text x="-20" y="106" text-anchor="middle" class="tick" transform="rotate(-90 -20 106)">impulse response</text>
+  </g>
+
+  <!-- Magnitude-response references A–F. -->
+  <g transform="translate(90 410)">
+    <rect x="0" y="0" width="630" height="290" fill="#fbfdff" stroke="#64748b"/><path class="grid" d="M0 73H630 M0 145H630 M0 218H630 M157 0V290 M315 0V290 M472 0V290"/><path class="axis" d="M0 290H630 M0 0V290"/>
+    <path d="M0 36H45 C68 36 78 50 83 78 C88 111 93 150 108 190 C121 226 136 251 157 269 C180 286 218 290 630 290" fill="none" stroke="#111827" stroke-width="7"/>
+    <path d="M0 290H55 C70 290 82 272 91 205 C98 148 105 75 123 62 C144 48 167 84 180 143 C195 219 205 273 238 287 C282 300 630 290 630 290" fill="none" stroke="#111827" stroke-width="6" stroke-dasharray="4 8"/>
+    <path d="M0 290H128 C145 264 156 212 173 155 C189 95 215 52 244 48 C291 48 334 101 364 163 C402 244 431 282 487 290H630" fill="none" stroke="#111827" stroke-width="6" stroke-dasharray="22 16"/>
+    <g class="tick"><text x="-12" y="295" text-anchor="end">0</text><text x="-12" y="150" text-anchor="end">0.5</text><text x="-12" y="41" text-anchor="end">1</text><text x="0" y="318">0</text><text x="157" y="318">π/8</text><text x="315" y="318">π/4</text><text x="472" y="318">π/2</text><text x="620" y="318">π</text></g>
+    <text x="315" y="352" text-anchor="middle" class="label">Frequency [radians per sample]</text><text x="-78" y="145" text-anchor="middle" class="label" transform="rotate(-90 -78 145)">Magnitude response</text>
+    <g transform="translate(452 42)"><rect width="152" height="112" fill="#fff" stroke="#334155"/><path d="M15 25H78" stroke="#111827" stroke-width="7"/><text x="91" y="32" class="tick">A</text><path d="M15 55H78" stroke="#111827" stroke-width="6" stroke-dasharray="4 8"/><text x="91" y="62" class="tick">B</text><path d="M15 85H78" stroke="#111827" stroke-width="6" stroke-dasharray="22 16"/><text x="91" y="92" class="tick">C</text></g>
+  </g>
+  <g transform="translate(875 410)">
+    <rect x="0" y="0" width="630" height="290" fill="#fbfdff" stroke="#64748b"/><path class="grid" d="M0 73H630 M0 145H630 M0 218H630 M157 0V290 M315 0V290 M472 0V290"/><path class="axis" d="M0 290H630 M0 0V290"/>
+    <path d="M0 36H87 C116 36 137 68 153 125 C172 191 186 250 224 276 C267 300 630 290 630 290" fill="none" stroke="#111827" stroke-width="7"/>
+    <path d="M0 36H177 C207 38 231 65 247 114 C267 176 290 235 333 266 C382 296 630 290 630 290" fill="none" stroke="#111827" stroke-width="6" stroke-dasharray="4 8"/>
+    <path d="M0 290H205 C239 281 266 240 290 190 C315 133 342 79 386 55 C421 37 459 36 630 36" fill="none" stroke="#111827" stroke-width="6" stroke-dasharray="22 16"/>
+    <g class="tick"><text x="-12" y="295" text-anchor="end">0</text><text x="-12" y="150" text-anchor="end">0.5</text><text x="-12" y="41" text-anchor="end">1</text><text x="0" y="318">0</text><text x="157" y="318">π/4</text><text x="315" y="318">π/2</text><text x="620" y="318">π</text></g>
+    <text x="315" y="352" text-anchor="middle" class="label">Frequency [radians per sample]</text><text x="-78" y="145" text-anchor="middle" class="label" transform="rotate(-90 -78 145)">Magnitude response</text>
+    <g transform="translate(452 42)"><rect width="152" height="112" fill="#fff" stroke="#334155"/><path d="M15 25H78" stroke="#111827" stroke-width="7"/><text x="91" y="32" class="tick">D</text><path d="M15 55H78" stroke="#111827" stroke-width="6" stroke-dasharray="4 8"/><text x="91" y="62" class="tick">E</text><path d="M15 85H78" stroke="#111827" stroke-width="6" stroke-dasharray="22 16"/><text x="91" y="92" class="tick">F</text></g>
+  </g>
+
+  <text x="75" y="800" class="label">Six cascaded systems to match with A–F and classify by octave passband</text>
+  <rect x="55" y="824" width="1490" height="585" fill="#fbfdff" stroke="#64748b"/>
+  <g class="rowline"><path d="M55 921H1545 M55 1018H1545 M55 1115H1545 M55 1212H1545 M55 1309H1545"/></g>
+
+  <!-- Each row is deliberately hand-laid-out as the source cascade. -->
+  <g transform="translate(85 850)">
+    <text x="0" y="28" class="tick">1</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H118"/><rect class="block" x="122" y="0" width="65" height="48"/><text x="155" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M187 24H211"/><rect class="block" x="215" y="0" width="65" height="48"/><text x="247" y="25" class="blocktext">↓₂</text><path class="arrow" d="M280 24H304"/><rect class="block" x="308" y="0" width="65" height="48"/><text x="340" y="25" class="blocktext">↑₂</text><path class="arrow" d="M373 24H397"/><rect class="block" x="401" y="0" width="65" height="48"/><text x="433" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M466 24H492"/><text x="540" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <g transform="translate(85 947)">
+    <text x="0" y="28" class="tick">2</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H118"/><rect class="block" x="122" y="0" width="65" height="48"/><text x="155" y="25" class="blocktext">Hₐ</text><path class="arrow" d="M187 24H211"/><rect class="block" x="215" y="0" width="65" height="48"/><text x="247" y="25" class="blocktext">↓₂</text><path class="arrow" d="M280 24H304"/><rect class="block" x="308" y="0" width="65" height="48"/><text x="340" y="25" class="blocktext">↑₂</text><path class="arrow" d="M373 24H397"/><rect class="block" x="401" y="0" width="65" height="48"/><text x="433" y="25" class="blocktext">Hₛ</text><path class="arrow" d="M466 24H492"/><text x="540" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <g transform="translate(85 1044)">
+    <text x="0" y="28" class="tick">3</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H108"/><rect class="block" x="112" y="0" width="55" height="48"/><text x="140" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M167 24H179"/><rect class="block" x="183" y="0" width="55" height="48"/><text x="210" y="25" class="blocktext">↓₂</text><path class="arrow" d="M238 24H250"/><rect class="block" x="254" y="0" width="55" height="48"/><text x="281" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M309 24H321"/><rect class="block" x="325" y="0" width="55" height="48"/><text x="352" y="25" class="blocktext">↓₂</text><path class="arrow" d="M380 24H392"/><rect class="block" x="396" y="0" width="55" height="48"/><text x="423" y="25" class="blocktext">↑₂</text><path class="arrow" d="M451 24H463"/><rect class="block" x="467" y="0" width="55" height="48"/><text x="494" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M522 24H534"/><rect class="block" x="538" y="0" width="55" height="48"/><text x="565" y="25" class="blocktext">↑₂</text><path class="arrow" d="M593 24H605"/><rect class="block" x="609" y="0" width="55" height="48"/><text x="636" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M664 24H680"/><text x="730" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <g transform="translate(85 1141)">
+    <text x="0" y="28" class="tick">4</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H108"/><rect class="block" x="112" y="0" width="55" height="48"/><text x="140" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M167 24H179"/><rect class="block" x="183" y="0" width="55" height="48"/><text x="210" y="25" class="blocktext">↓₂</text><path class="arrow" d="M238 24H250"/><rect class="block" x="254" y="0" width="55" height="48"/><text x="281" y="25" class="blocktext">Hₐ</text><path class="arrow" d="M309 24H321"/><rect class="block" x="325" y="0" width="55" height="48"/><text x="352" y="25" class="blocktext">↓₂</text><path class="arrow" d="M380 24H392"/><rect class="block" x="396" y="0" width="55" height="48"/><text x="423" y="25" class="blocktext">↑₂</text><path class="arrow" d="M451 24H463"/><rect class="block" x="467" y="0" width="55" height="48"/><text x="494" y="25" class="blocktext">Hₛ</text><path class="arrow" d="M522 24H534"/><rect class="block" x="538" y="0" width="55" height="48"/><text x="565" y="25" class="blocktext">↑₂</text><path class="arrow" d="M593 24H605"/><rect class="block" x="609" y="0" width="55" height="48"/><text x="636" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M664 24H680"/><text x="730" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <g transform="translate(85 1238)">
+    <text x="0" y="28" class="tick">5</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H104"/><rect class="block" x="108" y="0" width="50" height="48"/><text x="133" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M158 24H168"/><rect class="block" x="172" y="0" width="50" height="48"/><text x="197" y="25" class="blocktext">↓₂</text><path class="arrow" d="M222 24H232"/><rect class="block" x="236" y="0" width="50" height="48"/><text x="261" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M286 24H296"/><rect class="block" x="300" y="0" width="50" height="48"/><text x="325" y="25" class="blocktext">↓₂</text><path class="arrow" d="M350 24H360"/><rect class="block" x="364" y="0" width="50" height="48"/><text x="389" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M414 24H424"/><rect class="block" x="428" y="0" width="50" height="48"/><text x="453" y="25" class="blocktext">↓₂</text><path class="arrow" d="M478 24H488"/><rect class="block" x="492" y="0" width="50" height="48"/><text x="517" y="25" class="blocktext">↑₂</text><path class="arrow" d="M542 24H552"/><rect class="block" x="556" y="0" width="50" height="48"/><text x="581" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M606 24H616"/><rect class="block" x="620" y="0" width="50" height="48"/><text x="645" y="25" class="blocktext">↑₂</text><path class="arrow" d="M670 24H680"/><rect class="block" x="684" y="0" width="50" height="48"/><text x="709" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M734 24H744"/><rect class="block" x="748" y="0" width="50" height="48"/><text x="773" y="25" class="blocktext">↑₂</text><path class="arrow" d="M798 24H808"/><rect class="block" x="812" y="0" width="50" height="48"/><text x="837" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M862 24H876"/><text x="925" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <g transform="translate(85 1335)">
+    <text x="0" y="28" class="tick">6</text><text x="55" y="28" class="blocktext">x[n]</text><path class="arrow" d="M92 24H104"/><rect class="block" x="108" y="0" width="50" height="48"/><text x="133" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M158 24H168"/><rect class="block" x="172" y="0" width="50" height="48"/><text x="197" y="25" class="blocktext">↓₂</text><path class="arrow" d="M222 24H232"/><rect class="block" x="236" y="0" width="50" height="48"/><text x="261" y="25" class="blocktext">Lₐ</text><path class="arrow" d="M286 24H296"/><rect class="block" x="300" y="0" width="50" height="48"/><text x="325" y="25" class="blocktext">↓₂</text><path class="arrow" d="M350 24H360"/><rect class="block" x="364" y="0" width="50" height="48"/><text x="389" y="25" class="blocktext">Hₐ</text><path class="arrow" d="M414 24H424"/><rect class="block" x="428" y="0" width="50" height="48"/><text x="453" y="25" class="blocktext">↓₂</text><path class="arrow" d="M478 24H488"/><rect class="block" x="492" y="0" width="50" height="48"/><text x="517" y="25" class="blocktext">↑₂</text><path class="arrow" d="M542 24H552"/><rect class="block" x="556" y="0" width="50" height="48"/><text x="581" y="25" class="blocktext">Hₛ</text><path class="arrow" d="M606 24H616"/><rect class="block" x="620" y="0" width="50" height="48"/><text x="645" y="25" class="blocktext">↑₂</text><path class="arrow" d="M670 24H680"/><rect class="block" x="684" y="0" width="50" height="48"/><text x="709" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M734 24H744"/><rect class="block" x="748" y="0" width="50" height="48"/><text x="773" y="25" class="blocktext">↑₂</text><path class="arrow" d="M798 24H808"/><rect class="block" x="812" y="0" width="50" height="48"/><text x="837" y="25" class="blocktext">Lₛ</text><path class="arrow" d="M862 24H876"/><text x="925" y="28" class="blocktext">x̂[n]</text>
+  </g>
+  <text x="75" y="1450" class="tick">The response curves and cascades are hand-recreated from the source page. Use the numbered rows in your answers.</text>
+</svg>

@@ -1050,6 +1050,25 @@ textarea:focus-visible {
   font-size: clamp(28px, 3.2vw, 38px);
 }
 
+.science-exam .objective-list {
+  gap: 16px;
+  max-width: 1120px;
+}
+
+.science-exam .objective-part {
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  gap: 28px;
+  padding: 20px;
+}
+
+.science-exam .part-code {
+  gap: 14px;
+}
+
+.science-exam .answer-line {
+  padding-top: 2px;
+}
+
 .thrown-out-note {
   margin: 0;
   color: #5f6b7a;
@@ -1354,6 +1373,32 @@ textarea:focus-visible {
   margin: 0;
 }
 
+.math-formula {
+  display: grid;
+  gap: 8px;
+  max-width: 100%;
+  margin: 18px 0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  color: #172b3a;
+  background: #f7fafc;
+  border: 1px solid #d7e0e8;
+  border-radius: 8px;
+}
+
+.math-formula-expression {
+  min-width: max-content;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.math-formula figcaption {
+  color: #526170;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .scientific-notation {
   font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
   font-variant-numeric: lining-nums tabular-nums;
@@ -1494,6 +1539,54 @@ textarea:focus-visible {
   margin: 18px 0 20px;
 }
 
+.short-answer-work {
+  display: grid;
+  gap: 10px;
+  margin: 6px 0 20px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #d7e0e8;
+  border-radius: 8px;
+}
+
+.short-answer-work label {
+  display: grid;
+  gap: 8px;
+}
+
+.short-answer-work strong {
+  color: #263645;
+}
+
+.short-answer-work p {
+  margin: 0;
+  color: #526170;
+  line-height: 1.5;
+}
+
+.short-answer-work textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 12px;
+  color: #172b3a;
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.short-answer-work textarea:focus {
+  border-color: var(--brand);
+  outline: 2px solid rgba(15, 93, 127, 0.18);
+}
+
+.short-answer-work textarea:disabled {
+  color: #344054;
+  background: #eef1f5;
+}
+
 .choice-option-row {
   display: grid;
   grid-template-columns: auto 32px minmax(0, 1fr);
@@ -1554,14 +1647,20 @@ textarea:focus-visible {
 }
 
 .context-block {
-  padding: 14px;
+  padding: 16px 18px;
   background: #eef4f8;
   border: 1px solid #c7d7e2;
   border-radius: 6px;
 }
 
+.science-exam .context-block {
+  padding: 14px 16px;
+  background: #f7fafc;
+  border-color: #d5e0e8;
+}
+
 .context-block h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: #244054;
   font-size: 13px;
   font-weight: 800;
