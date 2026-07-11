@@ -25,8 +25,15 @@ export default function Icon() {
           borderRadius: 12,
         }}
       >
-        <svg width="54" height="32" viewBox="0 0 424 248" fill="none">
-          <path d={longhornPath} fill="#fff9f1" />
+        <svg width="54" height="54" viewBox="0 0 64 64" fill="none">
+          <path d={longhornPath} transform="translate(2 4) scale(.14)" fill="#fff9f1" />
+          <path
+            d="M8 43c8-4 16-4 24 1v13c-8-5-16-5-24-1V43Zm48 0c-8-4-16-4-24 1v13c8-5 16-5 24-1V43Z"
+            stroke="#fff9f1"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </div>
     ),

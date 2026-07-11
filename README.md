@@ -1,4 +1,4 @@
-# DigitalExams
+# UTExamPrep
 
 A practice-exam workspace for UT Austin CS courses. Work through real past exams in
 the browser: short-answer questions are graded automatically, and coding questions can
@@ -25,8 +25,8 @@ point is for people to add more — see [Contributing](#contributing).
 You'll need [Node.js](https://nodejs.org) 18 or newer.
 
 ```bash
-git clone https://github.com/SakethSripada/DigitalExams.git
-cd DigitalExams
+git clone https://github.com/SakethSripada/UTExamPrep.git
+cd UTExamPrep
 npm install
 npm run dev
 ```

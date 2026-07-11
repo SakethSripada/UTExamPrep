@@ -20,23 +20,23 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "DigitalExams | Practice Exams",
+  title: "UTExamPrep | Practice Exams",
   description: "Past and practice exams for UT Austin courses.",
-  applicationName: "DigitalExams",
+  applicationName: "UTExamPrep",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: ["/favicon.svg"],
   },
   openGraph: {
-    title: "DigitalExams | Practice Exams",
+    title: "UTExamPrep | Practice Exams",
     description: "Past and practice exams for UT Austin courses.",
-    siteName: "DigitalExams",
+    siteName: "UTExamPrep",
     type: "website",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "DigitalExams practice exam library" }],
+    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "UTExamPrep practice exam library" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "DigitalExams | Practice Exams",
+    title: "UTExamPrep | Practice Exams",
     description: "Past and practice exams for UT Austin courses.",
     images: ["/og.png"],
   },

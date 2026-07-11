@@ -12,8 +12,8 @@ issue. If you want to add an exam, the steps below should get you there.
 You'll need [Node.js](https://nodejs.org) 18 or newer.
 
 ```bash
-git clone https://github.com/SakethSripada/DigitalExams.git
-cd DigitalExams
+git clone https://github.com/SakethSripada/UTExamPrep.git
+cd UTExamPrep
 npm install
 npm run dev
 ```

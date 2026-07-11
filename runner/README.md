@@ -2,7 +2,7 @@
 
 A standalone HTTP service that compiles and runs **untrusted user-submitted
 Java** inside a locked-down sandbox and reports per-question pass/fail counts.
-It is the execution backend for the Digital Exams site: Vercel's serverless
+It is the execution backend for the UTExamPrep site: Vercel's serverless
 runtime can't run Java or hold sandboxed processes, so `app/api/java/run`
 proxies here.
 
@@ -194,10 +194,10 @@ curl -s localhost:8080/api/run -H 'Authorization: Bearer devtoken'
 
 ```bash
 cd runner
-docker build -t digitalexams-runner .
+docker build -t utexamprep-runner .
 docker run --rm -p 8080:8080 \
   -e RUNNER_AUTH_TOKEN=devtoken \
-  digitalexams-runner
+  utexamprep-runner
 ```
 
 bubblewrap needs unprivileged user namespaces. Docker's default seccomp
@@ -208,7 +208,7 @@ failing, grant them explicitly:
 docker run --rm -p 8080:8080 \
   --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
   -e RUNNER_AUTH_TOKEN=devtoken \
-  digitalexams-runner
+  utexamprep-runner
 ```
 
 Smoke test:
@@ -240,7 +240,7 @@ JAVA_RUNNER_TOKEN=devtoken
 
 ```bash
 cd runner
-fly launch --no-deploy --copy-config --name digitalexams-runner
+fly launch --no-deploy --copy-config --name utexamprep-runner
 fly secrets set RUNNER_AUTH_TOKEN=$(openssl rand -hex 32)
 fly deploy
 ```

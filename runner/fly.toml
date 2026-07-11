@@ -1,18 +1,18 @@
 # Fly.io deployment for the Java runner.
 #
 # Setup (one time):
-#   fly launch --no-deploy --copy-config --name digitalexams-runner
+#   fly launch --no-deploy --copy-config --name utexamprep-runner
 #   fly secrets set RUNNER_AUTH_TOKEN=$(openssl rand -hex 32)
 #   fly deploy
 #
 # Then point the Next.js app at it:
-#   JAVA_RUNNER_URL   = https://digitalexams-runner.fly.dev
+#   JAVA_RUNNER_URL   = https://utexamprep-runner.fly.dev
 #   JAVA_RUNNER_TOKEN = <the same token>
 #
 # Each Fly Machine is a Firecracker microVM (its own kernel), which is the
 # outer isolation layer the security model assumes. bubblewrap runs inside it.
 
-app = "digitalexams-runner"
+app = "utexamprep-runner"
 primary_region = "iad"
 
 [build]

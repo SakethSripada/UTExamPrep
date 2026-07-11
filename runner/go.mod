@@ -1,3 +1,3 @@
-module digitalexams/runner
+module utexamprep/runner
 
 go 1.23
