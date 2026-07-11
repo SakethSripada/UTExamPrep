@@ -130,6 +130,25 @@ func TestReferenceSolutionsAllPass(t *testing.T) {
 	}
 }
 
+func TestArchivedHarnessesRejectObviousWrongAnswers(t *testing.T) {
+	srv := e2eServer(t)
+	handler := srv.routes()
+	mutations := loadJSONMap[string](t, "testdata/mutations.json")
+	if len(mutations) == 0 {
+		t.Fatal("no archived mutations found")
+	}
+	for id, code := range mutations {
+		id, code := id, code
+		t.Run(id, func(t *testing.T) {
+			t.Parallel()
+			_, resp := postRun(t, handler, id, code)
+			if resp.OK {
+				t.Fatalf("obviously wrong submission passed every check")
+			}
+		})
+	}
+}
+
 func TestWrongSolutionFailsTests(t *testing.T) {
 	srv := e2eServer(t)
 	handler := srv.routes()

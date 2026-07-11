@@ -178,20 +178,26 @@ func newSandbox(requestedMode string) (*sandbox, error) {
 }
 
 func (s *sandbox) resolveJava() {
+	javacName := "javac"
+	javaName := "java"
+	if runtime.GOOS == "windows" {
+		javacName += ".exe"
+		javaName += ".exe"
+	}
 	javaHome := os.Getenv("JAVA_HOME")
 	if javaHome != "" {
-		javac := filepath.Join(javaHome, "bin", "javac")
-		java := filepath.Join(javaHome, "bin", "java")
+		javac := filepath.Join(javaHome, "bin", javacName)
+		java := filepath.Join(javaHome, "bin", javaName)
 		if isExecutable(javac) && isExecutable(java) {
 			s.javaHome, s.javacPath, s.javaPath = javaHome, javac, java
 		}
 	}
 	if s.javacPath == "" {
-		if javac, err := exec.LookPath("javac"); err == nil {
+		if javac, err := exec.LookPath(javacName); err == nil {
 			if resolved, err := filepath.EvalSymlinks(javac); err == nil {
 				javac = resolved
 			}
-			java := filepath.Join(filepath.Dir(javac), "java")
+			java := filepath.Join(filepath.Dir(javac), javaName)
 			if isExecutable(java) {
 				s.javacPath, s.javaPath = javac, java
 				s.javaHome = filepath.Dir(filepath.Dir(javac))
@@ -304,7 +310,12 @@ func computeExtraBinds(javaHome string) []string {
 
 func isExecutable(path string) bool {
 	info, err := os.Stat(path)
-	return err == nil && !info.IsDir() && info.Mode()&0o111 != 0
+	if err != nil || info.IsDir() {
+		return false
+	}
+	// Windows does not expose Unix execute bits through os.FileMode. The
+	// resolved .exe path is sufficient; command startup remains the final probe.
+	return runtime.GOOS == "windows" || info.Mode()&0o111 != 0
 }
 
 func commandVersion(path string) string {

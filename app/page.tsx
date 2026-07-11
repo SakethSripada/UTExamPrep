@@ -14,6 +14,7 @@ import {
   Flag,
   Home as HomeIcon,
   RotateCcw,
+  Search,
   Send,
   Upload,
   Terminal,
@@ -42,6 +43,20 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 });
 
 const catalogExamIds = examCatalog.map((item) => item.id);
+
+function BrandLockup() {
+  return (
+    <div className="brand-lockup" aria-label="DigitalExams, UT Austin practice archive">
+      <span className="brand-mark" aria-hidden="true">
+        <BookOpen size={27} strokeWidth={1.8} />
+        <span className="brand-horns" />
+      </span>
+      <span className="brand-name">
+        <strong>DigitalExams</strong>
+      </span>
+    </div>
+  );
+}
 
 // A stable, anonymous per-browser id. It is never tied to a login; the runner
 // uses it only for fair per-user rate limiting (so students sharing a campus
@@ -528,79 +543,93 @@ export default function Home() {
   if (mode === "menu") {
     return (
       <main className="exam-shell menu-shell">
-        <section className="menu-hero">
-          <div>
-            <h1>UT Austin Practice Exams</h1>
-            <p className="lede">Choose a course and start practicing.</p>
-          </div>
+        <header className="site-header">
+          <BrandLockup />
           <div className="menu-actions">
             <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
               <Upload size={17} />
-              Add an Exam
+              Add exam
             </button>
-            <button className="secondary-button" onClick={resetAllExams}>
+            <button className="quiet-button" onClick={resetAllExams}>
               <RotateCcw size={17} />
-              Reset All
+              Reset progress
             </button>
           </div>
+        </header>
+
+        <section className="menu-hero" aria-labelledby="home-title">
+          <h1 id="home-title">Practice exams</h1>
+          <p className="lede">Past and practice exams for UT Austin courses.</p>
         </section>
 
         {examLoadError ? <p className="catalog-error">{examLoadError}</p> : null}
 
-        <section className="catalog-filters" aria-label="Exam filters">
-          <label className="catalog-search">
-            <span>Find an exam</span>
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search by course, term, or exam"
-            />
-          </label>
-          <label>
-            <span>Subject</span>
-            <select
-              value={subjectFilter}
-              onChange={(event) => {
-                setSubjectFilter(event.target.value);
-                setCourseFilter("All");
-              }}
-            >
-              {subjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span>Course</span>
-            <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
-              {courses.map((course) => (
-                <option key={course} value={course}>
-                  {course}
-                </option>
-              ))}
-            </select>
-          </label>
+        <section className="catalog-panel" aria-labelledby="catalog-title">
+          <h2 id="catalog-title" className="sr-only">Exam library</h2>
+
+          <div className="catalog-filters" aria-label="Exam filters">
+            <label className="catalog-search">
+              <span>Search the archive</span>
+              <span className="search-field">
+                <Search size={18} aria-hidden="true" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Course, term, or exam"
+                />
+              </span>
+            </label>
+            <label>
+              <span>Subject</span>
+              <select
+                value={subjectFilter}
+                onChange={(event) => {
+                  setSubjectFilter(event.target.value);
+                  setCourseFilter("All");
+                }}
+              >
+                {subjects.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>Course</span>
+              <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
+                {courses.map((course) => (
+                  <option key={course} value={course}>
+                    {course}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </section>
 
         <section className="exam-list" aria-label="Available exams">
           {groupedExams.map(([course, items]) => (
             <section className="course-group" key={course}>
-              <h2>{course}</h2>
+              <header className="course-heading">
+                <div>
+                  <h2>{course}</h2>
+                  <p>{items[0]?.subject} · {items.length} {items.length === 1 ? "exam" : "exams"}</p>
+                </div>
+              </header>
               {items.map((item) => {
                 const saved = savedExamIds.includes(item.id);
                 const loading = loadingExamId === item.id;
                 return (
                   <article className="exam-row" key={item.id}>
-                    <div>
+                    <div className="exam-row-copy">
                       <h3>{item.title}</h3>
                       <p>{item.subtitle}</p>
                     </div>
                     <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
                       <BookOpen size={18} />
-                      {loading ? "Loading" : saved ? "Resume" : "Start"}
+                      {loading ? "Loading" : saved ? "Resume exam" : "Start exam"}
                     </button>
                   </article>
                 );
@@ -609,6 +638,10 @@ export default function Home() {
           ))}
           {groupedExams.length === 0 ? <p className="empty-catalog">No exams match those filters.</p> : null}
         </section>
+
+        <footer className="menu-footer">
+          Unofficial student resource. Not affiliated with or endorsed by The University of Texas at Austin.
+        </footer>
         {requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">
             <section className="request-modal" role="dialog" aria-modal="true" aria-labelledby="exam-request-title">
@@ -737,7 +770,13 @@ export default function Home() {
             <span>{exam.title}</span>
           </div>
         </div>
-        {mode === "exam" ? <ExamTimer /> : <div className="topbar-center" />}
+        {mode === "exam" ? (
+          <ExamTimer />
+        ) : (
+          <div className="review-mode-indicator" role="status">
+            Review mode
+          </div>
+        )}
         <div className="topbar-actions">
           <button className="secondary-button" onClick={resetExam}>
             <RotateCcw size={17} />
@@ -823,7 +862,7 @@ export default function Home() {
           {mode === "review" ? (
             <section className="review-banner">
               <div>
-                <p className="eyebrow">Scoring Mode</p>
+                <p className="eyebrow">Score summary</p>
                 <h2>
                   {totals.earned.toFixed(1)} / {totals.possible} points
                 </h2>
@@ -851,7 +890,11 @@ export default function Home() {
           </div>
 
           {isComputerScience ? (
-            <InlineProseContent content={question.prompt} className="prompt" />
+            <InlineProseContent
+              content={question.prompt}
+              codeContext={[question.reference, question.stub, question.code].filter(Boolean).join("\n")}
+              className="prompt"
+            />
           ) : (
             <ScientificContent content={question.prompt} className="prompt" />
           )}

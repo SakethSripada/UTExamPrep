@@ -12,12 +12,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  title: "DigitalExams | UT Austin Practice",
-  description: "A digital practice exam workspace for public UT Austin exam materials.",
+  metadataBase: new URL(siteUrl),
+  title: "DigitalExams | Practice Exams",
+  description: "Past and practice exams for UT Austin courses.",
+  applicationName: "DigitalExams",
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
     shortcut: ["/favicon.ico"],
+  },
+  openGraph: {
+    title: "DigitalExams | Practice Exams",
+    description: "Past and practice exams for UT Austin courses.",
+    siteName: "DigitalExams",
+    type: "website",
+    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "DigitalExams practice exam library" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DigitalExams | Practice Exams",
+    description: "Past and practice exams for UT Austin courses.",
+    images: ["/og.png"],
   },
 };
 

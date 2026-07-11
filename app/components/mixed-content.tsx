@@ -47,6 +47,9 @@ function isProseMarker(line: string) {
   if (!trimmed) {
     return false;
   }
+  if (/^(\/\*|\*\/|\/\/|\*)/.test(trimmed)) {
+    return false;
+  }
   if (/^(-|•)\s+/.test(trimmed)) {
     return true;
   }
@@ -58,6 +61,23 @@ function isProseMarker(line: string) {
     return true;
   }
   if (/^(pre|post):\s/i.test(trimmed)) {
+    return true;
+  }
+  // Archived snippets frequently omit the closing brace of the surrounding
+  // class. In that case brace depth alone cannot tell us when the PDF has
+  // switched back to instructions. Treat an ordinary sentence as prose even
+  // while an earlier class declaration is still technically "open".
+  const withoutComment = trimmed.replace(/\/\/.*$/, "").trimEnd();
+  if (
+    !/[;{}]$/.test(withoutComment) &&
+    !/^(public|private|protected|static|final|abstract|class|interface|enum|return|if|else|for|while|do|switch|case|break|continue|try|catch|throw|new|void|int|long|double|float|boolean|char|struct|typedef|unsigned|#include|#define)\b/.test(
+      trimmed,
+    ) &&
+    !/[=+*/%]|\+\+|--/.test(withoutComment) &&
+    (/^(A|An|And|As|Complete|Do|Each|For|If|In|Instead|None|Recall|Return|Returns|The|This|Use|When|Write|Writes|You)\b/i.test(
+      trimmed,
+    ) || trimmed.split(/\s+/).filter(Boolean).length >= 8)
+  ) {
     return true;
   }
   return false;
@@ -133,9 +153,50 @@ function parseChoiceLine(line: string) {
   return { intro, choices };
 }
 
-function inlineCodeParts(line: string) {
-  const tokenPattern =
-    /(\[[^\]\n]+\]|\{[^}\n]+\}|\b[A-Za-z_]\w*(?:<[^>\n]+>)?(?:\.[A-Za-z_]\w*)+\([^)\n]*\)|\b[A-Za-z_]\w*\([^)\n]*\)|\b[A-Za-z_]\w*(?:<[^>\n]+>)?(?:\[\])?(?:\.[A-Za-z_]\w*)+\b|\b(?:ArrayList|LinkedList|LinkedList314|Stack314|Queue314|BST314|RedBlackTree314|TreeMap|HashMap|TreeSet|GenericList|MathMatrix|MultiSet|LL314|IntBST|HashTable314|Scanner|IntStream)(?:<[^>\n]+>)?(?:\[\])?\b|\b(?:Map|Set|List|Iterator|Vertex|Edge|String|Integer|Object)(?:<[^>\n]+>|\[\])\b|\bO\([^)\n]+\)|\bN(?:\^?\d+)?\b|\b[a-zA-Z_]\w*\.length\b|\b[a-zA-Z_]\w*\[\]\b)/g;
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function codeVocabulary(segments: ContentSegment[]) {
+  const terms = new Set<string>();
+  for (const segment of segments) {
+    if (segment.kind !== "code") {
+      continue;
+    }
+    const source = segment.text
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/\/\/.*$/gm, " ")
+      .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, " ");
+
+    for (const match of source.matchAll(/\b(?:class|interface|enum)\s+([A-Za-z_]\w*)/g)) {
+      terms.add(match[1]);
+    }
+    for (const match of source.matchAll(
+      /\b(?:[A-Z][A-Za-z0-9_]*(?:\s*<[^;=(){}]+>)?(?:\[\])?|byte|short|int|long|float|double|boolean|char|var)\s+(?:\[\]\s*)?([A-Za-z_]\w*)\b/g,
+    )) {
+      terms.add(match[1]);
+    }
+    for (const match of source.matchAll(/\.\s*([A-Za-z_]\w*)\b|\b([A-Za-z_]\w*)\s*\(/g)) {
+      terms.add(match[1] ?? match[2]);
+    }
+    for (const match of source.matchAll(/\b(?:[A-Z][A-Za-z0-9_]*|[A-Z][A-Z0-9_]{1,})\b/g)) {
+      terms.add(match[0]);
+    }
+  }
+  return terms;
+}
+
+function inlineCodeParts(line: string, vocabulary: ReadonlySet<string> = new Set()) {
+  const contextualTerms = [...vocabulary]
+    .filter((term) => term.length > 1)
+    .sort((left, right) => right.length - left.length)
+    .map(escapeRegExp)
+    .join("|");
+  const contextual = contextualTerms ? `|\\b(?:${contextualTerms})\\b` : "";
+  const tokenPattern = new RegExp(
+    `(\\[[^\\]\\n]+\\]|\\{[^}\\n]+\\}|\\b[A-Za-z_]\\w*(?:<[^>\\n]+>)?(?:\\.[A-Za-z_]\\w*)+\\([^\\)\\n]*\\)|\\b[A-Za-z_]\\w*\\([^\\)\\n]*\\)|\\b[A-Za-z_]\\w*(?:<[^>\\n]+>)?(?:\\[\\])?(?:\\.[A-Za-z_]\\w*)+\\b|\\b(?:ArrayList|LinkedList|LinkedList314|Stack314|Queue314|BST314|RedBlackTree314|TreeMap|HashMap|TreeSet|GenericList|MathMatrix|MultiSet|LL314|IntBST|HashTable314|Scanner|IntStream)(?:<[^>\\n]+>)?(?:\\[\\])?\\b|\\b(?:Map|Set|List|Iterator|Vertex|Edge|String|Integer|Object)(?:<[^>\\n]+>|\\[\\])\\b|\\b(?:null|true|false)\\b|\\bO\\([^\\)\\n]+\\)|\\bN(?:\\^?\\d+)?\\b|\\b[a-zA-Z_]\\w*\\.length\\b|\\b[a-zA-Z_]\\w*\\[\\]\\b${contextual})`,
+    "g",
+  );
   const parts: Array<{ code: boolean; text: string }> = [];
   let lastIndex = 0;
 
@@ -156,14 +217,14 @@ function inlineCodeParts(line: string) {
   return parts.length ? parts : [{ code: false, text: line }];
 }
 
-function InlineFormattedLine({ line }: { line: string }) {
+function InlineFormattedLine({ line, vocabulary }: { line: string; vocabulary?: ReadonlySet<string> }) {
   const choiceLine = parseChoiceLine(line);
   if (choiceLine) {
     return (
       <span className="choice-line">
         {choiceLine.intro ? (
           <span className="choice-intro">
-            <InlineFormattedLine line={choiceLine.intro} />
+            <InlineFormattedLine line={choiceLine.intro} vocabulary={vocabulary} />
           </span>
         ) : null}
         <span className="choice-label-text">Choices</span>
@@ -172,7 +233,7 @@ function InlineFormattedLine({ line }: { line: string }) {
             <span className="choice-option" key={choice.label}>
               <strong>{choice.label}</strong>
               <span>
-                <InlineFormattedLine line={choice.text} />
+                <InlineFormattedLine line={choice.text} vocabulary={vocabulary} />
               </span>
             </span>
           ))}
@@ -183,7 +244,7 @@ function InlineFormattedLine({ line }: { line: string }) {
 
   return (
     <>
-      {inlineCodeParts(line).map((part, index) =>
+      {inlineCodeParts(line, vocabulary).map((part, index) =>
         part.code ? (
           <code className="inline-code" key={index}>
             {part.text}
@@ -196,7 +257,7 @@ function InlineFormattedLine({ line }: { line: string }) {
   );
 }
 
-function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
+export function splitMixedContent(content = "", forceCode = false): ContentSegment[] {
   if (forceCode) {
     return content.trim() ? [{ kind: "code", text: content.trim() }] : [];
   }
@@ -285,6 +346,7 @@ export function MixedContent({
   language?: CodeLanguage;
 }) {
   const segments = splitMixedContent(content, forceCode);
+  const vocabulary = codeVocabulary(segments);
   return (
     <div className={`mixed-content ${className}`}>
       {segments.map((segment, index) =>
@@ -294,7 +356,7 @@ export function MixedContent({
           <div className="mixed-prose" key={`${segment.kind}-${index}`}>
             {segment.text.split("\n").map((line, lineIndex) => (
               <p key={lineIndex}>
-                <InlineFormattedLine line={line} />
+                <InlineFormattedLine line={line} vocabulary={vocabulary} />
               </p>
             ))}
           </div>
@@ -304,12 +366,21 @@ export function MixedContent({
   );
 }
 
-export function InlineProseContent({ content, className = "" }: { content?: string; className?: string }) {
+export function InlineProseContent({
+  content,
+  codeContext,
+  className = "",
+}: {
+  content?: string;
+  codeContext?: string;
+  className?: string;
+}) {
+  const vocabulary = codeVocabulary(splitMixedContent(codeContext));
   return (
     <div className={`mixed-prose ${className}`}>
       {(content ?? "").split("\n").map((line, index) => (
         <p key={index}>
-          <InlineFormattedLine line={line} />
+          <InlineFormattedLine line={line} vocabulary={vocabulary} />
         </p>
       ))}
     </div>
