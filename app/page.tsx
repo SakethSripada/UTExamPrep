@@ -588,7 +588,7 @@ export default function Home() {
         </header>
 
         <section className="menu-hero" aria-labelledby="home-title">
-          <h1 id="home-title">Practice exams</h1>
+          <h1 id="home-title">Digitized Past Exams</h1>
         </section>
 
         {examLoadError ? <p className="catalog-error">{examLoadError}</p> : null}
@@ -598,7 +598,7 @@ export default function Home() {
 
           <div className="catalog-filters" aria-label="Exam filters">
             <label className="catalog-search">
-              <span>Search the archive</span>
+              <span>Search Exams</span>
               <span className="search-field">
                 <Search size={18} aria-hidden="true" />
                 <input
