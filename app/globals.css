@@ -2620,7 +2620,7 @@ textarea:focus-visible {
 /* The homepage is intentionally quieter than the exam workspace. */
 .menu-shell {
   --home-content-width: 1440px;
-  padding: 0 20px 52px;
+  padding: 0 clamp(16px, 4vw, 56px) 52px;
   background: #ffffff;
 }
 
