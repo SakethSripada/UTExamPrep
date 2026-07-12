@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 390" role="img" aria-labelledby="title desc">
+  <title id="title">Binary tree for traversal questions</title>
+  <desc id="desc">P is the root. M is P's left child and O is P's right child. D is M's right child, K is D's left child, and J is O's left child.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#111827"/>
+    </marker>
+  </defs>
+  <rect width="640" height="390" fill="#ffffff"/>
+  <g fill="none" stroke="#111827" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M320 82C289 112 245 132 203 155"/>
+    <path d="M320 82C352 112 397 132 440 155"/>
+    <path d="M190 204C192 229 202 246 221 266"/>
+    <path d="M220 310C198 323 179 331 158 337"/>
+    <path d="M450 204C432 229 419 246 403 266"/>
+  </g>
+  <g fill="#ffffff" stroke="#111827" stroke-width="3">
+    <circle cx="320" cy="58" r="31"/>
+    <circle cx="177" cy="180" r="31"/>
+    <circle cx="462" cy="180" r="31"/>
+    <circle cx="230" cy="291" r="31"/>
+    <circle cx="135" cy="334" r="31"/>
+    <circle cx="390" cy="291" r="31"/>
+  </g>
+  <g fill="#111827" font-family="ui-sans-serif, system-ui, sans-serif" font-size="25" text-anchor="middle" dominant-baseline="central">
+    <text x="320" y="58">P</text>
+    <text x="177" y="180">M</text>
+    <text x="462" y="180">O</text>
+    <text x="230" y="291">D</text>
+    <text x="135" y="334">K</text>
+    <text x="390" y="291">J</text>
+  </g>
+</svg>

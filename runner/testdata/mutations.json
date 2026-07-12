@@ -207,7 +207,7 @@
   "cs314-2024-spring-exam-1-q4": "public boolean isSubset(MultiSet<E> other) {\n    return false;\n}",
   "cs314-2024-spring-exam-2-q2": "// pre: None.\n// post: Per the problem description.\nprivate boolean isRectangular() {\n    return false;\n}",
   "cs314-2024-spring-exam-2-q3": "// pre: map != null, minPeople >= 2\n// post: per the problem description. map is not altered by this method.\npublic static int getNum(Map<String, Set<String>> map, int minPeople) {\n    return 0;\n}",
-  "cs314-2024-spring-exam-2-q4": "// post: Per the problem description.\nprivate static boolean help(Airline org, Airline dest, Set<Airline> tried) {\n    return false;\n}",
+  "cs314-2024-spring-exam-2-q4": "// post: Per the problem description.\nprivate static boolean help(Airline org, Airline dest, Set<Airline> tried) {\n    return true;\n}",
   "cs314-2024-spring-exam-3-q2": "// pre: tgt != null, minDepth >= 0\n// post: Per the problem description.\npublic int count(E tgt, int minDepth) {\n    return 0;\n}",
   "cs314-2024-spring-exam-3-q3": "// pre: s != null, s.length() >= 1\n// post: Per the problem description.\npublic String decode(String s) {\n    return null;\n}",
   "cs314-2024-spring-exam-3-q4": "// post: Per the problem description.\nprivate boolean helper(String currentVertexName, int verticesInPath) {\n    return false;\n}"
