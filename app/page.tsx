@@ -106,6 +106,7 @@ export default function Home() {
 
   const question = exam?.questions[index] ?? null;
   const isComputerScience = exam?.subject === "Computer Science";
+  const useCodePresentation = Boolean(isComputerScience || question?.codePresentation);
   const subjects = ["All", ...Array.from(new Set(examCatalog.map((item) => item.subject))).sort()];
   const courses = [
     "All",
@@ -912,7 +913,7 @@ export default function Home() {
             </button>
           </div>
 
-          {isComputerScience ? (
+          {useCodePresentation ? (
             <InlineProseContent
               content={question.prompt}
               codeContext={[question.reference, question.stub, question.code].filter(Boolean).join("\n")}
@@ -925,7 +926,7 @@ export default function Home() {
           {question.reference ? (
             <section className="reference-panel">
               <h2>Reference for this section</h2>
-              {isComputerScience ? (
+              {useCodePresentation ? (
                 <MixedContent content={question.reference} language={question.language} />
               ) : (
                 <ScientificContent content={question.reference} />
@@ -970,7 +971,7 @@ export default function Home() {
                       }
                     >
                       Correct answer:{" "}
-                      {isComputerScience ? question.answers[0] : <ScientificText text={question.answers[0]} />}
+                      {useCodePresentation ? question.answers[0] : <ScientificText text={question.answers[0]} />}
                     </strong>
                   ) : null}
                 </label>
@@ -978,7 +979,7 @@ export default function Home() {
                 if (part.kind === "context") {
                   return (
                     <section className="context-block" key={`${question.id}-context-${partIndex}`}>
-                      <h2>{isComputerScience ? "Shared context" : "Use these labels"}</h2>
+                      <h2>{useCodePresentation ? "Shared context" : "Use these labels"}</h2>
                       <MixedContent content={part.code} />
                     </section>
                   );
@@ -1004,7 +1005,7 @@ export default function Home() {
                   <section className="objective-part" id={partTargetId} key={`${question.id}-${answerIndex}`}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
-                      {isComputerScience ? (
+                      {useCodePresentation ? (
                         <MixedContent
                           content={part.code.trim()}
                           forceCode={question.title.includes("Expressions")}
@@ -1025,7 +1026,7 @@ export default function Home() {
                       {submitted ? (
                         <strong className={correct ? "correct" : "incorrect"}>
                           Correct answer:{" "}
-                          {isComputerScience ? (
+                          {useCodePresentation ? (
                             question.answers![answerIndex]
                           ) : (
                             <ScientificText text={question.answers![answerIndex]} />
@@ -1137,7 +1138,7 @@ export default function Home() {
               question={question}
               manual={manual}
               setManual={setManual}
-              isComputerScience={Boolean(isComputerScience)}
+              isComputerScience={useCodePresentation}
             />
           ) : null}
 
@@ -1201,7 +1202,7 @@ export default function Home() {
                 <X size={18} />
               </button>
             </div>
-            {isComputerScience ? (
+            {useCodePresentation ? (
               <MixedContent content={question.reference} language={question.language} />
             ) : (
               <ScientificContent content={question.reference} />

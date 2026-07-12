@@ -58,7 +58,7 @@ public class TestRunner {
     }
 
     private static void runCases() {
-        for (int caseIndex = 0; caseIndex < 6; caseIndex++) {
+        for (int caseIndex = 0; caseIndex < 7; caseIndex++) {
             MorseCodeTree student = MorseCodeTree.fixture(); OracleMorseCodeTree oracle = OracleMorseCodeTree.fixture();
             final int currentCase = caseIndex;
             Outcome studentOutcome = Outcome.capture(() -> student.examCall(currentCase));

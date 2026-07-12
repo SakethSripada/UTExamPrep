@@ -31,39 +31,53 @@ private int count(BNode<E> node, E target, int depth, int minDepth) {
 }
 
     private OracleBinTree() { }
+
+    private static BNode<Integer> node(int value) {
+        return new BNode<>(value);
+    }
+
     static OracleBinTree<Integer> fixture() {
+        return fixtureForCase(0);
+    }
+
+    private static OracleBinTree<Integer> fixtureForCase(int caseIndex) {
         OracleBinTree<Integer> tree = new OracleBinTree<>();
-        BNode<Integer> n4 = new BNode<>(4);
-        BNode<Integer> n2 = new BNode<>(2);
-        BNode<Integer> n7 = new BNode<>(7);
-        BNode<Integer> n1 = new BNode<>(1);
-        BNode<Integer> n3 = new BNode<>(3);
-        BNode<Integer> n6 = new BNode<>(6);
-        BNode<Integer> n8 = new BNode<>(8);
-        n4.left = n2; n4.right = n7; n2.left = n1; n2.right = n3; n7.left = n6; n7.right = n8;
-        n4.children.add(n2); n4.children.add(n7); n2.children.add(n1); n2.children.add(n3); n7.children.add(n6); n7.children.add(n8);
-        n1.children = null; n3.children = null; n6.children = null; n8.children = null;
-        n2.red = true; n2.color = RED; n7.red = false; n7.color = BLACK;
-        n2.isBlack = false; n2.isBlackNode = false; n2.isBlackBode = false;
-        tree.root = n4; tree.size = 7;
-        
-        
-        
-        n6.data = n6.value = n6.element = n6.val = 2;
-        
-        
+        if (caseIndex == 0) { // Empty tree.
+            return tree;
+        }
+
+        BNode<Integer> root = node(4);
+        BNode<Integer> left = node(caseIndex == 4 ? 2 : 4);
+        BNode<Integer> right = node(3);
+        root.left = left;
+        root.right = right;
+        root.children.add(left);
+        root.children.add(right);
+
+        if (caseIndex == 1) { // Matching root with exactly two children.
+            tree.root = root;
+            tree.size = 3;
+            return tree;
+        }
+
+        BNode<Integer> leftLeft = node(1);
+        BNode<Integer> leftRight = node(caseIndex == 5 ? 8 : 2);
+        left.left = leftLeft;
+        left.right = leftRight;
+        left.children.add(leftLeft);
+        left.children.add(leftRight);
+        tree.root = root;
+        tree.size = 5;
         return tree;
     }
+
     public Object examCall(int caseIndex) {
-        OracleBinTree other = OracleBinTree.fixture();
-        
-        E target = (E) Integer.valueOf(caseIndex % 2 == 0 ? 2 : 9);
-        int[] countArray = {0};
-        int[] valueRange = {2, 7};
-        int[] depthRange = {1, 3};
-        E[] resultArray = (E[]) new Comparable[1];
-        Object result = count(target, 2);
-        return Arrays.asList(result, Arrays.toString(countArray), Arrays.toString(resultArray), other.examSnapshot());
+        OracleBinTree<Integer> tree = fixtureForCase(caseIndex);
+        int[] targets = {1, 4, 4, 4, 2, 99};
+        int[] minimumDepths = {0, 0, 1, 2, 1, 0};
+        String before = tree.examSnapshot();
+        Object result = tree.count(targets[caseIndex], minimumDepths[caseIndex]);
+        return Arrays.asList(result, before, tree.examSnapshot());
     }
     private void snapshot(BNode<E> node, List<String> values, int depth) {
         if (node == null || depth > 30) { values.add("#"); return; }

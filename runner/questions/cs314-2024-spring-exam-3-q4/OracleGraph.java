@@ -24,16 +24,33 @@ class OracleGraph implements ExamSnapshot {
     private static final double INFINITY = Double.POSITIVE_INFINITY;
 
     private OracleGraph() { }
-    static OracleGraph fixture() {
+    static OracleGraph fixture() { return fixtureForCase(0); }
+
+    private static OracleGraph fixtureForCase(int caseIndex) {
         OracleGraph result = new OracleGraph();
-        for (String name : new String[]{"A", "B", "C", "D", "E"}) result.vertices.put(name, new Vertex(name));
-        result.addEdge("A", "B", 2); result.addEdge("A", "C", 5);
-        result.addEdge("B", "C", 1); result.addEdge("C", "A", 4); result.addEdge("C", "D", 3);
-        result.addEdge("D", "E", 2); result.addEdge("E", "A", 1);
-        result.adjMat = new boolean[][]{
-            {false,true,true,false,false}, {false,false,true,false,false},
-            {true,false,false,true,false}, {false,false,false,false,false}, {false,false,false,false,false}
-        };
+        String[] names = caseIndex == 3 ? new String[]{"A", "B", "C"}
+            : caseIndex == 4 ? new String[]{"A", "B", "C", "D", "E"}
+            : caseIndex == 5 ? new String[]{"A", "B", "C"}
+            : caseIndex == 0 ? new String[]{"A", "B", "C"}
+            : new String[]{"A", "B", "C", "D"};
+        for (String name : names) result.vertices.put(name, new Vertex(name));
+
+        if (caseIndex == 0) {
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1);
+        } else if (caseIndex == 1) {
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+            result.addEdge("B", "D", 1); result.addEdge("C", "B", 1);
+        } else if (caseIndex == 2) {
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+            result.addEdge("B", "D", 1); result.addEdge("C", "D", 1);
+        } else if (caseIndex == 3) {
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1); result.addEdge("C", "A", 1);
+        } else if (caseIndex == 4) {
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1); result.addEdge("C", "B", 1);
+            result.addEdge("C", "D", 1); result.addEdge("D", "E", 1);
+        } else {
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+        }
         return result;
     }
     private void addEdge(String from, String to, int cost) {
@@ -68,16 +85,13 @@ private boolean helper(String currentVertexName, int verticesInPath) {
 }
 
     public Object examCall(int caseIndex) {
-        OracleGraph other = OracleGraph.fixture();
-        Set<String> required = new LinkedHashSet<>(caseIndex % 2 == 0 ? Arrays.asList("A", "C") : Arrays.asList("A", "E"));
-        Set<Vertex> visited = new LinkedHashSet<>();
-        Map<String, Integer> indegree = new LinkedHashMap<>();
-        for (String name : vertices.keySet()) indegree.put(name, 0);
-        ArrayList<Vertex> path = new ArrayList<>();
-        ArrayList<String> namesPath = new ArrayList<>();
-        int[] visitedCount = {0};
-        Object result = helper("A", 0);
-        return Arrays.asList(result, required, visited, indegree, path, namesPath, Arrays.toString(visitedCount), other.examSnapshot());
+        OracleGraph tree = fixtureForCase(caseIndex);
+        Object result = tree.helper("A", 0);
+        if (caseIndex == 5) {
+            Object retry = tree.helper("A", 0);
+            return Arrays.asList(result, retry, tree.examSnapshot());
+        }
+        return Arrays.asList(result, tree.examSnapshot());
     }
     public String examSnapshot() {
         ArrayList<String> result = new ArrayList<>();

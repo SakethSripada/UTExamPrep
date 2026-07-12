@@ -182,6 +182,14 @@ function looseTextAnswer(value: string) {
   return normalized.replace(/\s+/g, " ").trim();
 }
 
+function compactBinaryInstruction(value: string) {
+  const normalized = normalizeAnswer(value);
+  if (!/^[01][01\s_-]*$/.test(normalized)) {
+    return null;
+  }
+  return normalized.replace(/[\s_-]/g, "");
+}
+
 function isCorrectSingle(given: string, expected: string) {
   const user = normalizeAnswer(given);
   const official = normalizeAnswer(expected);
@@ -195,6 +203,11 @@ function isCorrectSingle(given: string, expected: string) {
     if (Math.abs(userNumber.value - officialNumber.value) <= scale * 1e-9) {
       return true;
     }
+  }
+  const userBinary = compactBinaryInstruction(given);
+  const officialBinary = compactBinaryInstruction(expected);
+  if (userBinary && officialBinary && userBinary === officialBinary) {
+    return true;
   }
   const formulaLike = ["=", "^", "delta", "sin", "cos"].some((marker) => official.includes(marker));
   if ((!official.includes("[") || formulaLike) && looseTextAnswer(given) === looseTextAnswer(expected)) {

@@ -24,16 +24,33 @@ class Graph implements ExamSnapshot {
     private static final double INFINITY = Double.POSITIVE_INFINITY;
 
     private Graph() { }
-    static Graph fixture() {
+    static Graph fixture() { return fixtureForCase(0); }
+
+    private static Graph fixtureForCase(int caseIndex) {
         Graph result = new Graph();
-        for (String name : new String[]{"A", "B", "C", "D", "E"}) result.vertices.put(name, new Vertex(name));
-        result.addEdge("A", "B", 2); result.addEdge("A", "C", 5);
-        result.addEdge("B", "C", 1); result.addEdge("C", "A", 4); result.addEdge("C", "D", 3);
-        result.addEdge("D", "E", 2); result.addEdge("E", "A", 1);
-        result.adjMat = new boolean[][]{
-            {false,true,true,false,false}, {false,false,true,false,false},
-            {true,false,false,true,false}, {false,false,false,false,false}, {false,false,false,false,false}
-        };
+        String[] names = caseIndex == 3 ? new String[]{"A", "B", "C"}
+            : caseIndex == 4 ? new String[]{"A", "B", "C", "D", "E"}
+            : caseIndex == 5 ? new String[]{"A", "B", "C"}
+            : caseIndex == 0 ? new String[]{"A", "B", "C"}
+            : new String[]{"A", "B", "C", "D"};
+        for (String name : names) result.vertices.put(name, new Vertex(name));
+
+        if (caseIndex == 0) { // Simple Hamiltonian chain.
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1);
+        } else if (caseIndex == 1) { // The first A branch is a dead end; backtracking is required.
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+            result.addEdge("B", "D", 1); result.addEdge("C", "B", 1);
+        } else if (caseIndex == 2) { // No Hamiltonian path from A.
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+            result.addEdge("B", "D", 1); result.addEdge("C", "D", 1);
+        } else if (caseIndex == 3) { // Cycle must not cause infinite recursion.
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1); result.addEdge("C", "A", 1);
+        } else if (caseIndex == 4) { // Skip a revisited edge and continue along the path.
+            result.addEdge("A", "B", 1); result.addEdge("B", "C", 1); result.addEdge("C", "B", 1);
+            result.addEdge("C", "D", 1); result.addEdge("D", "E", 1);
+        } else { // A failed call must fully undo scratch marks before a retry.
+            result.addEdge("A", "B", 1); result.addEdge("A", "C", 1);
+        }
         return result;
     }
     private void addEdge(String from, String to, int cost) {
@@ -58,16 +75,13 @@ class Graph implements ExamSnapshot {
 // __STUDENT_CODE__
 
     public Object examCall(int caseIndex) {
-        Graph other = Graph.fixture();
-        Set<String> required = new LinkedHashSet<>(caseIndex % 2 == 0 ? Arrays.asList("A", "C") : Arrays.asList("A", "E"));
-        Set<Vertex> visited = new LinkedHashSet<>();
-        Map<String, Integer> indegree = new LinkedHashMap<>();
-        for (String name : vertices.keySet()) indegree.put(name, 0);
-        ArrayList<Vertex> path = new ArrayList<>();
-        ArrayList<String> namesPath = new ArrayList<>();
-        int[] visitedCount = {0};
-        Object result = helper("A", 0);
-        return Arrays.asList(result, required, visited, indegree, path, namesPath, Arrays.toString(visitedCount), other.examSnapshot());
+        Graph tree = fixtureForCase(caseIndex);
+        Object result = tree.helper("A", 0);
+        if (caseIndex == 5) {
+            Object retry = tree.helper("A", 0);
+            return Arrays.asList(result, retry, tree.examSnapshot());
+        }
+        return Arrays.asList(result, tree.examSnapshot());
     }
     public String examSnapshot() {
         ArrayList<String> result = new ArrayList<>();

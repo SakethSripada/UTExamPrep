@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1400 940">
+  <title id="title">Modified microsequencer and incomplete control store</title>
+  <desc id="desc">The source microsequencer replaces an OR input J5 path with an AND gate and mux. Below it, a five-row control store has blank state numbers for the NOT and PC-offset rows.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#111827" stroke-width="1.5"/></marker>
+    <style>
+      .wire { fill:none; stroke:#111827; stroke-width:3; marker-end:url(#arrow); }
+      .shape { fill:#fff; stroke:#111827; stroke-width:3; }
+      .new { fill:#fff; stroke:#111827; stroke-width:5; }
+      .label { font:700 21px Arial,sans-serif; fill:#111827; text-anchor:middle; }
+      .text { font:18px Arial,sans-serif; fill:#111827; text-anchor:middle; dominant-baseline:middle; }
+      .small { font:15px Arial,sans-serif; fill:#111827; text-anchor:middle; dominant-baseline:middle; }
+      .header { fill:#edf2ff; stroke:#111827; stroke-width:1.5; }
+      .cell { fill:#fff; stroke:#111827; stroke-width:1.5; }
+      .blank { fill:#fff; stroke:#111827; stroke-width:5; }
+    </style>
+  </defs>
+  <rect width="1400" height="940" fill="#fff"/>
+  <text x="700" y="34" class="label">Modified microsequencer (focused redraw)</text>
+  <text x="250" y="86" class="text">COND2</text><text x="390" y="86" class="text">COND1</text><text x="530" y="86" class="text">COND0</text>
+  <path class="wire" d="M250 100 V160 H185"/><path class="wire" d="M390 100 V190 H580"/><path class="wire" d="M530 100 V215 H745"/>
+  <rect class="new" x="135" y="160" width="105" height="65" rx="28"/><text x="188" y="200" class="label">AND</text><text x="188" y="143" class="text">Z</text>
+  <path class="wire" d="M188 225 V285 H275"/>
+  <polygon class="new" points="275,260 390,260 420,315 390,370 275,370 305,315"/><text x="347" y="306" class="text">0</text><text x="347" y="342" class="text">1</text><text x="370" y="250" class="text">J[5]</text>
+  <path class="wire" d="M420 315 V415"/><text x="474" y="305" class="text">new mux</text>
+  <g>
+    <path class="shape" d="M520 170 H620 Q650 210 620 250 H520 Q550 210 520 170Z"/><text x="585" y="214" class="text">BEN</text>
+    <path class="shape" d="M685 170 H785 Q815 210 785 250 H685 Q715 210 685 170Z"/><text x="750" y="214" class="text">R</text>
+    <path class="shape" d="M850 170 H950 Q980 210 950 250 H850 Q880 210 850 170Z"/><text x="915" y="214" class="text">IR[11]</text>
+    <path class="wire" d="M585 250 V415"/><path class="wire" d="M750 250 V415"/><path class="wire" d="M915 250 V415"/>
+    <text x="560" y="455" class="text">J[4]</text><text x="700" y="455" class="text">J[3]</text><text x="840" y="455" class="text">J[2]</text><text x="980" y="455" class="text">J[1]</text><text x="1120" y="455" class="text">J[0]</text>
+    <path class="shape" d="M530 470 H590 Q620 500 590 530 H530 Q560 500 530 470Z"/><path class="shape" d="M670 470 H730 Q760 500 730 530 H670 Q700 500 670 470Z"/><path class="shape" d="M810 470 H870 Q900 500 870 530 H810 Q840 500 810 470Z"/><path class="shape" d="M950 470 H1010 Q1040 500 1010 530 H950 Q980 500 950 470Z"/><path class="shape" d="M1090 470 H1150 Q1180 500 1150 530 H1090 Q1120 500 1090 470Z"/>
+    <path class="wire" d="M560 530 V570 H850"/><path class="wire" d="M700 530 V570 H850"/><path class="wire" d="M840 530 V570 H850"/><path class="wire" d="M980 530 V570 H850"/><path class="wire" d="M1120 530 V570 H850"/>
+  </g>
+  <polygon class="shape" points="700,610 970,610 940,690 730,690"/><text x="835" y="655" class="label">IRD-controlled next-state mux</text><path class="wire" d="M850 570 V610"/>
+  <text x="1190" y="280" class="small">Thick outline: source's AND-plus-mux replacement for the J[5] path.</text>
+
+  <text x="700" y="735" class="label">Incomplete control store</text>
+  <g transform="translate(50 755)">
+    <rect class="header" x="0" y="0" width="120" height="42"/><rect class="header" x="120" y="0" width="62" height="42"/><rect class="header" x="182" y="0" width="86" height="42"/><rect class="header" x="268" y="0" width="60" height="42"/><rect class="header" x="328" y="0" width="60" height="42"/><rect class="header" x="388" y="0" width="75" height="42"/><rect class="header" x="463" y="0" width="70" height="42"/><rect class="header" x="533" y="0" width="92" height="42"/><rect class="header" x="625" y="0" width="72" height="42"/><rect class="header" x="697" y="0" width="88" height="42"/><rect class="header" x="785" y="0" width="100" height="42"/><rect class="header" x="885" y="0" width="105" height="42"/><rect class="header" x="990" y="0" width="100" height="42"/><rect class="header" x="1090" y="0" width="80" height="42"/>
+    <g class="small"><text x="60" y="21">STATE</text><text x="151" y="21">COND</text><text x="225" y="21">J</text><text x="298" y="21">LD.PC</text><text x="358" y="21">LD.CC</text><text x="425" y="21">LD.TEMP</text><text x="498" y="21">GateALU</text><text x="579" y="21">PCMUX</text><text x="661" y="21">SEL2</text><text x="741" y="21">SEL1</text><text x="835" y="21">ADDR1MUX</text><text x="937" y="21">ADDR2MUX</text><text x="1040" y="21">SR1MUX</text><text x="1130" y="21">ALUK</text></g>
+    <g class="cell"><rect x="0" y="42" width="1170" height="35"/><rect x="0" y="77" width="1170" height="35"/><rect x="0" y="112" width="1170" height="35"/><rect x="0" y="147" width="1170" height="35"/><rect x="0" y="182" width="1170" height="35"/></g>
+    <g stroke="#111827" stroke-width="1.5"><line x1="120" x2="120" y1="0" y2="217"/><line x1="182" x2="182" y1="0" y2="217"/><line x1="268" x2="268" y1="0" y2="217"/><line x1="328" x2="328" y1="0" y2="217"/><line x1="388" x2="388" y1="0" y2="217"/><line x1="463" x2="463" y1="0" y2="217"/><line x1="533" x2="533" y1="0" y2="217"/><line x1="625" x2="625" y1="0" y2="217"/><line x1="697" x2="697" y1="0" y2="217"/><line x1="785" x2="785" y1="0" y2="217"/><line x1="885" x2="885" y1="0" y2="217"/><line x1="990" x2="990" y1="0" y2="217"/><line x1="1090" x2="1090" y1="0" y2="217"/></g>
+    <rect class="blank" x="2" y="79" width="116" height="31"/><rect class="blank" x="2" y="114" width="116" height="31"/>
+    <g class="small">
+      <text x="60" y="59">51</text><text x="151" y="59">000</text><text x="225" y="59">111101</text><text x="298" y="59">0</text><text x="358" y="59">1</text><text x="425" y="59">1</text><text x="498" y="59">1</text><text x="579" y="59">X</text><text x="661" y="59">TEMP</text><text x="741" y="59">SR1OUT</text><text x="835" y="59">X</text><text x="937" y="59">X</text><text x="1040" y="59">IR[8:6]</text><text x="1130" y="59">ADD</text>
+      <text x="151" y="94">000</text><text x="225" y="94">101111</text><text x="298" y="94">0</text><text x="358" y="94">0</text><text x="425" y="94">1</text><text x="498" y="94">1</text><text x="579" y="94">X</text><text x="661" y="94">X</text><text x="741" y="94">SR1OUT</text><text x="835" y="94">X</text><text x="937" y="94">X</text><text x="1040" y="94">IR[11:9]</text><text x="1130" y="94">NOT</text>
+      <text x="151" y="129">000</text><text x="225" y="129">010010</text><text x="298" y="129">1</text><text x="358" y="129">0</text><text x="425" y="129">0</text><text x="498" y="129">0</text><text x="579" y="129">ADDER</text><text x="661" y="129">X</text><text x="741" y="129">X</text><text x="835" y="129">PC</text><text x="937" y="129">offset6</text><text x="1040" y="129">X</text><text x="1130" y="129">X</text>
+      <text x="60" y="164">61</text><text x="151" y="164">100</text><text x="225" y="164">110010</text><text x="298" y="164">0</text><text x="358" y="164">0</text><text x="425" y="164">0</text><text x="498" y="164">0</text><text x="579" y="164">X</text><text x="661" y="164">X</text><text x="741" y="164">X</text><text x="835" y="164">X</text><text x="937" y="164">X</text><text x="1040" y="164">X</text><text x="1130" y="164">X</text>
+      <text x="60" y="199">47</text><text x="151" y="199">000</text><text x="225" y="199">110011</text><text x="298" y="199">0</text><text x="358" y="199">0</text><text x="425" y="199">1</text><text x="498" y="199">1</text><text x="579" y="199">X</text><text x="661" y="199">ONE</text><text x="741" y="199">TEMP</text><text x="835" y="199">X</text><text x="937" y="199">X</text><text x="1040" y="199">X</text><text x="1130" y="199">ADD</text>
+    </g>
+  </g>
+</svg>

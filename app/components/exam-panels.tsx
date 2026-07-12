@@ -3,6 +3,7 @@ import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import { MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import { MathFormulaBlock } from "@/app/components/math-formula";
+import { QuestionDiagramVisual } from "@/app/components/question-diagram";
 
 export function JavaRunnerPanel({
   question,
@@ -209,6 +210,9 @@ export function ReviewPanel({
             <ScientificContent content={question.officialSolution} className="solution-copy" />
           )
         ) : null}
+        {question.solutionDiagrams?.map((diagram, index) => (
+          <QuestionDiagramVisual diagram={diagram} key={`${question.id}-solution-diagram-${index}`} />
+        ))}
         {question.solutionFormulas?.map((formula) => <MathFormulaBlock formula={formula} key={formula.ariaLabel} />)}
       </section>
     );

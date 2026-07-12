@@ -32,6 +32,12 @@ export type Question = {
   imageWidth?: number;
   imageHeight?: number;
   diagrams?: QuestionDiagram[];
+  // Use the code/reference presentation for assembly or other structured
+  // technical content without categorizing the entire exam as Computer Science.
+  codePresentation?: boolean;
+  // Source solution visuals belong in review mode, where they do not reveal an
+  // answer during an attempt but remain available for a faithful comparison.
+  solutionDiagrams?: QuestionDiagram[];
   code?: string;
   stub?: string;
   language?: CodeLanguage;

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1160 1040">
+  <title id="title">Correct CMOS sprinkler circuit</title>
+  <desc id="desc">A CMOS inverter produces T prime. The pull-up has pMOS R, T prime, and B in series. The pull-down has nMOS R, T prime, and B in parallel. The output is G.</desc>
+  <style>
+    .wire { fill:none; stroke:#111827; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+    .device { fill:#fff; stroke:#111827; stroke-width:3; }
+    .gate { stroke:#111827; stroke-width:3; }
+    .bubble { fill:#fff; stroke:#111827; stroke-width:3; }
+    .label { font:31px Arial,sans-serif; fill:#111827; }
+    .small { font:26px Arial,sans-serif; fill:#111827; }
+    .caption { font:22px Arial,sans-serif; fill:#374151; text-anchor:middle; }
+  </style>
+  <rect width="1160" height="1040" fill="#fff"/>
+  <text x="580" y="42" class="caption">One source-faithful corrected topology: invert T, then use R, T', and B in the CMOS networks.</text>
+
+  <text x="220" y="95" class="label" text-anchor="middle">VDD</text><path class="wire" d="M115 118 H325"/>
+  <path class="wire" d="M220 118 V165 M220 235 V265"/><rect class="device" x="205" y="165" width="30" height="70"/><line class="gate" x1="250" y1="160" x2="250" y2="240"/><circle class="bubble" cx="250" cy="200" r="10"/><line class="gate" x1="260" y1="200" x2="307" y2="200"/><text x="322" y="210" class="small">T</text>
+  <path class="wire" d="M220 265 V310 M220 385 V420"/><rect class="device" x="205" y="310" width="30" height="75"/><line class="gate" x1="250" y1="305" x2="250" y2="390"/><line class="gate" x1="260" y1="347" x2="307" y2="347"/><text x="322" y="357" class="small">T</text>
+  <circle cx="220" cy="288" r="6" fill="#111827"/><path class="wire" d="M220 288 H425 V343 H710"/><path class="wire" d="M425 343 V640 H710"/><text x="295" y="277" class="label">T'</text>
+  <path class="wire" d="M220 420 V450"/><path class="wire" d="M185 450 H255 M192 463 H248 M200 476 H240"/><text x="273" y="476" class="label">GND</text>
+  <text x="220" y="510" class="caption">CMOS inverter</text>
+
+  <text x="690" y="95" class="label" text-anchor="middle">VDD</text><path class="wire" d="M520 118 H860"/><path class="wire" d="M690 118 V165"/>
+  <path class="wire" d="M690 165 V190 M690 255 V285"/><rect class="device" x="675" y="190" width="30" height="65"/><line class="gate" x1="720" y1="185" x2="720" y2="260"/><circle class="bubble" cx="720" cy="222.5" r="10"/><line class="gate" x1="730" y1="222.5" x2="775" y2="222.5"/><text x="790" y="232" class="small">R</text>
+  <path class="wire" d="M690 285 V310 M690 375 V405"/><rect class="device" x="675" y="310" width="30" height="65"/><line class="gate" x1="720" y1="305" x2="720" y2="380"/><circle class="bubble" cx="720" cy="342.5" r="10"/><line class="gate" x1="730" y1="342.5" x2="775" y2="342.5"/><text x="790" y="352" class="small">T'</text>
+  <path class="wire" d="M690 405 V430 M690 495 V525"/><rect class="device" x="675" y="430" width="30" height="65"/><line class="gate" x1="720" y1="425" x2="720" y2="500"/><circle class="bubble" cx="720" cy="462.5" r="10"/><line class="gate" x1="730" y1="462.5" x2="775" y2="462.5"/><text x="790" y="472" class="small">B</text>
+  <path class="wire" d="M690 525 V550 H895"/><text x="915" y="560" class="label">G</text>
+
+  <path class="wire" d="M690 550 H550 V605 M690 550 V605 M690 550 H830 V605"/>
+  <rect class="device" x="535" y="605" width="30" height="70"/><line class="gate" x1="580" y1="600" x2="580" y2="680"/><line class="gate" x1="590" y1="640" x2="637" y2="640"/><text x="650" y="650" class="small">R</text>
+  <rect class="device" x="675" y="605" width="30" height="70"/><line class="gate" x1="720" y1="600" x2="720" y2="680"/><line class="gate" x1="730" y1="640" x2="777" y2="640"/><text x="790" y="650" class="small">T'</text>
+  <rect class="device" x="815" y="605" width="30" height="70"/><line class="gate" x1="860" y1="600" x2="860" y2="680"/><line class="gate" x1="870" y1="640" x2="917" y2="640"/><text x="930" y="650" class="small">B</text>
+  <path class="wire" d="M550 675 V725 H690 M690 675 V725 M830 675 V725 H690"/>
+  <path class="wire" d="M690 725 V770"/><path class="wire" d="M655 770 H725 M662 783 H718 M670 796 H710"/><text x="742" y="796" class="label">GND</text>
+  <text x="690" y="870" class="caption">pMOS: R, T', B in series. nMOS: R, T', B in parallel.</text>
+</svg>

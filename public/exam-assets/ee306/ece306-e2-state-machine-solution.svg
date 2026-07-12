@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 980 1040">
+  <title id="title">Completed state machine for opcode 1101</title>
+  <desc id="desc">State 32 goes to 13, then 47, 51, and 61. At 61, Z zero goes to state 18 and Z one goes to 50, which updates PC by PCoffset6 before going to state 18.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#111827" stroke-width="1.8"/></marker>
+    <style>
+      .box { fill:#fff; stroke:#111827; stroke-width:3; }
+      .arrow { fill:none; stroke:#111827; stroke-width:3; marker-end:url(#arrow); }
+      .label { font:700 25px Arial,sans-serif; fill:#111827; text-anchor:middle; }
+      .text { font:23px Arial,sans-serif; fill:#111827; text-anchor:middle; }
+      .small { font:20px Arial,sans-serif; fill:#374151; text-anchor:middle; }
+    </style>
+  </defs>
+  <rect width="980" height="1040" fill="#fff"/>
+  <rect class="box" x="250" y="60" width="480" height="105" rx="18"/><text x="490" y="108" class="text">BEN &lt;- IR[11] &amp; N + IR[10] &amp; Z + IR[9] &amp; P</text><text x="490" y="140" class="text">[IR[15:12]]</text><text x="745" y="58" class="label">32</text>
+  <path class="arrow" d="M305 165 L245 250"/><text x="200" y="205" class="text">1101</text>
+  <rect class="box" x="80" y="225" width="64" height="56" rx="8"/><text x="112" y="261" class="label">13</text><rect class="box" x="250" y="250" width="300" height="72" rx="12"/><text x="400" y="295" class="text">TEMP &lt;- NOT(SR1)</text>
+  <path class="arrow" d="M400 322 V395"/>
+  <rect class="box" x="80" y="370" width="64" height="56" rx="8"/><text x="112" y="406" class="label">47</text><rect class="box" x="250" y="395" width="370" height="72" rx="12"/><text x="435" y="440" class="text">TEMP &lt;- TEMP + 1</text>
+  <path class="arrow" d="M435 467 V540"/>
+  <rect class="box" x="80" y="515" width="64" height="56" rx="8"/><text x="112" y="551" class="label">51</text><rect class="box" x="250" y="540" width="405" height="95" rx="12"/><text x="452" y="580" class="text">TEMP &lt;- TEMP + SR2</text><text x="452" y="612" class="text">set CC</text>
+  <path class="arrow" d="M453 635 V710"/>
+  <rect class="box" x="80" y="685" width="64" height="56" rx="8"/><text x="112" y="721" class="label">61</text><rect class="box" x="325" y="710" width="220" height="62" rx="12"/><text x="435" y="750" class="text">[Z]</text>
+  <path class="arrow" d="M545 742 L690 800"/><text x="610" y="755" class="text">0</text><text x="742" y="810" class="text">To 18</text>
+  <path class="arrow" d="M435 772 V840"/><text x="400" y="808" class="text">1</text>
+  <rect class="box" x="60" y="815" width="64" height="56" rx="8"/><text x="92" y="851" class="label">50</text><rect class="box" x="250" y="840" width="390" height="72" rx="12"/><text x="445" y="885" class="text">PC &lt;- PC + PCoffset6</text>
+  <path class="arrow" d="M445 912 V965"/><text x="445" y="1000" class="text">To 18</text>
+  <text x="490" y="1028" class="small">At state 61, the Z=1 path clears the appropriate next-state bit to route to state 18 or state 50 as shown.</text>
+</svg>
