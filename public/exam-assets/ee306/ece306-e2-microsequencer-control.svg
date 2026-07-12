@@ -16,7 +16,7 @@
     </style>
   </defs>
   <rect width="1400" height="940" fill="#fff"/>
-  <text x="700" y="34" class="label">Modified microsequencer (focused redraw)</text>
+  <text x="700" y="34" class="label">Modified microsequencer</text>
   <text x="250" y="86" class="text">COND2</text><text x="390" y="86" class="text">COND1</text><text x="530" y="86" class="text">COND0</text>
   <path class="wire" d="M250 100 V160 H185"/><path class="wire" d="M390 100 V190 H580"/><path class="wire" d="M530 100 V215 H745"/>
   <rect class="new" x="135" y="160" width="105" height="65" rx="28"/><text x="188" y="200" class="label">AND</text><text x="188" y="143" class="text">Z</text>

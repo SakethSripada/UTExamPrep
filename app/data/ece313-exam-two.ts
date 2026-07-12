@@ -164,7 +164,6 @@ F. List all possible frequency selectivities in this order: lowpass, highpass, a
           height: 1110,
           title: "Input and output spectrograms",
           alt: "Three recreated chirp spectrograms: an input rising from zero to eight kilohertz, a lowpass-filtered output that retains only the first two kilohertz, and a nonlinear output with additional folded N-shaped frequency traces.",
-          description: "The source evidence is recreated as vector graphics so the frequency trajectories remain crisp at every size.",
         },
       ],
       code: `A1. In output (a), identify the filter selectivity.
@@ -211,7 +210,7 @@ B. In output (b), give the integer exponent k for y[n] = x^k[n].`,
           height: 1490,
           title: "Source filters, response curves, and six system rows",
           alt: "Four hand-recreated analysis and synthesis impulse-response plots, magnitude-response curves A through F, and six numbered diagrams combining lowpass or highpass filters with downsampling and upsampling by two.",
-          description: "Use rows 1–6 from the diagram. All graphs and cascades are digitally redrawn from the source rather than copied from the PDF.",
+          description: "Use rows 1–6 from the diagram.",
         },
       ],
       code: `A1. Row 1: match A–F.

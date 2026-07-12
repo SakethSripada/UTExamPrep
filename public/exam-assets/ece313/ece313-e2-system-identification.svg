@@ -58,5 +58,4 @@
     <text x="535" y="1040" text-anchor="middle" class="label">Time [s]</text><text x="35" y="876" text-anchor="middle" class="label" transform="rotate(-90 35 876)">Frequency [kHz]</text>
     <text x="1021" y="782" class="tick">−20</text><text x="1021" y="886" class="tick">−80</text><text x="1021" y="982" class="tick">−140 dB/Hz</text>
   </g>
-  <text x="110" y="1080" class="note">The recreated frequency traces encode the same evidence as the source: a 0–2 kHz lowpass cutoff in (a), and an added 3× chirp component that aliases in (b).</text>
 </svg>

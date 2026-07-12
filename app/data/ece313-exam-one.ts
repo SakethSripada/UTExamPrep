@@ -45,7 +45,7 @@ export const ece313ExamOne: Exam = {
           height: 560,
           title: "Source signal",
           alt: "A sinusoidal signal from minus eight to twelve milliseconds with a positive amplitude of two and a period of four milliseconds.",
-          description: "The recreated graph preserves the source scale: −8 to 12 milliseconds horizontally and −2 to 2 vertically.",
+          description: "Graph scale: −8 to 12 milliseconds horizontally and −2 to 2 vertically.",
         },
       ],
       code: `A. Estimate the amplitude A.
@@ -194,7 +194,7 @@ D. Is the aliased frequency audible? Answer yes or no.`,
       type: "short",
       gradingMode: "auto",
       prompt:
-        "A complex image signal S[m,k] is obtained by taking the short-time Fourier transform of x[n] using non-overlapping rectangular windows of length N = 5 samples. Identify each plotted STFT component using the four labels below.\n\nSource correction: the official solution identifies two typos in the printed paper. The first and fourth pieces of x(t) are sin² terms, not cos² terms; the recreated waveform and formula below use the corrected, diagram-consistent form.",
+        "A complex image signal S[m,k] is obtained by taking the short-time Fourier transform of x[n] using non-overlapping rectangular windows of length N = 5 samples. Identify each plotted STFT component using the four labels below.\n\nSource correction: the official solution identifies two typos in the printed paper. The first and fourth pieces of x(t) are sin² terms, not cos² terms; the waveform and formula below use the corrected, diagram-consistent form.",
       formulas: [
         {
           ariaLabel: "corrected piecewise source signal x of t",
@@ -216,7 +216,7 @@ D. Is the aliased frequency audible? Answer yes or no.`,
           height: 1200,
           title: "Source waveform and four STFT component plots",
           alt: "A corrected sampled waveform over time and four five-by-four grayscale STFT heatmaps labeled plots one through four. Each heatmap has frequency rows 80, 40, 0, minus 40, and minus 80 hertz and time columns 0, 0.025, 0.05, and 0.075 seconds.",
-          description: "Enter the matching letter for each numbered plot. The visual is manually recreated from the source values, not cropped from the PDF.",
+          description: "Enter the matching letter for each numbered plot.",
         },
       ],
       code: `Labels: A. Magnitude |S[m,k]|; B. Phase ∠S[m,k]; C. Real part Re{S[m,k]}; D. Imaginary part Im{S[m,k]}.
