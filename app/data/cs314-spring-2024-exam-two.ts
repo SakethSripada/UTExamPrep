@@ -19,6 +19,7 @@ export const cs314Spring2024ExamTwo: Exam = {
       diagrams: [
         {
           kind: "source",
+          beforePart: "I",
           title: "For part I: Node object template",
           description: "The source exam's two-field Node template. A slash denotes a null reference.",
           src: "/exam-assets/cs314/cs314-spring-2024-e2-node-template.svg",
@@ -28,6 +29,7 @@ export const cs314Spring2024ExamTwo: Exam = {
         },
         {
           kind: "source",
+          beforePart: "V",
           title: "For parts V through X: Binary tree",
           description: "Use this exact tree for the traversal and full-tree questions.",
           src: "/exam-assets/cs314/cs314-spring-2024-e2-tree.svg",

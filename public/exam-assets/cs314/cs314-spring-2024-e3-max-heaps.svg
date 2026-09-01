@@ -19,27 +19,27 @@
   <text x="285" y="72" class="caption">maximum binary heap</text>
   <text x="895" y="72" class="caption">maximum binary heap</text>
 
-  <path class="edge" d="M285 134 L202 207"/>
-  <path class="edge" d="M285 134 L368 207"/>
-  <path class="edge" d="M202 279 L132 354"/>
-  <path class="edge" d="M202 279 L272 354"/>
-  <path class="edge" d="M368 279 L368 354"/>
+  <path class="edge" d="M285 174 L202 247"/>
+  <path class="edge" d="M285 174 L368 247"/>
+  <path class="edge" d="M202 319 L132 394"/>
+  <path class="edge" d="M202 319 L272 394"/>
+  <path class="edge" d="M368 319 L368 394"/>
 
-  <circle class="node" cx="285" cy="110" r="43"/><text class="value" x="285" y="110">100</text>
-  <circle class="node" cx="202" cy="250" r="43"/><text class="value" x="202" y="250">90</text>
-  <circle class="node" cx="368" cy="250" r="43"/><text class="value" x="368" y="250">40</text>
-  <circle class="node" cx="132" cy="396" r="43"/><text class="value" x="132" y="396">10</text>
-  <circle class="node" cx="272" cy="396" r="43"/><text class="value" x="272" y="396">5</text>
-  <circle class="node" cx="368" cy="396" r="43"/><text class="value" x="368" y="396">??</text>
+  <circle class="node" cx="285" cy="150" r="43"/><text class="value" x="285" y="150">100</text>
+  <circle class="node" cx="202" cy="290" r="43"/><text class="value" x="202" y="290">90</text>
+  <circle class="node" cx="368" cy="290" r="43"/><text class="value" x="368" y="290">40</text>
+  <circle class="node" cx="132" cy="436" r="43"/><text class="value" x="132" y="436">10</text>
+  <circle class="node" cx="272" cy="436" r="43"/><text class="value" x="272" y="436">5</text>
+  <circle class="node" cx="368" cy="436" r="43"/><text class="value" x="368" y="436">??</text>
 
-  <path class="edge" d="M895 134 L812 207"/>
-  <path class="edge" d="M895 134 L978 207"/>
-  <path class="edge" d="M812 279 L742 354"/>
-  <path class="edge" d="M812 279 L882 354"/>
+  <path class="edge" d="M895 174 L812 247"/>
+  <path class="edge" d="M895 174 L978 247"/>
+  <path class="edge" d="M812 319 L742 394"/>
+  <path class="edge" d="M812 319 L882 394"/>
 
-  <circle class="node" cx="895" cy="110" r="43"/><text class="value" x="895" y="110">90</text>
-  <circle class="node" cx="812" cy="250" r="43"/><text class="value" x="812" y="250">??</text>
-  <circle class="node" cx="978" cy="250" r="43"/><text class="value" x="978" y="250">40</text>
-  <circle class="node" cx="742" cy="396" r="43"/><text class="value" x="742" y="396">10</text>
-  <circle class="node" cx="882" cy="396" r="43"/><text class="value" x="882" y="396">35</text>
+  <circle class="node" cx="895" cy="150" r="43"/><text class="value" x="895" y="150">90</text>
+  <circle class="node" cx="812" cy="290" r="43"/><text class="value" x="812" y="290">??</text>
+  <circle class="node" cx="978" cy="290" r="43"/><text class="value" x="978" y="290">40</text>
+  <circle class="node" cx="742" cy="436" r="43"/><text class="value" x="742" y="436">10</text>
+  <circle class="node" cx="882" cy="436" r="43"/><text class="value" x="882" y="436">35</text>
 </svg>

@@ -70,7 +70,11 @@ export type Question = {
   thrownOut?: ThrownOutPart;
 };
 
-export type QuestionDiagram = TreeDiagram | LinkedListDiagram | GraphDiagram | SourceDiagram;
+export type QuestionDiagram = (TreeDiagram | LinkedListDiagram | GraphDiagram | SourceDiagram) & {
+  // Short-answer questions can attach a visual to the exact labeled part that
+  // needs it instead of collecting every diagram above part A.
+  beforePart?: string;
+};
 
 export type SourceDiagram = {
   kind: "source";

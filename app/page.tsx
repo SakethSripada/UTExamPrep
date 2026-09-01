@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   BookOpen,
   Check,
@@ -824,7 +824,7 @@ export default function Home() {
               />
             </figure>
           ) : null}
-          {question.diagrams?.map((diagram, diagramIndex) => (
+          {question.diagrams?.filter((diagram) => !diagram.beforePart).map((diagram, diagramIndex) => (
             <QuestionDiagramVisual diagram={diagram} key={`${question.id}-diagram-${diagramIndex}`} />
           ))}
 
@@ -881,8 +881,16 @@ export default function Home() {
                 const submitted = mode === "review";
                 const correct = submitted && isCorrect(userAnswers[answerIndex] ?? "", question.answers![answerIndex]);
                 const partTargetId = `${question.id}-part-${part.label}`;
+                const partDiagrams = question.diagrams?.filter((diagram) => diagram.beforePart === part.label) ?? [];
                 return (
-                  <section className="objective-part" id={partTargetId} key={`${question.id}-${answerIndex}`}>
+                  <Fragment key={`${question.id}-${answerIndex}`}>
+                    {partDiagrams.map((diagram, diagramIndex) => (
+                      <QuestionDiagramVisual
+                        diagram={diagram}
+                        key={`${question.id}-${part.label}-diagram-${diagramIndex}`}
+                      />
+                    ))}
+                    <section className="objective-part" id={partTargetId}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
                       {useCodePresentation ? (
@@ -914,7 +922,8 @@ export default function Home() {
                         </strong>
                       ) : null}
                     </label>
-                  </section>
+                    </section>
+                  </Fragment>
                 );
               })}
             </div>

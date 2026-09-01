@@ -244,6 +244,7 @@ D4. Fourth replacement instruction.`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A3",
           src: "/exam-assets/ee306/ece306-e2-instruction-datapath.svg",
           width: 1400,
           height: 900,
@@ -253,6 +254,7 @@ D4. Fourth replacement instruction.`,
         },
         {
           kind: "source",
+          beforePart: "A8",
           src: "/exam-assets/ee306/ece306-e2-microsequencer-control.svg",
           width: 1400,
           height: 1000,
@@ -262,6 +264,7 @@ D4. Fourth replacement instruction.`,
         },
         {
           kind: "source",
+          beforePart: "A1",
           src: "/exam-assets/ee306/ece306-e2-state-machine.svg",
           width: 980,
           height: 1040,

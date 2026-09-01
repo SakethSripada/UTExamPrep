@@ -19,6 +19,7 @@ export const cs314Spring2024ExamThree: Exam = {
       diagrams: [
         {
           kind: "source",
+          beforePart: "P",
           title: "For part P: Maximum binary heaps before and after removeMax",
           description:
             "The source problem's two heap states. The unknown value occupies the last node before removal and the left child of the root afterward.",
@@ -29,6 +30,7 @@ export const cs314Spring2024ExamThree: Exam = {
         },
         {
           kind: "source",
+          beforePart: "Q",
           title: "For part Q: Five-slot linear-probing table",
           description: "The source table has array indices 0 through 4 and starts empty.",
           src: "/exam-assets/cs314/cs314-spring-2024-e3-linear-probing.svg",
@@ -38,6 +40,7 @@ export const cs314Spring2024ExamThree: Exam = {
         },
         {
           kind: "source",
+          beforePart: "U",
           title: "For part U: Timing table",
           description: "The source timing observations for the unknown graph algorithm, in seconds.",
           src: "/exam-assets/cs314/cs314-spring-2024-e3-timing-table.svg",
@@ -47,6 +50,7 @@ export const cs314Spring2024ExamThree: Exam = {
         },
         {
           kind: "graph",
+          beforePart: "W",
           title: "For parts W and X: Directed graph",
           description: "The graphical form of the source adjacency list. Arrowheads show edge direction.",
           directed: true,
