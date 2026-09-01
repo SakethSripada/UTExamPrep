@@ -1,29 +1,10 @@
 import type { Dispatch, SetStateAction } from "react";
-import { CheckCircle2, ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
+import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import { MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import { MathFormulaBlock } from "@/app/components/math-formula";
 import { QuestionDiagramVisual } from "@/app/components/question-diagram";
 import { gradingRubric, manualScoreForQuestion, rubricScoreKey } from "@/app/lib/exam-state";
-
-export function CodePracticePanel() {
-  return (
-    <section className="java-panel code-practice-panel">
-      <div className="java-panel-header">
-        <div>
-          <h2>
-            <CheckCircle2 size={18} />
-            Response saved
-          </h2>
-          <p>
-            Code execution is temporarily unavailable. Submit when you are ready, then score each rubric criterion
-            beside your response and compare it with the official solution.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function JavaRunnerPanel({
   question,

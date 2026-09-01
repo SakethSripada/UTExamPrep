@@ -2346,31 +2346,24 @@ textarea:focus-visible {
   outline: 2px solid rgb(11 92 122 / 16%);
 }
 
-.code-practice-panel {
-  padding: 14px 16px;
-  background: #f7f9fb;
-  border: 1px solid #cfd8e2;
-  border-radius: 7px;
-}
-
 @media (min-width: 1321px) {
-  .review-shell .question-pane {
+  .review-shell.cs-exam .question-pane {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(390px, 0.78fr);
     gap: 0 clamp(24px, 3vw, 48px);
     width: min(100%, 1640px);
   }
 
-  .review-shell .question-pane > * {
+  .review-shell.cs-exam .question-pane > * {
     grid-column: 1;
     min-width: 0;
   }
 
-  .review-shell .question-pane > .review-banner {
+  .review-shell.cs-exam .question-pane > .review-banner {
     grid-column: 1 / -1;
   }
 
-  .review-shell .question-pane > .review-panel {
+  .review-shell.cs-exam .question-pane > .review-panel {
     position: sticky;
     top: 88px;
     grid-column: 2;

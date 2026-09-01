@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { examCatalog, loadExam } from "@/app/data/exams";
-import { CodePracticePanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
+import { ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
 import { MathFormulaBlock } from "@/app/components/math-formula";
 import { InlineProseContent, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
@@ -1010,10 +1010,6 @@ export default function Home() {
                 }}
               />
             </div>
-          ) : null}
-
-          {question.type === "code" ? (
-            <CodePracticePanel />
           ) : null}
 
           {mode === "review" ? (
