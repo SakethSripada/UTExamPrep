@@ -21,7 +21,7 @@ export const cs314Spring2024ExamTwo: Exam = {
           kind: "source",
           beforePart: "I",
           title: "For part I: Node object template",
-          description: "The source exam's two-field Node template. A slash denotes a null reference.",
+          description: "A slash denotes a null reference.",
           src: "/exam-assets/cs314/cs314-spring-2024-e2-node-template.svg",
           alt: "A Node object box split into data and next fields, with null slash marks in both fields.",
           width: 680,
@@ -240,7 +240,7 @@ for (String name : names) {
         {
           kind: "source",
           title: "LinkedMatrix representation",
-          description: "The source's abstract 2 by 3 matrix and its concrete row-header/data-node linked representation. A slash denotes null.",
+          description: "The abstract 2 by 3 matrix and its row-header/data-node linked representation. A slash denotes null.",
           src: "/exam-assets/cs314/cs314-spring-2024-e2-linked-matrix.svg",
           alt: "An abstract matrix with rows 12 minus 3 7 and 5 0 19, represented by two linked row headers with three linked data nodes per row.",
           width: 1180,

@@ -73,8 +73,6 @@ for (const exam of Object.values(archive)) {
       kind: "source",
       src: `/exam-visuals/cs314/${fileName}`,
       alt: `Official source-page visual for ${exam.title}, question ${activeQuestion}, page ${pageIndex + 1}.`,
-      title: "Original exam visual",
-      description: "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
       width: pageWidth,
       height: pageHeight,
     });

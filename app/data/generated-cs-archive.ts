@@ -159,8 +159,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-exam-1-q3-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Exam 1, question 3, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -366,8 +364,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -375,8 +371,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -480,8 +474,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-exam-2-q2-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Exam 2, question 2, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -687,8 +679,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -696,8 +686,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -705,8 +693,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -714,8 +700,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -744,8 +728,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q2-p10.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 2, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -774,8 +756,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q3-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 3, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -823,8 +803,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2011-fall-final-q5-p16.png",
             "alt": "Official source-page visual for CS 314 Fall 2011 Final Exam, question 5, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -955,8 +933,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-1-q2-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 1, question 2, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1001,8 +977,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-1-q3-p9.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 1, question 3, page 9.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1055,8 +1029,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-1-q4-p11.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 1, question 4, page 11.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1101,8 +1073,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-1-q5-p13.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 1, question 5, page 13.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1180,8 +1150,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1315,8 +1283,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-exam-2-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Exam 2, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1448,8 +1414,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -1457,8 +1421,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -1466,8 +1428,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -1475,8 +1435,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -1484,8 +1442,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1543,8 +1499,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q2-p11.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 2, page 11.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1589,8 +1543,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q3-p13.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 3, page 13.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -1682,8 +1634,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2012-fall-final-q5-p17.png",
             "alt": "Official source-page visual for CS 314 Fall 2012 Final Exam, question 5, page 17.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2015,8 +1965,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -2024,8 +1972,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2307,8 +2253,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -2316,8 +2260,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -2325,8 +2267,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -2334,8 +2274,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2451,8 +2389,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2529,8 +2465,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2013-spring-final-q4-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2013 Final Exam, question 4, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2853,8 +2787,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-exam-1-q4-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Exam 1, question 4, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -2993,8 +2925,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3130,8 +3060,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-exam-2-q4-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Exam 2, question 4, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3219,8 +3147,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -3228,8 +3154,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -3237,8 +3161,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -3246,8 +3168,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3339,8 +3259,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3440,8 +3358,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2014-spring-final-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2014 Final Exam, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3635,8 +3551,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-exam-1-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Exam 1, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3802,8 +3716,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -3811,8 +3723,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -3820,8 +3730,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -3976,8 +3884,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-exam-2-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Exam 2, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4065,8 +3971,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -4074,8 +3978,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -4083,8 +3985,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4168,8 +4068,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4210,8 +4108,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4240,8 +4136,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2015-spring-final-q5-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2015 Final Exam, question 5, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4399,8 +4293,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-exam-1-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Exam 1, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4523,8 +4415,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-exam-1-q6-p14.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Exam 1, question 6, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4612,8 +4502,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -4621,8 +4509,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-exam-2-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Exam 2, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4784,8 +4670,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-exam-2-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Exam 2, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -4912,8 +4796,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -4921,8 +4803,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -4930,8 +4810,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-final-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Final Exam, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5153,8 +5031,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-final-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Final Exam, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5203,8 +5079,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-fall-final-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Fall 2016 Final Exam, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5353,8 +5227,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-1-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 1, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5399,8 +5271,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-1-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 1, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5445,8 +5315,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-1-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 1, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5534,8 +5402,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5543,8 +5409,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5552,8 +5416,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5731,8 +5593,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-2-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 2, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5740,8 +5600,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-exam-2-q5-p15.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Exam 2, question 5, page 15.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -5878,8 +5736,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5887,8 +5743,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5896,8 +5750,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5905,8 +5757,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -5914,8 +5764,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q1-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 1, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6097,8 +5945,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q5-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 5, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6159,8 +6005,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2016-spring-final-q6-p18.png",
             "alt": "Official source-page visual for CS 314 Spring 2016 Final Exam, question 6, page 18.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6324,8 +6168,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-exam-1-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Exam 1, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6471,8 +6313,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6603,8 +6443,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-exam-2-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Exam 2, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6747,8 +6585,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -6756,8 +6592,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6813,8 +6647,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-final-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Final Exam, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -6906,8 +6738,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-fall-final-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2017 Final Exam, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7124,8 +6954,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-exam-1-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Exam 1, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7252,8 +7080,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-exam-1-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Exam 1, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7339,8 +7165,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -7348,8 +7172,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7535,8 +7357,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-exam-2-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Exam 2, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7624,8 +7444,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -7633,8 +7451,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -7642,8 +7458,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -7651,8 +7465,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7850,8 +7662,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -7916,8 +7726,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2017-spring-final-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2017 Final Exam, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8247,8 +8055,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -8256,8 +8062,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8600,8 +8404,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -8609,8 +8411,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -8618,8 +8418,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -8627,8 +8425,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8697,8 +8493,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q2-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 2, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8743,8 +8537,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8797,8 +8589,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -8938,8 +8728,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -8947,8 +8735,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-fall-final-q6-p17.png",
             "alt": "Official source-page visual for CS 314 Fall 2018 Final Exam, question 6, page 17.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9128,8 +8914,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-exam-1-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Exam 1, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9316,8 +9100,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-exam-1-q6-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Exam 1, question 6, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9403,8 +9185,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -9412,8 +9192,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -9421,8 +9199,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9658,8 +9434,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -9667,8 +9441,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -9676,8 +9448,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -9685,8 +9455,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9798,8 +9566,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -9946,8 +9712,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2018-spring-final-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2018 Final Exam, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10133,8 +9897,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-exam-1-q3-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Exam 1, question 3, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10270,8 +10032,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-exam-1-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Exam 1, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10359,8 +10119,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -10368,8 +10126,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10584,8 +10340,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-exam-2-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Exam 2, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10712,8 +10466,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -10721,8 +10473,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -10730,8 +10480,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -10739,8 +10487,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10895,8 +10641,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -10973,8 +10717,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-fall-final-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Fall 2019 Final Exam, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11457,8 +11199,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -11466,8 +11206,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11693,8 +11431,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-exam-2-q5-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Exam 2, question 5, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11755,8 +11491,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-exam-2-q6-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Exam 2, question 6, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11844,8 +11578,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -11853,8 +11585,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -11862,8 +11592,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11904,8 +11632,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q2-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 2, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -11962,8 +11688,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12190,8 +11914,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2019-spring-final-q6-p16.png",
             "alt": "Official source-page visual for CS 314 Spring 2019 Final Exam, question 6, page 16.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12538,8 +12260,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12547,8 +12267,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12556,8 +12274,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12565,8 +12281,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12574,8 +12288,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12612,8 +12324,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q2-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 2, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12621,8 +12331,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12699,8 +12407,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-2-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 2, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12873,8 +12579,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p1.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 1.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12882,8 +12586,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p2.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 2.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12891,8 +12593,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12900,8 +12600,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12909,8 +12607,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12918,8 +12614,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -12927,8 +12621,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -12993,8 +12685,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -13106,8 +12796,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2021-fall-exam-3-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Fall 2021 Exam 3, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -13252,8 +12940,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-1-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 1, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13261,8 +12947,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-1-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 1, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -13533,8 +13217,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-2-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 2, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13542,8 +13224,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13551,8 +13231,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-2-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 2, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13560,8 +13238,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-2-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 2, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -13767,8 +13443,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-2-q5-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 2, question 5, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -13866,8 +13540,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13875,8 +13547,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13884,8 +13554,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13893,8 +13561,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -13902,8 +13568,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14003,8 +13667,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q3-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 3, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14081,8 +13743,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2022-spring-exam-3-q4-p14.png",
             "alt": "Official source-page visual for CS 314 Spring 2022 Exam 3, question 4, page 14.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14219,8 +13879,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-1-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 1, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14408,8 +14066,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-2-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 2, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14612,8 +14268,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-3-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 3, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -14621,8 +14275,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-3-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 3, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -14630,8 +14282,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-3-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 3, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14676,8 +14326,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-3-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 3, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -14758,8 +14406,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-fall-exam-3-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Fall 2023 Exam 3, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -15133,8 +14779,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2023 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -15373,8 +15017,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-spring-exam-3-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2023 Exam 3, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -15382,8 +15024,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-spring-exam-3-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2023 Exam 3, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -15578,8 +15218,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2023-spring-exam-3-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2023 Exam 3, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -15878,8 +15516,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-2-q1-p4.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 2, question 1, page 4.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -15887,8 +15523,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-2-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 2, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -15957,8 +15591,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-2-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 2, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -16007,8 +15639,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-2-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 2, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -16161,8 +15791,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q1-p3.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 1, page 3.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -16170,8 +15798,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q1-p5.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 1, page 5.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -16179,8 +15805,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q1-p6.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 1, page 6.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           },
@@ -16188,8 +15812,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q1-p7.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 1, page 7.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -16230,8 +15852,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q2-p8.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 2, page 8.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -16272,8 +15892,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q3-p10.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 3, page 10.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
@@ -16346,8 +15964,6 @@ export const archivedCsExams: Record<string, Exam> = {
             "kind": "source",
             "src": "/exam-visuals/cs314/cs314-2024-spring-exam-3-q4-p12.png",
             "alt": "Official source-page visual for CS 314 Spring 2024 Exam 3, question 4, page 12.",
-            "title": "Original exam visual",
-            "description": "The diagram is shown from the official exam page so node positions and connections remain unambiguous.",
             "width": 1224,
             "height": 1584
           }
