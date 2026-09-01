@@ -34,6 +34,10 @@ npm run validate:launch
 
 ## Source PDFs
 
+UTExamPrep uses only exams and supporting materials that are publicly available.
+The project does not access, collect, or reproduce materials from authenticated,
+login-gated, course-restricted, or otherwise private sources.
+
 PDFs are intentionally kept out of this open-source repository and its Git history.
 For local curation and source audits, place the separate PDF archive at
 `../UTExamPrep-PDFs/exampdfs`, or set `UTEXAMPREP_PDF_ROOT` to its `exampdfs`
