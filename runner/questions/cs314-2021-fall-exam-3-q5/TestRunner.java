@@ -1,0 +1,77 @@
+import java.util.*;
+import java.lang.reflect.Array;
+
+interface ExamSnapshot { String examSnapshot(); }
+
+public class TestRunner {
+    private static int passed;
+    private static int total;
+
+    private interface CheckedCall { Object run() throws Throwable; }
+
+    private static final class Outcome {
+        private final Object value;
+        private final String error;
+        private Outcome(Object value, String error) { this.value = value; this.error = error; }
+        static Outcome capture(CheckedCall call) {
+            try { return new Outcome(normalize(call.run()), null); }
+            catch (Throwable error) { return new Outcome(null, error.getClass().getName()); }
+        }
+        public boolean equals(Object other) {
+            if (!(other instanceof Outcome)) return false;
+            Outcome rhs = (Outcome) other;
+            return Objects.equals(value, rhs.value) && Objects.equals(error, rhs.error);
+        }
+        public String toString() { return error == null ? String.valueOf(value) : "throws " + error; }
+    }
+
+    private static Object normalize(Object value) {
+        if (value == null) return null;
+        if (value instanceof ExamSnapshot) return ((ExamSnapshot) value).examSnapshot();
+        if (value instanceof Iterable<?>) {
+            ArrayList<Object> result = new ArrayList<>();
+            for (Object item : (Iterable<?>) value) result.add(normalize(item));
+            return result;
+        }
+        if (value instanceof Map<?, ?>) {
+            TreeMap<String, Object> result = new TreeMap<>();
+            for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet())
+                result.put(String.valueOf(entry.getKey()), normalize(entry.getValue()));
+            return result;
+        }
+        Class<?> type = value.getClass();
+        if (!type.isArray()) return value;
+        int length = Array.getLength(value);
+        ArrayList<Object> result = new ArrayList<>();
+        for (int i = 0; i < length; i++) result.add(normalize(Array.get(value, i)));
+        return result;
+    }
+
+    private static void checkEqual(Object actual, Object expected, String name) {
+        total++;
+        if (Objects.equals(actual, expected)) {
+            passed++;
+            System.out.println("PASS " + name);
+        } else {
+            System.out.println("FAIL " + name + " expected=" + expected + " actual=" + actual);
+        }
+    }
+
+    private static void runCases() {
+        for (int caseIndex = 0; caseIndex < 6; caseIndex++) {
+            LinkedBigInteger student = LinkedBigInteger.fixture();
+            OracleLinkedBigInteger oracle = OracleLinkedBigInteger.fixture();
+            final int currentCase = caseIndex;
+            Outcome studentOutcome = Outcome.capture(() -> student.examCall(currentCase));
+            Outcome oracleOutcome = Outcome.capture(() -> oracle.examCall(currentCase));
+            checkEqual(studentOutcome, oracleOutcome, "case " + caseIndex + " return");
+            checkEqual(student.examSnapshot(), oracle.examSnapshot(), "case " + caseIndex + " state");
+        }
+    }
+
+    public static void main(String[] args) {
+        runCases();
+        System.out.println("RESULT " + passed + "/" + total);
+        if (passed != total) System.exit(1);
+    }
+}

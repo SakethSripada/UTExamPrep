@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1280 700">
+  <title id="title">Standard Morse-code tree</title>
+  <desc id="desc">A Morse-code reference tree. Dot follows each left edge and dash follows each right edge, starting with E and T at the first level.</desc>
+  <defs>
+    <marker id="leftArrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M10,0 L0,5 L10,10" fill="#111827"/>
+    </marker>
+    <marker id="rightArrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10" fill="#111827"/>
+    </marker>
+    <style>
+      .edge { stroke: #111827; stroke-width: 2.5; stroke-dasharray: 5 9; fill: none; }
+      .node { fill: #fff; stroke: #111827; stroke-width: 2.5; }
+      .letter { font: 24px Georgia, serif; fill: #111827; text-anchor: middle; dominant-baseline: middle; }
+      .start { font: 33px Georgia, serif; fill: #111827; text-anchor: middle; dominant-baseline: middle; }
+      .legend { font: 35px Georgia, serif; fill: #111827; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1280" height="700" fill="#fff"/>
+  <text x="210" y="74" class="legend">Dot</text><path d="M330 88 L105 88" stroke="#111827" stroke-width="3" stroke-dasharray="5 10" marker-end="url(#leftArrow)"/>
+  <text x="1070" y="74" class="legend">Dash</text><path d="M950 88 L1175 88" stroke="#111827" stroke-width="3" stroke-dasharray="5 10" marker-end="url(#rightArrow)"/>
+
+  <g class="edge">
+    <path d="M617 135 L413 188"/><path d="M663 135 L867 188"/>
+    <path d="M380 221 L259 278"/><path d="M410 221 L481 278"/><path d="M870 221 L789 278"/><path d="M900 221 L1021 278"/>
+    <path d="M238 311 L164 368"/><path d="M262 311 L338 368"/><path d="M478 311 L428 368"/><path d="M502 311 L552 368"/>
+    <path d="M758 311 L698 368"/><path d="M782 311 L838 368"/><path d="M1018 311 L928 368"/><path d="M1042 311 L1068 368"/>
+    <path d="M144 401 L104 463"/><path d="M164 401 L166 463"/><path d="M338 401 L328 463"/><path d="M428 401 L438 463"/>
+    <path d="M552 401 L528 463"/><path d="M572 401 L603 463"/><path d="M698 401 L678 463"/><path d="M718 401 L748 463"/>
+    <path d="M838 401 L823 463"/><path d="M858 401 L893 463"/><path d="M928 401 L958 463"/><path d="M948 401 L1028 463"/>
+  </g>
+
+  <circle class="node" cx="640" cy="120" r="42"/><text class="start" x="640" y="120">start</text>
+  <circle class="node" cx="395" cy="205" r="26"/><text class="letter" x="395" y="205">E</text>
+  <circle class="node" cx="885" cy="205" r="26"/><text class="letter" x="885" y="205">T</text>
+  <circle class="node" cx="250" cy="295" r="26"/><text class="letter" x="250" y="295">I</text>
+  <circle class="node" cx="490" cy="295" r="26"/><text class="letter" x="490" y="295">A</text>
+  <circle class="node" cx="770" cy="295" r="26"/><text class="letter" x="770" y="295">N</text>
+  <circle class="node" cx="1030" cy="295" r="26"/><text class="letter" x="1030" y="295">M</text>
+  <circle class="node" cx="150" cy="385" r="26"/><text class="letter" x="150" y="385">S</text>
+  <circle class="node" cx="350" cy="385" r="26"/><text class="letter" x="350" y="385">U</text>
+  <circle class="node" cx="440" cy="385" r="26"/><text class="letter" x="440" y="385">R</text>
+  <circle class="node" cx="565" cy="385" r="26"/><text class="letter" x="565" y="385">W</text>
+  <circle class="node" cx="695" cy="385" r="26"/><text class="letter" x="695" y="385">D</text>
+  <circle class="node" cx="845" cy="385" r="26"/><text class="letter" x="845" y="385">K</text>
+  <circle class="node" cx="935" cy="385" r="26"/><text class="letter" x="935" y="385">G</text>
+  <circle class="node" cx="1080" cy="385" r="26"/><text class="letter" x="1080" y="385">O</text>
+  <circle class="node" cx="100" cy="485" r="24"/><text class="letter" x="100" y="485">H</text>
+  <circle class="node" cx="170" cy="485" r="24"/><text class="letter" x="170" y="485">V</text>
+  <circle class="node" cx="328" cy="485" r="24"/><text class="letter" x="328" y="485">F</text>
+  <circle class="node" cx="438" cy="485" r="24"/><text class="letter" x="438" y="485">L</text>
+  <circle class="node" cx="528" cy="485" r="24"/><text class="letter" x="528" y="485">P</text>
+  <circle class="node" cx="603" cy="485" r="24"/><text class="letter" x="603" y="485">J</text>
+  <circle class="node" cx="678" cy="485" r="24"/><text class="letter" x="678" y="485">B</text>
+  <circle class="node" cx="748" cy="485" r="24"/><text class="letter" x="748" y="485">X</text>
+  <circle class="node" cx="823" cy="485" r="24"/><text class="letter" x="823" y="485">C</text>
+  <circle class="node" cx="893" cy="485" r="24"/><text class="letter" x="893" y="485">Y</text>
+  <circle class="node" cx="958" cy="485" r="24"/><text class="letter" x="958" y="485">Z</text>
+  <circle class="node" cx="1028" cy="485" r="24"/><text class="letter" x="1028" y="485">Q</text>
+  <text x="640" y="595" text-anchor="middle" style="font: 18px Arial, sans-serif; fill: #374151">Follow a dot to the left child and a dash to the right child.</text>
+</svg>

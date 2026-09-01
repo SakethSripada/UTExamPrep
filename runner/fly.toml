@@ -1,0 +1,51 @@
+# Fly.io deployment for the Java runner.
+#
+# Setup (one time):
+#   fly launch --no-deploy --copy-config --name utexamprep-runner
+#   fly secrets set RUNNER_AUTH_TOKEN=$(openssl rand -hex 32)
+#   fly deploy
+#
+# Then point the Next.js app at it:
+#   JAVA_RUNNER_URL   = https://utexamprep-runner.fly.dev
+#   JAVA_RUNNER_TOKEN = <the same token>
+#
+# Each Fly Machine is a Firecracker microVM (its own kernel), which is the
+# outer isolation layer the security model assumes. bubblewrap runs inside it.
+
+app = "utexamprep-runner"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  SANDBOX_MODE = "bwrap"
+  RUNNER_MAX_CONCURRENCY = "2"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Scale to zero when idle to keep cost near zero; cold start is a few
+  # seconds while the machine boots and the JVM warms.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 4
+    hard_limit = 8
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/healthz"
+    interval = "15s"
+    timeout = "3s"
+    grace_period = "10s"
+
+# Compiling and running a JVM wants real memory; 512MB is the practical floor
+# given -Xmx128m per run plus metaspace and the toolchain.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1000 270">
+  <title id="title">Five-slot linear-probing hash-table array</title>
+  <desc id="desc">An empty five-cell internal array with indices zero through four, as shown in the source question.</desc>
+  <rect width="1000" height="270" fill="#fff"/>
+  <style>
+    .index { font: 700 28px Arial, sans-serif; fill: #111827; text-anchor: middle; }
+    .cell { fill: #fff; stroke: #111827; stroke-width: 4; }
+    .caption { font: 20px Arial, sans-serif; fill: #374151; text-anchor: middle; }
+  </style>
+  <text x="500" y="40" class="caption">Internal array (initially empty)</text>
+  <text x="150" y="100" class="index">0</text>
+  <text x="325" y="100" class="index">1</text>
+  <text x="500" y="100" class="index">2</text>
+  <text x="675" y="100" class="index">3</text>
+  <text x="850" y="100" class="index">4</text>
+  <rect class="cell" x="62.5" y="122" width="175" height="96"/>
+  <rect class="cell" x="237.5" y="122" width="175" height="96"/>
+  <rect class="cell" x="412.5" y="122" width="175" height="96"/>
+  <rect class="cell" x="587.5" y="122" width="175" height="96"/>
+  <rect class="cell" x="762.5" y="122" width="175" height="96"/>
+</svg>

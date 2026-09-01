@@ -1,0 +1,12 @@
+# Keep the build context tiny: only Go sources + embedded questions are
+# needed. Everything else is local-dev or test tooling.
+testdata/
+harness-reference/
+*_test.go
+README.md
+OVERVIEW.md
+fly.toml
+.env
+.env.*
+scripts/
+.git

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1040 1140">
+  <title id="title">Attempted CMOS sprinkler circuit</title>
+  <desc id="desc">The source circuit has pMOS devices R, T, and B in series above output G. The pull-down has R and B in parallel followed by an nMOS T device in series to ground.</desc>
+  <style>
+    .wire { fill:none; stroke:#111827; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+    .device { fill:#fff; stroke:#111827; stroke-width:3; }
+    .gate { stroke:#111827; stroke-width:3; }
+    .bubble { fill:#fff; stroke:#111827; stroke-width:3; }
+    .label { font:32px Arial,sans-serif; fill:#111827; }
+    .small { font:27px Arial,sans-serif; fill:#111827; }
+  </style>
+  <rect width="1040" height="1140" fill="#fff"/>
+  <text x="520" y="48" class="label" text-anchor="middle">VDD</text><path class="wire" d="M350 72 H690"/>
+  <path class="wire" d="M520 72 V125"/>
+  <g>
+    <path class="wire" d="M520 125 V150 M520 215 V245"/><rect class="device" x="505" y="150" width="30" height="65"/><line class="gate" x1="550" y1="145" x2="550" y2="220"/><circle class="bubble" cx="550" cy="182.5" r="10"/><line class="gate" x1="560" y1="182.5" x2="610" y2="182.5"/><text x="628" y="192" class="small">R</text>
+    <path class="wire" d="M520 245 V275 M520 340 V370"/><rect class="device" x="505" y="275" width="30" height="65"/><line class="gate" x1="550" y1="270" x2="550" y2="345"/><circle class="bubble" cx="550" cy="307.5" r="10"/><line class="gate" x1="560" y1="307.5" x2="610" y2="307.5"/><text x="628" y="317" class="small">T</text>
+    <path class="wire" d="M520 370 V400 M520 465 V495"/><rect class="device" x="505" y="400" width="30" height="65"/><line class="gate" x1="550" y1="395" x2="550" y2="470"/><circle class="bubble" cx="550" cy="432.5" r="10"/><line class="gate" x1="560" y1="432.5" x2="610" y2="432.5"/><text x="628" y="442" class="small">B</text>
+  </g>
+  <path class="wire" d="M520 495 V530 H760"/><text x="778" y="540" class="label">G</text>
+
+  <path class="wire" d="M520 530 H390 V575 M520 530 H650 V575"/>
+  <rect class="device" x="375" y="575" width="30" height="70"/><line class="gate" x1="420" y1="570" x2="420" y2="650"/><line class="gate" x1="430" y1="610" x2="480" y2="610"/><text x="495" y="620" class="small">R</text>
+  <rect class="device" x="635" y="575" width="30" height="70"/><line class="gate" x1="680" y1="570" x2="680" y2="650"/><line class="gate" x1="690" y1="610" x2="740" y2="610"/><text x="755" y="620" class="small">B</text>
+  <path class="wire" d="M390 645 V690 H520 M650 645 V690 H520"/>
+  <path class="wire" d="M520 690 V735 M520 810 V840"/><rect class="device" x="505" y="735" width="30" height="75"/><line class="gate" x1="550" y1="730" x2="550" y2="815"/><line class="gate" x1="560" y1="772" x2="610" y2="772"/><text x="625" y="782" class="small">T</text>
+  <path class="wire" d="M520 840 V885"/><path class="wire" d="M485 885 H555 M492 898 H548 M500 911 H540"/><text x="575" y="912" class="label">GND</text>
+</svg>

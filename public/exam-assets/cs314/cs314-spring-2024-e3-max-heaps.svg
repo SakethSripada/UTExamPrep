@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1180 520">
+  <title id="title">Maximum binary heap before and after removeMax</title>
+  <desc id="desc">The original maximum heap has root 100, then 90 and 40, then 10, 5, and an unknown value. Removing the root produces root 90, an unknown left child, 40 on the right, and 10 and 35 below the unknown.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,4 L0,8" fill="none" stroke="#111827" stroke-width="1.6"/>
+    </marker>
+    <style>
+      .node { fill: #fff; stroke: #111827; stroke-width: 3; }
+      .edge { fill: none; stroke: #111827; stroke-width: 3; marker-end: url(#arrow); }
+      .value { font: 700 27px Arial, sans-serif; fill: #111827; text-anchor: middle; dominant-baseline: middle; }
+      .heading { font: 700 24px Arial, sans-serif; fill: #111827; text-anchor: middle; }
+      .caption { font: 18px Arial, sans-serif; fill: #374151; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1180" height="520" fill="#fff"/>
+  <text x="285" y="42" class="heading">Before removeMax()</text>
+  <text x="895" y="42" class="heading">After removeMax()</text>
+  <text x="285" y="72" class="caption">maximum binary heap</text>
+  <text x="895" y="72" class="caption">maximum binary heap</text>
+
+  <path class="edge" d="M285 134 L202 207"/>
+  <path class="edge" d="M285 134 L368 207"/>
+  <path class="edge" d="M202 279 L132 354"/>
+  <path class="edge" d="M202 279 L272 354"/>
+  <path class="edge" d="M368 279 L368 354"/>
+
+  <circle class="node" cx="285" cy="110" r="43"/><text class="value" x="285" y="110">100</text>
+  <circle class="node" cx="202" cy="250" r="43"/><text class="value" x="202" y="250">90</text>
+  <circle class="node" cx="368" cy="250" r="43"/><text class="value" x="368" y="250">40</text>
+  <circle class="node" cx="132" cy="396" r="43"/><text class="value" x="132" y="396">10</text>
+  <circle class="node" cx="272" cy="396" r="43"/><text class="value" x="272" y="396">5</text>
+  <circle class="node" cx="368" cy="396" r="43"/><text class="value" x="368" y="396">??</text>
+
+  <path class="edge" d="M895 134 L812 207"/>
+  <path class="edge" d="M895 134 L978 207"/>
+  <path class="edge" d="M812 279 L742 354"/>
+  <path class="edge" d="M812 279 L882 354"/>
+
+  <circle class="node" cx="895" cy="110" r="43"/><text class="value" x="895" y="110">90</text>
+  <circle class="node" cx="812" cy="250" r="43"/><text class="value" x="812" y="250">??</text>
+  <circle class="node" cx="978" cy="250" r="43"/><text class="value" x="978" y="250">40</text>
+  <circle class="node" cx="742" cy="396" r="43"/><text class="value" x="742" y="396">10</text>
+  <circle class="node" cx="882" cy="396" r="43"/><text class="value" x="882" y="396">35</text>
+</svg>

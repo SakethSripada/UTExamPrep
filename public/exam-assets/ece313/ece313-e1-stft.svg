@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1200" role="img" aria-labelledby="title description">
+  <title id="title">ECE 313 time-frequency analysis plots</title>
+  <desc id="description">A corrected piecewise signal with sampled stems above four hand-drawn five-by-four STFT heatmaps, labeled plots one through four.</desc>
+  <defs>
+    <linearGradient id="signed" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#151515"/><stop offset=".5" stop-color="#858585"/><stop offset="1" stop-color="#f5f5f5"/></linearGradient>
+    <linearGradient id="magnitude" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <linearGradient id="phase" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#f4f4f4"/></linearGradient>
+  </defs>
+  <style>
+    .axis { stroke: #172b3a; stroke-width: 1.6; }
+    .grid { stroke: #d9e1e8; stroke-width: 1; }
+    .signal { fill: none; stroke: #101820; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .stem { stroke: #111827; stroke-width: 2.3; }
+    .dot { fill: #111827; }
+    .tick { fill: #334155; font: 17px ui-sans-serif, system-ui, sans-serif; }
+    .axis-label { fill: #172b3a; font: 22px Georgia, serif; }
+    .plot-label { fill: #172b3a; font: 25px Georgia, serif; }
+    .cell-label { font: 16px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    .light { fill: #ffffff; }
+    .dark { fill: #17212b; }
+    .caption { fill: #334155; font: 16px ui-sans-serif, system-ui, sans-serif; }
+  </style>
+  <rect width="1280" height="1200" fill="#fff"/>
+  <text x="640" y="36" text-anchor="middle" class="caption">Corrected source signal x(t) with sampled values x[n]</text>
+  <rect x="130" y="58" width="1020" height="260" fill="#fbfdff" stroke="#536579" stroke-width="1.4"/>
+  <g class="grid">
+    <path d="M130 58H1150 M130 123H1150 M130 188H1150 M130 253H1150 M130 318H1150"/>
+    <path d="M130 58V318 M385 58V318 M640 58V318 M895 58V318 M1150 58V318"/>
+  </g>
+  <path class="axis" d="M130 188H1150 M130 58V318"/>
+  <path class="signal" d="M130 188
+    C145 184,157 160,181 143 C203 128,229 100,257 75 C283 59,307 55,334 61
+    C357 68,375 99,385 126 C392 150,393 173,385 188
+    C397 172,407 130,423 110 C438 94,452 85,466 108 C481 134,490 166,512 205
+    C528 232,544 267,566 291 C585 313,602 309,615 286 C632 256,635 216,640 188
+    C647 210,663 251,678 275 C692 295,705 304,716 288 C730 268,740 231,755 209
+    C770 187,783 169,796 130 C808 93,820 68,832 60
+    C846 49,863 59,877 85 C891 112,905 155,916 188
+    C914 205,930 282,946 305 C962 314,980 251,997 233
+    C1014 226,1031 226,1048 233 C1064 251,1082 314,1099 305
+    C1117 298,1135 204,1150 188"/>
+  <g class="stem">
+    <path d="M130 188V188 M181 188V143 M232 188V71 M283 188V71 M334 188V143 M385 188V188 M436 188V112 M487 188V312 M538 188V64 M589 188V264 M640 188V188 M691 188V312 M742 188V264 M793 188V112 M844 188V64 M895 188V188 M946 188V305 M997 188V233 M1048 188V233 M1099 188V305 M1150 188V188"/>
+  </g>
+  <g class="dot">
+    <circle cx="130" cy="188" r="5"/><circle cx="181" cy="143" r="5"/><circle cx="232" cy="71" r="5"/><circle cx="283" cy="71" r="5"/><circle cx="334" cy="143" r="5"/>
+    <circle cx="385" cy="188" r="5"/><circle cx="436" cy="112" r="5"/><circle cx="487" cy="312" r="5"/><circle cx="538" cy="64" r="5"/><circle cx="589" cy="264" r="5"/>
+    <circle cx="640" cy="188" r="5"/><circle cx="691" cy="312" r="5"/><circle cx="742" cy="264" r="5"/><circle cx="793" cy="112" r="5"/><circle cx="844" cy="64" r="5"/>
+    <circle cx="895" cy="188" r="5"/><circle cx="946" cy="305" r="5"/><circle cx="997" cy="233" r="5"/><circle cx="1048" cy="233" r="5"/><circle cx="1099" cy="305" r="5"/><circle cx="1150" cy="188" r="5"/>
+  </g>
+  <g class="tick" text-anchor="end"><text x="116" y="64">1</text><text x="116" y="194">0</text><text x="116" y="324">−1</text></g>
+  <g class="tick" text-anchor="middle"><text x="130" y="344">0</text><text x="385" y="344">0.025</text><text x="640" y="344">0.05</text><text x="895" y="344">0.075</text><text x="1150" y="344">0.1</text></g>
+  <text class="axis-label" x="640" y="374" text-anchor="middle">Time [seconds]</text>
+  <text class="axis-label" x="52" y="190" text-anchor="middle" transform="rotate(-90 52 190)">x(t)</text>
+
+  <!-- Plot 1: imaginary part -->
+  <g transform="translate(115 470)">
+    <text class="plot-label" x="132" y="-28" text-anchor="middle">(1)</text>
+    <rect x="0" y="0" width="264" height="240" fill="#858585" stroke="#1f2937" stroke-width="1.6"/>
+    <g stroke="#1f2937" stroke-width="1"><path d="M66 0V240 M132 0V240 M198 0V240 M0 48H264 M0 96H264 M0 144H264 M0 192H264"/></g>
+    <rect x="66" y="0" width="66" height="48" fill="#464646"/><rect x="132" y="48" width="66" height="48" fill="#b8b8b8"/><rect x="132" y="144" width="66" height="48" fill="#464646"/><rect x="66" y="192" width="66" height="48" fill="#b8b8b8"/>
+    <g class="cell-label"><g class="light"><text x="33" y="24">0</text><text x="99" y="24">0.5</text><text x="165" y="24">0</text><text x="231" y="24">0</text><text x="33" y="72">0</text><text x="99" y="72">0</text></g><text x="165" y="72">−0.5</text><g class="light"><text x="231" y="72">0</text><text x="33" y="120">0</text><text x="99" y="120">0</text><text x="165" y="120">0</text><text x="231" y="120">0</text><text x="33" y="168">0</text><text x="99" y="168">0</text><text x="165" y="168">0.5</text><text x="231" y="168">0</text><text x="33" y="216">0</text></g><text x="99" y="216">−0.5</text><g class="light"><text x="165" y="216">0</text><text x="231" y="216">0</text></g></g>
+    <g class="tick" text-anchor="end"><text x="-12" y="28">80</text><text x="-12" y="76">40</text><text x="-12" y="124">0</text><text x="-12" y="172">−40</text><text x="-12" y="220">−80</text></g>
+    <g class="tick" text-anchor="middle"><text x="33" y="266">0</text><text x="99" y="266">0.025</text><text x="165" y="266">0.05</text><text x="231" y="266">0.075</text></g>
+    <rect x="286" y="0" width="25" height="240" fill="url(#signed)" stroke="#1f2937"/><text class="tick" x="322" y="16">1</text><text class="tick" x="322" y="124">0</text><text class="tick" x="322" y="240">−1</text>
+    <text class="axis-label" x="132" y="305" text-anchor="middle">Time [s]</text><text class="axis-label" x="-74" y="120" text-anchor="middle" transform="rotate(-90 -74 120)">Frequency [Hz]</text>
+  </g>
+
+  <!-- Plot 2: magnitude -->
+  <g transform="translate(760 470)">
+    <text class="plot-label" x="132" y="-28" text-anchor="middle">(2)</text>
+    <rect x="0" y="0" width="264" height="240" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+    <rect x="66" y="0" width="66" height="48" fill="#777"/><rect x="198" y="0" width="66" height="48" fill="#d2d2d2"/><rect x="0" y="48" width="66" height="48" fill="#d2d2d2"/><rect x="132" y="48" width="66" height="48" fill="#777"/><rect x="0" y="96" width="66" height="48" fill="#777"/><rect x="198" y="96" width="66" height="48" fill="#777"/><rect x="0" y="144" width="66" height="48" fill="#d2d2d2"/><rect x="132" y="144" width="66" height="48" fill="#777"/><rect x="66" y="192" width="66" height="48" fill="#777"/><rect x="198" y="192" width="66" height="48" fill="#d2d2d2"/>
+    <g stroke="#1f2937" stroke-width="1"><path d="M66 0V240 M132 0V240 M198 0V240 M0 48H264 M0 96H264 M0 144H264 M0 192H264"/></g>
+    <g class="cell-label"><g class="dark"><text x="33" y="24">0</text><text x="99" y="24">0.5</text><text x="165" y="24">0</text><text x="231" y="24">0.25</text></g><text x="33" y="72">0.25</text><g class="dark"><text x="99" y="72">0</text><text x="165" y="72">0.5</text><text x="231" y="72">0</text><text x="33" y="120">0.5</text></g><text x="99" y="120">0</text><text x="165" y="120">0</text><g class="dark"><text x="231" y="120">0.5</text></g><text x="33" y="168">0.25</text><text x="99" y="168">0</text><g class="dark"><text x="165" y="168">0.5</text></g><text x="231" y="168">0</text><g class="dark"><text x="33" y="216">0</text><text x="99" y="216">0.5</text><text x="165" y="216">0</text></g><text x="231" y="216">0.25</text></g>
+    <g class="tick" text-anchor="end"><text x="-12" y="28">80</text><text x="-12" y="76">40</text><text x="-12" y="124">0</text><text x="-12" y="172">−40</text><text x="-12" y="220">−80</text></g>
+    <g class="tick" text-anchor="middle"><text x="33" y="266">0</text><text x="99" y="266">0.025</text><text x="165" y="266">0.05</text><text x="231" y="266">0.075</text></g>
+    <rect x="286" y="0" width="25" height="240" fill="url(#magnitude)" stroke="#1f2937"/><text class="tick" x="322" y="16">1</text><text class="tick" x="322" y="124">0.5</text><text class="tick" x="322" y="240">0</text>
+    <text class="axis-label" x="132" y="305" text-anchor="middle">Time [s]</text><text class="axis-label" x="-74" y="120" text-anchor="middle" transform="rotate(-90 -74 120)">Frequency [Hz]</text>
+  </g>
+
+  <!-- Plot 3: phase -->
+  <g transform="translate(115 855)">
+    <text class="plot-label" x="132" y="-28" text-anchor="middle">(3)</text>
+    <rect x="0" y="0" width="264" height="240" fill="#222" stroke="#1f2937" stroke-width="1.6"/>
+    <rect x="66" y="0" width="66" height="48" fill="#575757"/><rect x="198" y="0" width="66" height="48" fill="#858585"/><rect x="0" y="48" width="66" height="48" fill="#f5f5f5"/><rect x="132" y="48" width="66" height="48" fill="#a0a0a0"/><rect x="0" y="96" width="66" height="48" fill="#858585"/><rect x="198" y="96" width="66" height="48" fill="#151515"/><rect x="0" y="144" width="66" height="48" fill="#151515"/><rect x="132" y="144" width="66" height="48" fill="#575757"/><rect x="66" y="192" width="66" height="48" fill="#a0a0a0"/><rect x="198" y="192" width="66" height="48" fill="#858585"/>
+    <g stroke="#3e4650" stroke-width="1"><path d="M66 0V240 M132 0V240 M198 0V240 M0 48H264 M0 96H264 M0 144H264 M0 192H264"/></g>
+    <g class="cell-label"><g class="light"><text x="99" y="24">1.571</text><text x="231" y="24">0</text></g><text x="33" y="72">−3.142</text><text x="165" y="72">−1.571</text><g class="light"><text x="33" y="120">0</text><text x="231" y="120">3.142</text><text x="33" y="168">3.142</text><text x="165" y="168">1.571</text><text x="99" y="216">−1.571</text><text x="231" y="216">0</text></g></g>
+    <g class="tick" text-anchor="end"><text x="-12" y="28">80</text><text x="-12" y="76">40</text><text x="-12" y="124">0</text><text x="-12" y="172">−40</text><text x="-12" y="220">−80</text></g>
+    <g class="tick" text-anchor="middle"><text x="33" y="266">0</text><text x="99" y="266">0.025</text><text x="165" y="266">0.05</text><text x="231" y="266">0.075</text></g>
+    <rect x="286" y="0" width="25" height="210" fill="url(#phase)" stroke="#1f2937"/><rect x="286" y="214" width="25" height="26" fill="#222" stroke="#1f2937"/><text class="tick" x="322" y="16">π</text><text class="tick" x="322" y="111">0</text><text class="tick" x="322" y="210">−π</text><text class="tick" x="322" y="235">NaN</text>
+    <text class="axis-label" x="132" y="305" text-anchor="middle">Time [s]</text><text class="axis-label" x="-74" y="120" text-anchor="middle" transform="rotate(-90 -74 120)">Frequency [Hz]</text>
+  </g>
+
+  <!-- Plot 4: real part -->
+  <g transform="translate(760 855)">
+    <text class="plot-label" x="132" y="-28" text-anchor="middle">(4)</text>
+    <rect x="0" y="0" width="264" height="240" fill="#858585" stroke="#1f2937" stroke-width="1.6"/>
+    <rect x="198" y="0" width="66" height="48" fill="#666"/><rect x="0" y="48" width="66" height="48" fill="#a7a7a7"/><rect x="0" y="96" width="66" height="48" fill="#444"/><rect x="198" y="96" width="66" height="48" fill="#c8c8c8"/><rect x="0" y="144" width="66" height="48" fill="#a7a7a7"/><rect x="198" y="192" width="66" height="48" fill="#666"/>
+    <g stroke="#1f2937" stroke-width="1"><path d="M66 0V240 M132 0V240 M198 0V240 M0 48H264 M0 96H264 M0 144H264 M0 192H264"/></g>
+    <g class="cell-label"><g class="light"><text x="33" y="24">0</text><text x="99" y="24">0</text><text x="165" y="24">0</text><text x="231" y="24">0.25</text></g><text x="33" y="72">−0.25</text><g class="light"><text x="99" y="72">0</text><text x="165" y="72">0</text><text x="231" y="72">0</text><text x="33" y="120">0.5</text><text x="99" y="120">0</text><text x="165" y="120">0</text></g><text x="231" y="120">−0.5</text><text x="33" y="168">−0.25</text><g class="light"><text x="99" y="168">0</text><text x="165" y="168">0</text><text x="231" y="168">0</text><text x="33" y="216">0</text><text x="99" y="216">0</text><text x="165" y="216">0</text><text x="231" y="216">0.25</text></g></g>
+    <g class="tick" text-anchor="end"><text x="-12" y="28">80</text><text x="-12" y="76">40</text><text x="-12" y="124">0</text><text x="-12" y="172">−40</text><text x="-12" y="220">−80</text></g>
+    <g class="tick" text-anchor="middle"><text x="33" y="266">0</text><text x="99" y="266">0.025</text><text x="165" y="266">0.05</text><text x="231" y="266">0.075</text></g>
+    <rect x="286" y="0" width="25" height="240" fill="url(#signed)" stroke="#1f2937"/><text class="tick" x="322" y="16">1</text><text class="tick" x="322" y="124">0</text><text class="tick" x="322" y="240">−1</text>
+    <text class="axis-label" x="132" y="305" text-anchor="middle">Time [s]</text><text class="axis-label" x="-74" y="120" text-anchor="middle" transform="rotate(-90 -74 120)">Frequency [Hz]</text>
+  </g>
+</svg>

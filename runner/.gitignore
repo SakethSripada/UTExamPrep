@@ -1,0 +1,10 @@
+# Build output
+/runner
+/out
+
+# Local env
+.env
+.env.*
+
+# Fly
+.fly/

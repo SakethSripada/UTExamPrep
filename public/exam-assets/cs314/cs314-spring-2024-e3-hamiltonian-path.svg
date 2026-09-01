@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 840 560">
+  <title id="title">Illustrative Hamiltonian path</title>
+  <desc id="desc">The source graph illustrates a Hamiltonian path with red solid edges and unused black dotted edges.</desc>
+  <style>
+    .unused { fill: none; stroke: #111827; stroke-width: 3; stroke-dasharray: 4 9; }
+    .used { fill: none; stroke: #ef2929; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .vertex { fill: #111827; }
+    .label { font: 18px Arial, sans-serif; fill: #374151; }
+  </style>
+  <rect x="24" y="20" width="792" height="505" fill="#fff" stroke="#d1d5db" stroke-width="2"/>
+  <text x="420" y="548" class="label" text-anchor="middle">Solid red: one Hamiltonian path. Dotted black: unused edges.</text>
+
+  <g class="unused">
+    <path d="M420 60 L420 125"/><path d="M135 200 L250 175"/><path d="M705 200 L590 175"/>
+    <path d="M250 470 L610 470"/><path d="M250 470 L350 340"/><path d="M610 470 L490 340"/>
+    <path d="M250 175 L320 250"/><path d="M590 175 L520 250"/><path d="M230 270 L320 250"/>
+    <path d="M610 270 L520 250"/><path d="M350 340 L420 410"/><path d="M490 340 L420 410"/>
+    <path d="M135 200 L230 270"/><path d="M705 200 L610 270"/>
+  </g>
+  <path class="used" d="M420 60 L135 200 L250 470 L610 470 L705 200 L590 175 L520 250 L490 340 L420 410 L350 340 L320 250 L230 270 L250 175 L420 125 L610 270"/>
+  <g class="vertex">
+    <circle cx="420" cy="60" r="10"/><circle cx="135" cy="200" r="10"/><circle cx="250" cy="470" r="10"/>
+    <circle cx="610" cy="470" r="10"/><circle cx="705" cy="200" r="10"/><circle cx="420" cy="125" r="10"/>
+    <circle cx="250" cy="175" r="10"/><circle cx="590" cy="175" r="10"/><circle cx="230" cy="270" r="10"/>
+    <circle cx="610" cy="270" r="10"/><circle cx="320" cy="250" r="10"/><circle cx="520" cy="250" r="10"/>
+    <circle cx="350" cy="340" r="10"/><circle cx="490" cy="340" r="10"/><circle cx="420" cy="410" r="10"/>
+  </g>
+</svg>

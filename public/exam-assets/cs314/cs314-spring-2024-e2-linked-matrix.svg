@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 500" role="img" aria-labelledby="title desc">
+  <title id="title">Linked matrix with two rows and three columns</title>
+  <desc id="desc">The abstract matrix contains rows 12, minus 3, 7 and 5, 0, 19. Its concrete representation has row headers linked down and data nodes linked across each row.</desc>
+  <defs>
+    <marker id="blue-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,4.5 L0,9 Z" fill="#4777c5"/>
+    </marker>
+  </defs>
+  <rect width="1180" height="500" fill="#ffffff"/>
+  <g fill="#ffffff" stroke="#111827" stroke-width="2">
+    <rect x="496" y="24" width="82" height="42"/><rect x="578" y="24" width="82" height="42"/><rect x="660" y="24" width="82" height="42"/>
+    <rect x="496" y="66" width="82" height="42"/><rect x="578" y="66" width="82" height="42"/><rect x="660" y="66" width="82" height="42"/>
+  </g>
+  <g fill="#111827" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="central">
+    <text x="537" y="45">12</text><text x="619" y="45">−3</text><text x="701" y="45">7</text>
+    <text x="537" y="87">5</text><text x="619" y="87">0</text><text x="701" y="87">19</text>
+  </g>
+  <g fill="#1f2937" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="25" text-anchor="middle">
+    <text x="307" y="174">nextRow</text><text x="420" y="174">first</text>
+    <text x="562" y="174">data</text><text x="675" y="174">next</text>
+  </g>
+  <g fill="#ffffff" stroke="#111827" stroke-width="2">
+    <rect x="290" y="196" width="130" height="64"/><path d="M355 196V260"/>
+    <rect x="290" y="328" width="130" height="64"/><path d="M355 328V392"/>
+    <rect x="485" y="196" width="130" height="64"/><path d="M550 196V260"/>
+    <rect x="676" y="196" width="130" height="64"/><path d="M741 196V260"/>
+    <rect x="867" y="196" width="130" height="64"/><path d="M932 196V260"/>
+    <rect x="485" y="328" width="130" height="64"/><path d="M550 328V392"/>
+    <rect x="676" y="328" width="130" height="64"/><path d="M741 328V392"/>
+    <rect x="867" y="328" width="130" height="64"/><path d="M932 328V392"/>
+  </g>
+  <g fill="none" stroke="#4777c5" stroke-width="3" marker-end="url(#blue-arrow)">
+    <path d="M355 229V326"/>
+    <path d="M420 228H480"/><path d="M615 228H671"/><path d="M806 228H862"/>
+    <path d="M420 360H480"/><path d="M615 360H671"/><path d="M806 360H862"/>
+  </g>
+  <g fill="#111827" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="central">
+    <text x="518" y="228">12</text><text x="709" y="228">−3</text><text x="900" y="228">7</text>
+    <text x="518" y="360">5</text><text x="709" y="360">0</text><text x="900" y="360">19</text>
+  </g>
+  <g fill="none" stroke="#4b5563" stroke-width="3">
+    <path d="M310 244L340 213"/><path d="M310 376L340 345"/>
+    <path d="M950 244L979 214"/><path d="M950 376L979 346"/>
+  </g>
+  <text x="82" y="235" fill="#1f2937" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="25">firstRow</text>
+  <path d="M215 228H285" fill="none" stroke="#4777c5" stroke-width="3" marker-end="url(#blue-arrow)"/>
+</svg>
