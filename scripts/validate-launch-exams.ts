@@ -120,6 +120,21 @@ function validateQuestion(question: Question, scope: string) {
         issue(scope, `objective answer points total ${actual}, expected ${expected}`);
       }
     }
+    if (/canonical (?:form|description)|in this digitized version|for automatic scoring/i.test(question.code ?? "")) {
+      issue(scope, "drawing or structured response is exposed as an implementation-oriented text format");
+    }
+    for (const [label, choices] of Object.entries(question.answerChoices ?? {})) {
+      if (!choices.length) issue(scope, `part ${label} has no answer choices`);
+      const choiceIds = new Set(choices.map((choice) => choice.id));
+      if (choiceIds.size !== choices.length) issue(scope, `part ${label} has duplicate answer-choice ids`);
+      const part = buildObjectiveParts(question).find((item) => item.kind === "answer" && item.label === label);
+      const expected = part?.kind === "answer" ? question.answers?.[part.answerIndex] : undefined;
+      if (!part) issue(scope, `answer choices reference missing part ${label}`);
+      if (expected && !choiceIds.has(expected)) issue(scope, `part ${label} answer key references missing choice ${expected}`);
+      for (const [index, choice] of choices.entries()) {
+        if (choice.diagram) validateDiagram(choice.diagram, `${scope} part ${label} choice ${index + 1}`);
+      }
+    }
   }
 
   if (question.type === "code" || question.type === "free-response") {

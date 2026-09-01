@@ -56,7 +56,12 @@ export function sanitizeAnswersForExam(exam: Exam, answers: AnswerState = {}) {
     }
     if (question.type === "short") {
       if (Array.isArray(value)) {
-        next[question.id] = value;
+        const objectiveParts = buildObjectiveParts(question).filter((part) => part.kind === "answer");
+        next[question.id] = value.map((answer, answerIndex) => {
+          const label = objectiveParts[answerIndex]?.label;
+          const choices = label ? question.answerChoices?.[label] : undefined;
+          return choices && !choices.some((choice) => choice.id === answer) ? "" : answer;
+        });
       }
       continue;
     }

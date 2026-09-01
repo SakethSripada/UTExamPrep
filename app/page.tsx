@@ -49,6 +49,10 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 
 const catalogExamIds = examCatalog.map((item) => item.id);
 
+function formatScore(value: number) {
+  return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1);
+}
+
 function BrandLockup() {
   return (
     <div className="brand-lockup" aria-label="UTExamPrep, UT Austin practice archive">
@@ -89,6 +93,13 @@ export default function Home() {
   const question = exam?.questions[index] ?? null;
   const isComputerScience = exam?.subject === "Computer Science";
   const useCodePresentation = Boolean(isComputerScience || question?.codePresentation);
+  const hasReviewPanel = Boolean(
+    mode === "review" &&
+      question &&
+      (question.type === "code" ||
+        question.type === "free-response" ||
+        (question.type === "short" && question.workPoints)),
+  );
   const subjects = ["All", ...Array.from(new Set(examCatalog.map((item) => item.subject))).sort()];
   const courses = [
     "All",
@@ -229,6 +240,7 @@ export default function Home() {
       possible: autoPossible + manualPossible,
     };
   })();
+  const answeredCount = exam?.questions.filter((item) => questionAnswered(item)).length ?? 0;
 
   function questionAnswered(item: Question) {
     if (item.type === "short") {
@@ -675,7 +687,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`exam-shell ${mode === "review" ? "review-shell" : ""} ${isComputerScience ? "cs-exam" : "science-exam"}`}>
+    <main className={`exam-shell ${mode === "review" ? "review-shell" : ""} ${hasReviewPanel ? "has-review-panel" : ""} ${isComputerScience ? "cs-exam" : "science-exam"}`}>
       <header className="topbar">
         <div className="topbar-left">
           <button className="icon-button" aria-label="Back to menu" onClick={returnToMenu}>
@@ -714,14 +726,33 @@ export default function Home() {
       <div className="workbench">
         <aside className="navigator" aria-label="Question navigator">
           <div className="score-panel">
-            <span>Total Score</span>
-            <strong>
-              {totals.earned.toFixed(1)} / {totals.possible}
-            </strong>
-            <small>
-              Auto-graded {totals.autoEarned.toFixed(1)}/{totals.autoPossible}; self-graded{" "}
-              {totals.manualEarned}/{totals.manualPossible}
-            </small>
+            <span>{mode === "review" ? "Exam score" : "Progress"}</span>
+            {mode === "review" ? (
+              <>
+                <strong className="score-value">
+                  {formatScore(totals.earned)} <small>/ {formatScore(totals.possible)}</small>
+                </strong>
+                <dl className="score-breakdown">
+                  <div>
+                    <dt>Automatic</dt>
+                    <dd>{formatScore(totals.autoEarned)} / {formatScore(totals.autoPossible)}</dd>
+                  </div>
+                  {totals.manualPossible ? (
+                    <div>
+                      <dt>Self-reviewed</dt>
+                      <dd>{formatScore(totals.manualEarned)} / {formatScore(totals.manualPossible)}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              </>
+            ) : (
+              <>
+                <strong className="score-value">
+                  {answeredCount} <small>/ {exam.questions.length}</small>
+                </strong>
+                <small>questions answered</small>
+              </>
+            )}
           </div>
           <div className="question-map">
             {exam.questions.map((item, qIndex) => {
@@ -763,21 +794,6 @@ export default function Home() {
         </aside>
 
         <section className="question-pane">
-          {mode === "review" ? (
-            <section className="review-banner">
-              <div>
-                <p className="eyebrow">Score summary</p>
-                <h2>
-                  {totals.earned.toFixed(1)} / {totals.possible} points
-                </h2>
-              </div>
-              <p>
-                Answers are locked while reviewing. Use Continue Editing to return to the exam and make
-                changes.
-              </p>
-            </section>
-          ) : null}
-
           <div className="question-header">
             <div>
               <p className="eyebrow">{question.points} points</p>
@@ -882,6 +898,7 @@ export default function Home() {
                 const correct = submitted && isCorrect(userAnswers[answerIndex] ?? "", question.answers![answerIndex]);
                 const partTargetId = `${question.id}-part-${part.label}`;
                 const partDiagrams = question.diagrams?.filter((diagram) => diagram.beforePart === part.label) ?? [];
+                const answerChoices = question.answerChoices?.[part.label];
                 return (
                   <Fragment key={`${question.id}-${answerIndex}`}>
                     {partDiagrams.map((diagram, diagramIndex) => (
@@ -890,7 +907,7 @@ export default function Home() {
                         key={`${question.id}-${part.label}-diagram-${diagramIndex}`}
                       />
                     ))}
-                    <section className="objective-part" id={partTargetId}>
+                    <section className={`objective-part ${answerChoices ? "with-part-choices" : ""}`} id={partTargetId}>
                     <div className="part-code">
                       <div className="part-label">{part.label}</div>
                       {useCodePresentation ? (
@@ -903,25 +920,57 @@ export default function Home() {
                         <ScientificContent content={part.code.trim()} className="structured-science-content" />
                       )}
                     </div>
-                    <label className="answer-line">
-                      <span>Answer {part.label}</span>
-                      <input
-                        disabled={mode === "review"}
-                        value={userAnswers[answerIndex] ?? ""}
-                        onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
-                        placeholder={answerPlaceholder(part)}
-                      />
-                      {submitted ? (
-                        <strong className={correct ? "correct" : "incorrect"}>
-                          Correct answer:{" "}
-                          {useCodePresentation ? (
-                            question.answers![answerIndex]
-                          ) : (
-                            <ScientificText text={question.answers![answerIndex]} />
-                          )}
-                        </strong>
-                      ) : null}
-                    </label>
+                    {answerChoices ? (
+                      <fieldset className="part-choice-list">
+                        <legend>Choose one</legend>
+                        {answerChoices.map((choice) => {
+                          const selected = userAnswers[answerIndex] === choice.id;
+                          const choiceCorrect = submitted && isCorrect(choice.id, question.answers![answerIndex]);
+                          return (
+                            <label
+                              className={`part-choice ${choiceCorrect ? "correct" : ""} ${submitted && selected && !choiceCorrect ? "incorrect" : ""}`}
+                              key={choice.id}
+                            >
+                              <span className="part-choice-heading">
+                                <input
+                                  type="radio"
+                                  name={`${question.id}-${part.label}`}
+                                  value={choice.id}
+                                  checked={selected}
+                                  disabled={submitted}
+                                  onChange={() => setShortAnswer(question.id, answerIndex, choice.id)}
+                                />
+                                <strong>{choice.id}</strong>
+                                <span>{choice.text}</span>
+                                {choiceCorrect ? <em>Correct answer</em> : null}
+                                {submitted && selected && !choiceCorrect ? <em>Your answer</em> : null}
+                              </span>
+                              {choice.diagram ? <QuestionDiagramVisual diagram={choice.diagram} /> : null}
+                            </label>
+                          );
+                        })}
+                      </fieldset>
+                    ) : (
+                      <label className="answer-line">
+                        <span>Answer {part.label}</span>
+                        <input
+                          disabled={mode === "review"}
+                          value={userAnswers[answerIndex] ?? ""}
+                          onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
+                          placeholder={answerPlaceholder(part)}
+                        />
+                        {submitted ? (
+                          <strong className={correct ? "correct" : "incorrect"}>
+                            Correct answer:{" "}
+                            {useCodePresentation ? (
+                              question.answers![answerIndex]
+                            ) : (
+                              <ScientificText text={question.answers![answerIndex]} />
+                            )}
+                          </strong>
+                        ) : null}
+                      </label>
+                    )}
                     </section>
                   </Fragment>
                 );
@@ -969,6 +1018,8 @@ export default function Home() {
                     />
                     <strong>{choice.id}</strong>
                     <span>{isComputerScience ? choice.text : <ScientificText text={choice.text} />}</span>
+                    {submitted && correct ? <em className="choice-result">Correct answer</em> : null}
+                    {submitted && selected && !correct ? <em className="choice-result">Your answer</em> : null}
                   </label>
                 );
               })}
