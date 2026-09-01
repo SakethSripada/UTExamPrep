@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { LinkedListDiagram, QuestionDiagram, TreeDiagram } from "@/app/lib/exam-types";
+import type { GraphDiagram, LinkedListDiagram, QuestionDiagram, TreeDiagram } from "@/app/lib/exam-types";
 
 function TreeVisual({ diagram }: { diagram: TreeDiagram }) {
   const byId = new Map(diagram.nodes.map((node) => [node.id, node]));
@@ -78,12 +78,64 @@ function LinkedListVisual({ diagram }: { diagram: LinkedListDiagram }) {
   );
 }
 
+function GraphVisual({ diagram }: { diagram: GraphDiagram }) {
+  const byId = new Map(diagram.nodes.map((node) => [node.id, node]));
+  return (
+    <svg
+      aria-label={diagram.description ?? diagram.title ?? "Graph diagram"}
+      className="graph-diagram"
+      role="img"
+      viewBox="0 0 720 420"
+    >
+      {diagram.directed ? (
+        <defs>
+          <marker id="graph-arrow" markerHeight="8" markerWidth="8" orient="auto" refX="10" refY="4">
+            <path d="M0,0 L0,8 L10,4 z" />
+          </marker>
+        </defs>
+      ) : null}
+      {diagram.edges.map((edge, index) => {
+        const from = byId.get(edge.from);
+        const to = byId.get(edge.to);
+        if (!from || !to) return null;
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        const inset = 27;
+        const startX = from.x + (dx / distance) * inset;
+        const startY = from.y + (dy / distance) * inset;
+        const endX = to.x - (dx / distance) * inset;
+        const endY = to.y - (dy / distance) * inset;
+        const reciprocal = diagram.edges.some((candidate) => candidate.from === edge.to && candidate.to === edge.from);
+        const curve = reciprocal ? 28 : 0;
+        const controlX = (startX + endX) / 2 - (dy / distance) * curve;
+        const controlY = (startY + endY) / 2 + (dx / distance) * curve;
+        return (
+          <path
+            className="graph-edge"
+            d={`M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`}
+            key={`${edge.from}-${edge.to}-${index}`}
+            markerEnd={diagram.directed ? "url(#graph-arrow)" : undefined}
+          />
+        );
+      })}
+      {diagram.nodes.map((node) => (
+        <g className="graph-node" key={node.id} transform={`translate(${node.x} ${node.y})`}>
+          <circle r="24" />
+          <text dy="0.35em">{node.label}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 export function QuestionDiagramVisual({ diagram }: { diagram: QuestionDiagram }) {
   return (
     <figure className="question-diagram">
       {diagram.title ? <figcaption>{diagram.title}</figcaption> : null}
       {diagram.kind === "tree" ? <TreeVisual diagram={diagram} /> : null}
       {diagram.kind === "linked-list" ? <LinkedListVisual diagram={diagram} /> : null}
+      {diagram.kind === "graph" ? <GraphVisual diagram={diagram} /> : null}
       {diagram.kind === "source" ? (
         <Image
           className="source-diagram"

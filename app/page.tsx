@@ -17,16 +17,15 @@ import {
   Search,
   Send,
   Upload,
-  Terminal,
   X,
 } from "lucide-react";
 import { examCatalog, loadExam } from "@/app/data/exams";
-import { JavaRunnerPanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
+import { CodePracticePanel, ReviewPanel, SubmitModal } from "@/app/components/exam-panels";
 import { ExamTimer } from "@/app/components/exam-timer";
 import { MathFormulaBlock } from "@/app/components/math-formula";
 import { InlineProseContent, MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import { QuestionDiagramVisual } from "@/app/components/question-diagram";
-import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, JavaRunResult, JavaRunState, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
+import type { AnswerState, Exam, ExamCatalogEntry, FlagState, IncompleteSection, ManualState, Question } from "@/app/lib/exam-types";
 import {
   answerPlaceholder,
   buildObjectiveParts,
@@ -35,10 +34,13 @@ import {
   hasEditedCodeAnswer,
   isCorrect,
   isSameCode,
+  manualScoreForQuestion,
   readPersistedExam,
   readSavedExamIds,
   workResponseKey,
 } from "@/app/lib/exam-state";
+
+const examRequestsEnabled = process.env.NEXT_PUBLIC_EXAM_REQUESTS_ENABLED === "true";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
@@ -60,24 +62,6 @@ function BrandLockup() {
   );
 }
 
-// A stable, anonymous per-browser id. It is never tied to a login; the runner
-// uses it only for fair per-user rate limiting (so students sharing a campus
-// IP aren't throttled together) and for a rough unique-user count.
-function deviceHeaders(): Record<string, string> {
-  try {
-    const key = "utexamprep:deviceId";
-    // Carry the anonymous rate-limit id forward when someone returns after the
-    // product rename, so their browser remains a single fair-use identity.
-    let id = window.localStorage.getItem(key) ?? window.localStorage.getItem("digitalexams:deviceId");
-    if (!id) {
-      id = crypto.randomUUID();
-      window.localStorage.setItem(key, id);
-    }
-    return { "X-Device-Id": id };
-  } catch {
-    return {};
-  }
-}
 export default function Home() {
   const [selectedExamId, setSelectedExamId] = useState(examCatalog[0].id);
   const [exam, setExam] = useState<Exam | null>(null);
@@ -90,8 +74,6 @@ export default function Home() {
   const [flags, setFlags] = useState<FlagState>({});
   const [savedExamIds, setSavedExamIds] = useState<string[]>([]);
   const [storageReady, setStorageReady] = useState(false);
-  const [javaStatus, setJavaStatus] = useState<JavaStatus | null>(null);
-  const [javaRuns, setJavaRuns] = useState<JavaRunState>({});
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [submitRunning, setSubmitRunning] = useState(false);
   const [pendingTargetId, setPendingTargetId] = useState<string | null>(null);
@@ -187,28 +169,6 @@ export default function Home() {
   }, [answers, exam, flags, manual, storageReady]);
 
   useEffect(() => {
-    let cancelled = false;
-    fetch("/api/java/run", { headers: deviceHeaders() })
-      .then((response) => response.json() as Promise<JavaStatus>)
-      .then((status) => {
-        if (!cancelled) {
-          setJavaStatus(status);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setJavaStatus({
-            available: false,
-            message: "Code runner status could not be checked.",
-          });
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
     if (!pendingTargetId) {
       return;
     }
@@ -236,7 +196,7 @@ export default function Home() {
         const workPoints = Math.min(item.points, Math.max(0, item.workPoints ?? 0));
         autoPossible += item.points - workPoints;
         manualPossible += workPoints;
-        manualEarned += Math.min(workPoints, Math.max(0, manual[item.id] ?? 0));
+        manualEarned += manualScoreForQuestion(item, manual);
         // Points for a thrown-out part are awarded to everyone automatically.
         if (item.thrownOut) {
           autoEarned += item.thrownOut.points;
@@ -257,7 +217,7 @@ export default function Home() {
         }
       } else {
         manualPossible += item.points;
-        manualEarned += Math.min(item.points, Math.max(0, manual[item.id] ?? 0));
+        manualEarned += manualScoreForQuestion(item, manual);
       }
     }
     return {
@@ -413,7 +373,6 @@ export default function Home() {
       setAnswers(persisted.answers ?? {});
       setManual(persisted.manual ?? {});
       setFlags(persisted.flags ?? {});
-      setJavaRuns({});
       setMode("exam");
       setIndex(0);
       setReferenceOpen(false);
@@ -429,40 +388,13 @@ export default function Home() {
     setMode("menu");
   }
 
-  async function finalizeSubmit() {
+  function finalizeSubmit() {
     if (!exam) {
       return;
     }
     setSubmitRunning(true);
-    try {
-      if (javaStatus?.available) {
-        const codeQuestions = exam.questions.filter(
-          (item) =>
-            item.type === "code" &&
-            item.runnable !== false &&
-            hasEditedCodeAnswer(item, answers) &&
-            (!javaStatus.languages || javaStatus.languages.includes(item.language ?? "java")),
-        );
-        const results = await Promise.all(
-          codeQuestions.map(async (item) => ({
-            item,
-            result: await runJavaTests(item),
-          })),
-        );
-        setManual((current) => {
-          const next = { ...current };
-          for (const { item, result } of results) {
-            if (result && typeof result.passed === "number" && typeof result.total === "number" && result.total > 0) {
-              next[item.id] = Math.round((item.points * result.passed * 10) / result.total) / 10;
-            }
-          }
-          return next;
-        });
-      }
-      setMode("review");
-    } finally {
-      setSubmitRunning(false);
-    }
+    setMode("review");
+    setSubmitRunning(false);
   }
 
   function requestSubmit() {
@@ -473,12 +405,12 @@ export default function Home() {
       setSubmitModalOpen(true);
       return;
     }
-    void finalizeSubmit();
+    finalizeSubmit();
   }
 
   function submitAnyway() {
     setSubmitModalOpen(false);
-    void finalizeSubmit();
+    finalizeSubmit();
   }
 
   function resetAllExams() {
@@ -486,7 +418,6 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
-    setJavaRuns({});
     setIndex(0);
     setReferenceOpen(false);
     setSavedExamIds([]);
@@ -499,7 +430,6 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
-    setJavaRuns({});
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
@@ -529,57 +459,18 @@ export default function Home() {
     }
   }
 
-  async function runJavaTests(item: Question): Promise<JavaRunResult | null> {
-    if (item.runnable === false) {
-      return null;
-    }
-    const code = ((answers[item.id] as string | undefined) ?? item.stub ?? "").trim();
-    if (!hasEditedCodeAnswer(item, answers)) {
-      const result = {
-        ok: false,
-        phase: "request",
-        message: "Add code before running tests.",
-      };
-      setJavaRuns((current) => ({ ...current, [item.id]: result }));
-      return result;
-    }
-    setJavaRuns((current) => ({ ...current, [item.id]: { loading: true } }));
-    try {
-      const response = await fetch("/api/java/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...deviceHeaders() },
-        body: JSON.stringify({ questionId: item.id, code, language: item.language ?? "java" }),
-      });
-      const result = (await response.json()) as JavaRunResult;
-      setJavaRuns((current) => ({ ...current, [item.id]: result }));
-      if (result.phase === "runtime" || result.phase === "java") {
-        setJavaStatus({ available: false, message: result.message });
-      }
-      return result;
-    } catch {
-      const result = {
-        ok: false,
-        phase: "network",
-        message: "Could not reach the code runner.",
-      };
-      setJavaRuns((current) => ({
-        ...current,
-        [item.id]: result,
-      }));
-      return result;
-    }
-  }
-
   if (mode === "menu") {
     return (
       <main className="exam-shell menu-shell">
         <header className="site-header">
           <BrandLockup />
           <div className="menu-actions">
-            <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
-              <Upload size={17} />
-              Add exam
-            </button>
+            {examRequestsEnabled ? (
+              <button className="secondary-button" onClick={() => setRequestModalOpen(true)}>
+                <Upload size={17} />
+                Add exam
+              </button>
+            ) : null}
             <button className="quiet-button" onClick={resetAllExams}>
               <RotateCcw size={17} />
               Reset progress
@@ -666,7 +557,7 @@ export default function Home() {
           {groupedExams.length === 0 ? <p className="empty-catalog">No exams match those filters.</p> : null}
         </section>
 
-        {requestModalOpen ? (
+        {examRequestsEnabled && requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">
             <section className="request-modal" role="dialog" aria-modal="true" aria-labelledby="exam-request-title">
               <div className="modal-heading">
@@ -836,9 +727,6 @@ export default function Home() {
             {exam.questions.map((item, qIndex) => {
               const isComplete = questionAnswered(item);
               const isPartial = !isComplete && questionHasPartialAnswer(item);
-              const itemRun = javaRuns[item.id];
-              const passedJava = itemRun && !("loading" in itemRun) && itemRun.ok;
-              const failedJava = itemRun && !("loading" in itemRun) && !itemRun.ok;
               return (
                 <button
                   className={`map-item ${qIndex === index ? "active" : ""}`}
@@ -860,15 +748,7 @@ export default function Home() {
                         <Flag size={12} />
                       </span>
                     ) : null}
-                    {passedJava ? (
-                      <span className="map-badge passed">
-                        <Terminal size={12} />
-                      </span>
-                    ) : failedJava ? (
-                      <span className="map-badge failed">
-                        <Terminal size={12} />
-                      </span>
-                    ) : isComplete ? (
+                    {isComplete ? (
                       <span className="map-badge answered">
                         <Check size={12} />
                       </span>
@@ -1124,13 +1004,7 @@ export default function Home() {
           ) : null}
 
           {question.type === "code" ? (
-            <JavaRunnerPanel
-              question={question}
-              status={javaStatus}
-              runState={javaRuns[question.id]}
-              hasEditedCode={hasEditedCodeAnswer(question, answers)}
-              onRun={() => runJavaTests(question)}
-            />
+            <CodePracticePanel />
           ) : null}
 
           {mode === "review" ? (
@@ -1213,7 +1087,6 @@ export default function Home() {
       {submitModalOpen ? (
         <SubmitModal
           incompleteSections={incompleteSections}
-          javaAvailable={Boolean(javaStatus?.available)}
           submitting={submitRunning}
           onClose={() => setSubmitModalOpen(false)}
           onSubmit={submitAnyway}

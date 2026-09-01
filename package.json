@@ -9,7 +9,9 @@
     "lint": "eslint",
     "audit:cs314": "tsx scripts/audit-cs314-rendering.ts",
     "generate:archive": "node scripts/generate-cs-archive.mjs",
-    "validate:exams": "node scripts/validate-exam-archive.mjs"
+    "generate:visuals": "node scripts/generate-cs314-visuals.mjs",
+    "validate:exams": "node scripts/validate-exam-archive.mjs",
+    "validate:launch": "tsx scripts/validate-launch-exams.ts"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

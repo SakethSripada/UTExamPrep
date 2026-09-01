@@ -1,35 +1,27 @@
 import java.util.*;
-import java.io.*;
 
-class SparseMatrix implements ExamSnapshot {
-    private int[][] cells;
-    private int[][] coefficients;
-    private int[][] coeffs;
-    private int[][] myCells;
-    private int[][] elements;
-    private int[][] data;
-    private int[][] matrix;
+class SMEntry {
+    private final int row, col, value;
+    SMEntry(int row, int col, int value) { this.row = row; this.col = col; this.value = value; }
+    public int getRow() { return row; }
+    public int getCol() { return col; }
+    public int getVal() { return value; }
+}
 
-    public SparseMatrix(int rows, int columns) { set(new int[rows][columns]); }
-    private void set(int[][] source) {
-        cells = copy(source); coefficients = cells; coeffs = cells; myCells = cells; elements = cells; data = cells; matrix = cells;
+class SparseMatrix {
+    private final int numRows;
+    private final int numCols;
+    private final ArrayList<SMEntry> nonZeroValues = new ArrayList<>();
+
+    private SparseMatrix(int[][] values) {
+        numRows = values.length;
+        numCols = values[0].length;
+        for (int row = 0; row < numRows; row++)
+            for (int col = 0; col < numCols; col++)
+                if (values[row][col] != 0) nonZeroValues.add(new SMEntry(row, col, values[row][col]));
     }
-    private static int[][] copy(int[][] source) {
-        int[][] result = new int[source.length][];
-        for (int i = 0; i < source.length; i++) result[i] = Arrays.copyOf(source[i], source[i].length);
-        return result;
-    }
-    static SparseMatrix of(int[][] source) {
-        SparseMatrix result = new SparseMatrix(source.length, source[0].length);
-        result.set(source);
-        return result;
-    }
-    public int numRows() { return cells.length; }
-    public int numCols() { return cells[0].length; }
-    public int getValue(int row, int col) { return cells[row][col]; }
-    public int get(int row, int col) { return cells[row][col]; }
+
+    static SparseMatrix of(int[][] values) { return new SparseMatrix(values); }
 
 // __STUDENT_CODE__
-
-    public String examSnapshot() { return Arrays.deepToString(cells); }
 }

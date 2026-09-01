@@ -4,6 +4,14 @@ export const cs314ExamOne: Exam = {
   id: "cs314-fall-2025-e1",
   title: "CS 314 Fall 2025 Exam 1",
   subtitle: "Data structures, generics, matrices, and multisets",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/CS-314_Fall_25_E1.pdf", role: "exam" },
+    {
+      label: "Official solution and grading criteria",
+      path: "exampdfs/Fall_2025_E1_GradingCrit_And_Solutions_org.pdf",
+      role: "solution",
+    },
+  ],
   questions: [
     {
       id: "cs314-e1-q1",
@@ -391,4 +399,3 @@ private int indexOf(E tgt) {
     },
   ],
 };
-

@@ -34,10 +34,35 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.friendly-error {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 14px;
+  width: min(680px, calc(100% - 32px));
+  min-height: 100dvh;
+  margin: 0 auto;
+}
+
+.friendly-error h1,
+.friendly-error p {
+  margin: 0;
+}
+
+.friendly-error h1 {
+  font-size: clamp(30px, 7vw, 52px);
+  line-height: 1.08;
+}
+
+.friendly-error p {
+  color: #5f6672;
+  line-height: 1.6;
 }
 
 button,
@@ -1291,7 +1316,8 @@ textarea:focus-visible {
 }
 
 .tree-diagram,
-.linked-list-diagram {
+.linked-list-diagram,
+.graph-diagram {
   display: block;
   min-width: 320px;
   max-width: 100%;
@@ -1305,11 +1331,34 @@ textarea:focus-visible {
 }
 
 .tree-edge,
+.graph-edge,
 .list-arrow,
 .list-divider {
   fill: none;
   stroke: #64748b;
   stroke-width: 1.6;
+}
+
+.graph-edge {
+  marker-end: url(#graph-arrow);
+}
+
+.graph-diagram marker path {
+  fill: #64748b;
+}
+
+.graph-node circle {
+  fill: #ffffff;
+  stroke: #334155;
+  stroke-width: 2;
+}
+
+.graph-node text {
+  fill: #1e293b;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 16px;
+  font-weight: 800;
+  text-anchor: middle;
 }
 
 .tree-node circle {
@@ -2190,6 +2239,40 @@ textarea:focus-visible {
 .review-panel p {
   margin: 0;
   color: var(--muted);
+  line-height: 1.5;
+}
+
+.rubric-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.rubric-score-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: end;
+  padding: 14px 16px;
+  color: var(--review-accent-strong);
+  background: var(--review-surface);
+  border: 1px solid var(--review-border);
+  border-radius: 7px;
+}
+
+.rubric-score-summary div {
+  display: grid;
+  gap: 3px;
+}
+
+.rubric-score-summary span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rubric-score-summary div strong {
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .manual-score {
@@ -2225,6 +2308,84 @@ textarea:focus-visible {
 
 .rubric strong {
   text-align: right;
+}
+
+.rubric-inputs label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.criterion-score {
+  display: grid;
+  grid-template-columns: 64px auto;
+  gap: 7px;
+  align-items: center;
+  color: #344054;
+  white-space: nowrap;
+}
+
+.criterion-score input {
+  width: 64px;
+  height: 40px;
+  padding: 0 7px;
+  color: #111827;
+  text-align: right;
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.criterion-score input:focus {
+  border-color: var(--brand);
+  outline: 2px solid rgb(11 92 122 / 16%);
+}
+
+.code-practice-panel {
+  padding: 14px 16px;
+  background: #f7f9fb;
+  border: 1px solid #cfd8e2;
+  border-radius: 7px;
+}
+
+@media (min-width: 1321px) {
+  .review-shell .question-pane {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(390px, 0.78fr);
+    gap: 0 clamp(24px, 3vw, 48px);
+    width: min(100%, 1640px);
+  }
+
+  .review-shell .question-pane > * {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .review-shell .question-pane > .review-banner {
+    grid-column: 1 / -1;
+  }
+
+  .review-shell .question-pane > .review-panel {
+    position: sticky;
+    top: 88px;
+    grid-column: 2;
+    grid-row: 2 / span 30;
+    align-self: start;
+    max-height: calc(100dvh - 112px);
+    margin: 0;
+    padding: 20px;
+    overflow: auto;
+    background: #ffffff;
+    border: 1px solid var(--review-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 28px rgb(28 42 56 / 8%);
+    scrollbar-gutter: stable;
+  }
 }
 
 .solution {
@@ -2349,8 +2510,43 @@ textarea:focus-visible {
   .navigator {
     position: static;
     height: auto;
+    padding: 10px 12px 12px;
+    overflow: hidden;
     border-right: 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .score-panel {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 3px 12px;
+    align-items: end;
+    padding: 4px 2px 10px;
+  }
+
+  .score-panel strong {
+    justify-self: end;
+    font-size: 23px;
+  }
+
+  .score-panel small {
+    grid-column: 1 / -1;
+  }
+
+  .question-map {
+    display: flex;
+    gap: 8px;
+    padding-top: 9px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: thin;
+  }
+
+  .map-item {
+    flex: 0 0 min(220px, calc(100vw - 40px));
+    min-height: 52px;
+    border-color: #d4dbe4;
+    scroll-snap-align: start;
   }
 
   .objective-part {
@@ -2513,6 +2709,55 @@ textarea:focus-visible {
     flex-direction: column;
   }
 
+  .question-pane {
+    padding: 20px 12px 36px;
+    overflow-x: clip;
+  }
+
+  .objective-part,
+  .science-exam .objective-part {
+    gap: 14px;
+    padding: 14px 10px;
+  }
+
+  .part-code,
+  .science-exam .part-code {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .part-label {
+    width: 30px;
+    height: 30px;
+    align-self: start;
+    font-size: 12px;
+  }
+
+  .answer-line input,
+  .single-answer input {
+    font-size: 16px;
+  }
+
+  .tree-diagram,
+  .linked-list-diagram,
+  .graph-diagram {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .question-diagram {
+    padding: 10px;
+  }
+
+  .rubric-inputs label {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .criterion-score {
+    justify-self: start;
+  }
+
   .flag-button,
   .question-footer .secondary-button {
     width: 100%;
@@ -2585,6 +2830,63 @@ textarea:focus-visible {
 
   .floating-reference-heading strong {
     white-space: normal;
+  }
+}
+
+@media (max-width: 320px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .topbar-left,
+  .exam-timer,
+  .topbar-actions {
+    width: 100%;
+  }
+
+  .topbar-left {
+    gap: 8px;
+  }
+
+  .exam-timer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px;
+    padding: 5px 7px;
+    border-radius: 8px;
+  }
+
+  .timer-controls {
+    justify-content: end;
+    gap: 3px;
+  }
+
+  .timer-chip {
+    padding-inline: 5px;
+  }
+
+  .timer-action {
+    width: 26px;
+    height: 26px;
+  }
+
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .topbar-actions .primary-button,
+  .topbar-actions .secondary-button {
+    min-width: 0;
+    padding-inline: 7px;
+    font-size: 13px;
+  }
+
+  .navigator {
+    padding-inline: 8px;
   }
 }
 

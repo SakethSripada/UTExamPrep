@@ -17,6 +17,22 @@ const MAX_CODE_LENGTH = 20_000;
 // under this. Guards against a hung or unreachable runner holding the request.
 const PROXY_TIMEOUT_MS = 30_000;
 
+function executionDisabled() {
+  return process.env.CODE_RUNNER_ENABLED !== "true";
+}
+
+function disabledResponse() {
+  return json(
+    {
+      available: false,
+      ok: false,
+      phase: "disabled",
+      message: "Code execution is not part of the public practice experience. Use the rubric in review mode to score your response.",
+    },
+    404,
+  );
+}
+
 function json(body: unknown, status = 200) {
   return Response.json(body, {
     status,
@@ -89,6 +105,9 @@ async function forward(path: string, init: RequestInit) {
 }
 
 export async function GET() {
+  if (executionDisabled()) {
+    return disabledResponse();
+  }
   const { base } = runnerConfig();
   if (!base) {
     return json({
@@ -108,6 +127,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (executionDisabled()) {
+    return disabledResponse();
+  }
   if (crossOriginBlocked(request)) {
     return json({ ok: false, phase: "forbidden", message: "Cross-origin requests are not allowed." }, 403);
   }

@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1400 940">
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1400 1000">
   <title id="title">Modified microsequencer and incomplete control store</title>
   <desc id="desc">The source microsequencer replaces an OR input J5 path with an AND gate and mux. Below it, a five-row control store has blank state numbers for the NOT and PC-offset rows.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#111827" stroke-width="1.5"/></marker>
     <style>
       .wire { fill:none; stroke:#111827; stroke-width:3; marker-end:url(#arrow); }
+      .bus { fill:none; stroke:#111827; stroke-width:3; }
       .shape { fill:#fff; stroke:#111827; stroke-width:3; }
       .new { fill:#fff; stroke:#111827; stroke-width:5; }
       .label { font:700 21px Arial,sans-serif; fill:#111827; text-anchor:middle; }
@@ -15,7 +16,7 @@
       .blank { fill:#fff; stroke:#111827; stroke-width:5; }
     </style>
   </defs>
-  <rect width="1400" height="940" fill="#fff"/>
+  <rect width="1400" height="1000" fill="#fff"/>
   <text x="700" y="34" class="label">Modified microsequencer</text>
   <text x="250" y="86" class="text">COND2</text><text x="390" y="86" class="text">COND1</text><text x="530" y="86" class="text">COND0</text>
   <path class="wire" d="M250 100 V160 H185"/><path class="wire" d="M390 100 V190 H580"/><path class="wire" d="M530 100 V215 H745"/>
@@ -30,7 +31,7 @@
     <path class="wire" d="M585 250 V415"/><path class="wire" d="M750 250 V415"/><path class="wire" d="M915 250 V415"/>
     <text x="560" y="455" class="text">J[4]</text><text x="700" y="455" class="text">J[3]</text><text x="840" y="455" class="text">J[2]</text><text x="980" y="455" class="text">J[1]</text><text x="1120" y="455" class="text">J[0]</text>
     <path class="shape" d="M530 470 H590 Q620 500 590 530 H530 Q560 500 530 470Z"/><path class="shape" d="M670 470 H730 Q760 500 730 530 H670 Q700 500 670 470Z"/><path class="shape" d="M810 470 H870 Q900 500 870 530 H810 Q840 500 810 470Z"/><path class="shape" d="M950 470 H1010 Q1040 500 1010 530 H950 Q980 500 950 470Z"/><path class="shape" d="M1090 470 H1150 Q1180 500 1150 530 H1090 Q1120 500 1090 470Z"/>
-    <path class="wire" d="M560 530 V570 H850"/><path class="wire" d="M700 530 V570 H850"/><path class="wire" d="M840 530 V570 H850"/><path class="wire" d="M980 530 V570 H850"/><path class="wire" d="M1120 530 V570 H850"/>
+    <path class="bus" d="M560 530 V570 H850"/><path class="bus" d="M700 530 V570 H850"/><path class="bus" d="M840 530 V570 H850"/><path class="bus" d="M980 530 V570 H850"/><path class="bus" d="M1120 530 V570 H850"/>
   </g>
   <polygon class="shape" points="700,610 970,610 940,690 730,690"/><text x="835" y="655" class="label">IRD-controlled next-state mux</text><path class="wire" d="M850 570 V610"/>
   <text x="1190" y="280" class="small">Thick outline: source's AND-plus-mux replacement for the J[5] path.</text>

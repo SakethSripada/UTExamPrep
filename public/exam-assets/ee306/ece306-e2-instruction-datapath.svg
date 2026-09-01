@@ -24,18 +24,18 @@
   <rect x="70" y="230" width="1260" height="600" fill="#fbfcfe" stroke="#9ca3af" stroke-width="2"/>
   <text x="185" y="275" class="text">Existing LC-3 datapath context</text>
   <rect class="old" x="150" y="330" width="260" height="250"/><text class="label" x="280" y="395">REG</text><text class="label" x="280" y="428">FILE</text>
-  <text class="text" x="235" y="500">SR2OUT</text><text class="text" x="335" y="500">SR1OUT</text>
-  <path class="oldline" d="M335 535 V680 H820"/>
-  <path class="oldline" d="M235 535 V605 H650"/>
+  <text class="text" x="225" y="500">SR2OUT</text><text class="text" x="345" y="500">SR1OUT</text>
+  <path class="oldline" d="M345 535 V690 H775"/>
+  <path class="oldline" d="M225 535 V625 H568"/>
   <path class="newline" d="M335 535 V300 H1130 V390"/>
-  <rect class="new" x="1065" y="370" width="130" height="55"/><text class="label" x="1130" y="405">TEMP</text><text x="1235" y="405" class="text">LD.TEMP</text>
-  <path class="newline" d="M1130 425 V605 H650"/>
+  <rect class="new" x="1065" y="370" width="130" height="55"/><text class="label" x="1130" y="405">TEMP</text><text x="1218" y="405" class="text" style="text-anchor:start">LD.TEMP</text>
+  <path class="newline" d="M1130 425 V570 H618 V605"/>
 
-  <polygon class="new" points="555,605 650,605 680,655 650,705 555,705 585,655"/><text class="label" x="618" y="650">SEL2</text><text class="tiny" x="618" y="683">TEMP · ONE · SR2OUT</text>
-  <polygon class="new" points="765,605 860,605 890,655 860,705 765,705 795,655"/><text class="label" x="828" y="650">SEL1</text><text class="tiny" x="828" y="683">0 · SR1OUT</text>
-  <path class="newline" d="M650 655 H725"/><path class="newline" d="M820 680 V735"/>
+  <polygon class="new" points="555,605 650,605 680,655 650,705 555,705 585,655"/><text class="label" x="618" y="664">SEL2</text>
+  <polygon class="new" points="765,605 860,605 890,655 860,705 765,705 795,655"/><text class="label" x="828" y="664">SEL1</text>
+  <path class="newline" d="M680 655 H735 V720 H815 V735"/>
   <path class="newline" d="M890 655 H960 V735"/>
-  <path class="new" d="M755 735 H1025 L990 805 H790 Z"/><text class="label" x="890" y="783">ALU</text><text class="text" x="815" y="730">B</text><text class="text" x="965" y="730">A</text>
+  <path class="new" d="M755 735 H1025 L990 805 H790 Z"/><text class="label" x="890" y="783">ALU</text>
   <path class="newline" d="M890 805 V850"/><text x="980" y="842" class="text">GateALU</text>
   <text x="700" y="880" class="tiny">Thick outlines and wires identify the added TEMP path and the two new multiplexers.</text>
 </svg>

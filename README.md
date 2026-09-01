@@ -1,74 +1,73 @@
 # UTExamPrep
 
-A practice-exam workspace for UT Austin CS courses. Work through real past exams in
-the browser: short-answer questions are graded automatically, and coding questions can
-be checked against actual Java tests if you have a JDK installed.
+UTExamPrep turns official UT Austin practice and past exams into a focused,
+responsive study workspace. It includes objective grading, saved progress,
+exam-style diagrams, a timer, and rubric-based review for written and programming
+responses.
 
-It currently includes CS 312 sample exams and the CS 314 Fall 2025 exams, but the whole
-point is for people to add more — see [Contributing](#contributing).
+## Local development
 
-## Features
-
-- **Auto-graded short answer** — type your answers and get scored instantly, with the
-  official answers shown on review.
-- **Coding questions in a real editor** — a Monaco editor with Java syntax, graded by a
-  rubric and (optionally) by compiling and running tests locally.
-- **Reference panels** — class definitions and prose render together, with code
-  highlighted automatically.
-- **Progress is saved** — your answers persist in the browser, per exam, so you can
-  come back later.
-- **Built-in timer** — a countdown you can set and start whenever you want to simulate
-  exam conditions.
-
-## Getting started
-
-You'll need [Node.js](https://nodejs.org) 18 or newer.
+Use Node.js 20 or newer.
 
 ```bash
-git clone https://github.com/SakethSripada/UTExamPrep.git
-cd UTExamPrep
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000 and pick an exam.
+Open `http://localhost:3000` (or the port printed by Next.js).
 
-### Running Java tests (optional)
+## Grading model
 
-Coding questions can compile and run real Java tests if `javac` and `java` are on your
-PATH. This is optional — if no JDK is found, those questions fall back to manual
-scoring and everything else works normally. Nothing is uploaded; tests run locally
-through the dev server.
+- Short-answer and multiple-choice items are checked against their official keys.
+- Programming and written responses are self-graded against point-by-point official
+  rubrics after submission.
+- Public code execution is disabled by default. The runner implementation is retained
+  for authenticated or controlled deployments and requires
+  `CODE_RUNNER_ENABLED=true`, `JAVA_RUNNER_URL`, and `JAVA_RUNNER_TOKEN`.
 
-## Tech stack
+The launch validator checks published question totals, answer-part mappings, choice
+keys, rubric totals, and diagram references:
 
-- [Next.js](https://nextjs.org) (App Router) + React + TypeScript
-- [Monaco editor](https://microsoft.github.io/monaco-editor/) for code questions
-- A local API route that shells out to the installed JDK for Java tests
+```bash
+npm run validate:launch
+```
+
+## Source PDFs
+
+PDFs are intentionally kept out of this open-source repository and its Git history.
+For local curation and source audits, place the separate PDF archive at
+`../UTExamPrep-PDFs/exampdfs`, or set `UTEXAMPREP_PDF_ROOT` to its `exampdfs`
+directory. The application itself does not need the PDFs at runtime.
+
+## Optional exam submissions
+
+The unauthenticated public build does not expose PDF uploads. A controlled deployment
+can opt in with `NEXT_PUBLIC_EXAM_REQUESTS_ENABLED=true` and an absolute, durable
+`EXAM_REQUESTS_DIR`. Submission failures return user-facing messages without exposing
+filesystem or server details.
+
+## Useful commands
+
+```bash
+npm run lint
+npm run build
+npm run validate:launch
+npm run validate:exams
+npm run audit:cs314
+```
 
 ## Project layout
 
-| Path | What's there |
+| Path | Purpose |
 | --- | --- |
-| `app/data/` | The exams, one file per exam, plus the list in `exams.ts` |
-| `app/lib/exam-types.ts` | The types that describe an exam |
-| `app/components/` | Question UI, reference rendering, the Java runner panel, the timer |
-| `app/api/java/run/` | The local Java compile-and-test endpoint |
+| `app/data/` | Published exam content and catalog |
+| `app/lib/exam-types.ts` | Exam, rubric, and diagram types |
+| `app/components/` | Exam, review, editor, and diagram UI |
+| `app/api/java/run/` | Feature-gated code-runner proxy |
+| `runner/` | Preserved sandboxed runner service |
+| `scripts/` | Source curation and validation tools |
 
-## Contributing
-
-Contributions are very welcome, especially new exams. The
-[contributing guide](CONTRIBUTING.md) walks through local setup, how an exam is
-structured, and how to add one.
-
-## Scripts
-
-```bash
-npm run dev     # start the dev server
-npm run build   # production build
-npm run start   # serve the production build
-npm run lint    # run eslint
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 
 ## License
 

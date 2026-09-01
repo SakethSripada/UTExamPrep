@@ -2025,3 +2025,250 @@ private int find(E target) {
     return -1;
 }`,
 });
+
+// The Spring 2014 Exam 1 PDF puts the page containing the remainder of the
+// SparseMatrix prompt directly before Question 1's class-reference sheet. The
+// parser previously joined that sheet to Question 4 and extracted Button's
+// constructor as the editable method, which made the generated harness grade
+// an unrelated submission. Keep this transcription explicit.
+addQuestionOverride("cs314-2014-spring-exam-1", 4, {
+  title: "4. SparseMatrix - toString",
+  prompt:
+    "Implement SparseMatrix.toString(). The matrix stores only non-zero values in row-major order as SMEntry objects.",
+  reference: `public class SparseMatrix {
+    private int numRows;
+    private int numCols;
+    private ArrayList<SMEntry> nonZeroValues;
+}
+
+public class SMEntry {
+    public int getRow() // returns this element's row
+    public int getCol() // returns this element's column
+    public int getVal() // returns this element's non-zero value
+}
+
+Return every matrix value in row-major order. Append one underscore after every value (including the final value of each row) and one newline after every row. You may use only ArrayList, SMEntry, and StringBuilder, and may not use other SparseMatrix methods unless you implement them yourself.`,
+  stub: `public String toString() {
+    StringBuilder result = new StringBuilder();
+
+}`,
+  answer: `public String toString() {
+    StringBuilder result = new StringBuilder();
+    String zeros = "0_";
+    int indexInList = 0;
+    for (int row = 0; row < numRows; row++) {
+        for (int col = 0; col < numCols; col++) {
+            if (indexInList < nonZeroValues.size()) {
+                SMEntry entry = nonZeroValues.get(indexInList);
+                if (entry.getRow() == row && entry.getCol() == col) {
+                    result.append(entry.getVal());
+                    result.append("_");
+                    indexInList++;
+                } else {
+                    result.append(zeros);
+                }
+            } else {
+                result.append(zeros);
+            }
+        }
+        result.append("\\n");
+    }
+    return result.toString();
+}`,
+  rubric: [
+    { label: "Correct nested row and column traversal", points: 3 },
+    { label: "Correctly accesses the SMEntry ArrayList", points: 4 },
+    { label: "Tracks the next non-zero entry", points: 4 },
+    { label: "Matches entries to their matrix position", points: 3 },
+    { label: "Appends default zero values", points: 1 },
+    { label: "Appends stored non-zero values", points: 1 },
+    { label: "Avoids reading past the entry list", points: 3 },
+    { label: "Produces row newlines and returns the built string", points: 2 },
+  ],
+});
+
+// Spring 2015 Exam 1 Question 2 contains two methods in two different
+// classes. It is kept as one faithful, self-graded response instead of
+// pretending a single editor can compile both snippets in the same harness.
+addQuestionOverride("cs314-2015-spring-exam-1", 2, {
+  title: "2. NameRecord and Names",
+  points: 20,
+  type: "free-response",
+  prompt:
+    "Write both requested methods: NameRecord.getBestAndWorst(), then Names.constrained(NameRecord source).",
+  officialSolution: `public int[] getBestAndWorst() {
+    int min = ranks.get(0);
+    if (min == 0) min = 1001;
+    int max = min;
+    for (int index = 1; index < ranks.size(); index++) {
+        int rank = ranks.get(index);
+        if (rank == 0) rank = 1001;
+        if (rank < min) min = rank;
+        if (rank > max) max = rank;
+    }
+    return new int[] {min, max};
+}
+
+public ArrayList<NameRecord> constrained(NameRecord source) {
+    int[] bestAndWorst = source.getBestAndWorst();
+    int bestSource = bestAndWorst[0];
+    int worstSource = bestAndWorst[1];
+    ArrayList<NameRecord> result = new ArrayList<NameRecord>();
+    for (int index = 0; index < nameList.size(); index++) {
+        NameRecord record = nameList.get(index);
+        boolean inRange = true;
+        int decade = 0;
+        while (inRange && decade < NUM_RANKS) {
+            int rank = record.getRank(decade);
+            if (rank == 0) rank = 1001;
+            inRange = bestSource < rank && rank < worstSource;
+            decade++;
+        }
+        if (inRange) result.add(record);
+    }
+    return result;
+}`,
+  rubric: [
+    { label: "Computes best and worst ranks, treating an unranked rank as 1001", points: 10 },
+    { label: "Returns exactly the records constrained by the source range", points: 10 },
+  ],
+});
+
+addQuestionOverride("cs314-2015-spring-exam-1", 4, {
+  title: "4. Bag - iterator",
+  prompt: "Implement the complete inner BagIterator class, including its state, constructor, hasNext, next, and remove methods.",
+  reference: `public class Bag<E> implements Iterable<E> {
+    private int size;
+    private E[] container;
+
+    public Iterator<E> iterator() { return new BagIterator(); }
+}
+
+The bag's internal array can contain null gaps. next must skip gaps, throw NoSuchElementException when exhausted, and remove must throw IllegalStateException unless it follows one next call without an intervening remove. remove must delete the last-returned element and decrement Bag.size.`,
+  stub: `private class BagIterator implements Iterator<E> {
+
+}`,
+  answer: `private class BagIterator implements Iterator<E> {
+    private int numToReturn;
+    private int index;
+    private boolean removeOk;
+
+    private BagIterator() {
+        numToReturn = size;
+    }
+
+    public boolean hasNext() {
+        return numToReturn > 0;
+    }
+
+    public E next() {
+        if (!hasNext()) throw new NoSuchElementException();
+        while (container[index] == null) index++;
+        removeOk = true;
+        numToReturn--;
+        E result = container[index];
+        index++;
+        return result;
+    }
+
+    public void remove() {
+        if (!removeOk) throw new IllegalStateException();
+        removeOk = false;
+        container[index - 1] = null;
+        size--;
+    }
+}`,
+  rubric: [
+    { label: "Tracks iterator position and removal state", points: 4 },
+    { label: "hasNext and next correctly skip internal gaps", points: 7 },
+    { label: "remove enforces its precondition and updates the bag", points: 4 },
+  ],
+});
+
+// Visuals below are transcribed from the corresponding official PDF diagrams.
+// Keeping the structure as data lets the app render it crisply at any size,
+// instead of leaving a flattened run of node labels in the question text.
+const traversalTree2011 = {
+  kind: "tree",
+  title: "Binary tree used in parts M–O",
+  description: "Z is the root. Child links are shown exactly as in the original exam.",
+  root: "z",
+  nodes: [
+    { id: "z", label: "Z", left: "a", right: "h" },
+    { id: "a", label: "A", left: "c", right: "j" },
+    { id: "h", label: "H", left: "p", right: "m" },
+    { id: "c", label: "C" },
+    { id: "j", label: "J", left: "x" },
+    { id: "p", label: "P" },
+    { id: "m", label: "M" },
+    { id: "x", label: "X" },
+  ],
+};
+
+addQuestionOverride("cs314-2011-fall-exam-2", 1, { diagrams: [traversalTree2011] });
+addQuestionOverride("cs314-2011-fall-exam-2", 2, { diagrams: [traversalTree2011] });
+
+addQuestionOverride("cs314-2012-fall-final", 1, {
+  diagrams: [
+    {
+      kind: "tree",
+      title: "Binary tree used in parts H–I",
+      description: "Tree from the official exam, with A as the root.",
+      root: "root-a",
+      nodes: [
+        { id: "root-a", label: "A", left: "t", right: "x" },
+        { id: "t", label: "T", left: "left-a", right: "j" },
+        { id: "x", label: "X", left: "z" },
+        { id: "left-a", label: "A", left: "o" },
+        { id: "j", label: "J", right: "k" },
+        { id: "z", label: "Z" },
+        { id: "o", label: "O" },
+        { id: "k", label: "K" },
+      ],
+    },
+  ],
+});
+
+addQuestionOverride("cs314-2014-spring-exam-2", 1, {
+  diagrams: [
+    {
+      kind: "tree",
+      title: "Binary tree used in parts Q–S",
+      description: "X is the root of the tree.",
+      root: "x",
+      nodes: [
+        { id: "x", label: "X", left: "q-left", right: "h" },
+        { id: "q-left", label: "Q", left: "m", right: "v" },
+        { id: "h", label: "H", right: "q-right" },
+        { id: "m", label: "M", left: "g", right: "a" },
+        { id: "v", label: "V" },
+        { id: "q-right", label: "Q", left: "k" },
+        { id: "g", label: "G" },
+        { id: "a", label: "A" },
+        { id: "k", label: "K" },
+      ],
+    },
+  ],
+});
+
+addQuestionOverride("cs314-2015-spring-exam-2", 1, {
+  diagrams: [
+    {
+      kind: "tree",
+      title: "Binary tree used in parts P–R",
+      description: "A is the root of the tree.",
+      root: "a",
+      nodes: [
+        { id: "a", label: "A", left: "b", right: "c" },
+        { id: "b", label: "B", right: "d" },
+        { id: "c", label: "C", left: "e", right: "f" },
+        { id: "d", label: "D" },
+        { id: "e", label: "E", left: "g", right: "h" },
+        { id: "f", label: "F", right: "i" },
+        { id: "g", label: "G" },
+        { id: "h", label: "H" },
+        { id: "i", label: "I" },
+      ],
+    },
+  ],
+});

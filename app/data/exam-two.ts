@@ -5,6 +5,14 @@ export const examTwo: Exam = {
   id: "sample-2",
   title: "CS 312 Sample Credit by Exam 2",
   subtitle: "UT Austin Computer Science sample exam",
+  sourceFiles: [
+    { label: "Official sample exam", path: "exampdfs/CS312_Sample_Exam_2_0.pdf", role: "exam" },
+    {
+      label: "Official sample solution and grading criteria",
+      path: "exampdfs/CS312_Sample_Exam_2_SOLUTION.pdf",
+      role: "solution",
+    },
+  ],
   questions: [
     {
       id: "e2-q1",
@@ -506,4 +514,3 @@ public static int um(int[] ar, int x) {
     },
   ],
 };
-

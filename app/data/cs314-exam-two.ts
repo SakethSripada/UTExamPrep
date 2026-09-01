@@ -4,6 +4,14 @@ export const cs314ExamTwo: Exam = {
   id: "cs314-fall-2025-e2",
   title: "CS 314 Fall 2025 Exam 2",
   subtitle: "Maps, linked lists, recursion, sorting, queues, and trees",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/CS_314_Fall_25_E2.pdf", role: "exam" },
+    {
+      label: "Official solution and grading criteria",
+      path: "exampdfs/Fall_2025_E2_GradingCrit_And_Solutions.pdf",
+      role: "solution",
+    },
+  ],
   questions: [
     {
       id: "cs314-e2-q1",
@@ -280,4 +288,3 @@ private static boolean charsMatch(String s1, String s2) {
     },
   ],
 };
-

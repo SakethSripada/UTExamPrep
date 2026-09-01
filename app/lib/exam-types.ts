@@ -70,7 +70,7 @@ export type Question = {
   thrownOut?: ThrownOutPart;
 };
 
-export type QuestionDiagram = TreeDiagram | LinkedListDiagram | SourceDiagram;
+export type QuestionDiagram = TreeDiagram | LinkedListDiagram | GraphDiagram | SourceDiagram;
 
 export type SourceDiagram = {
   kind: "source";
@@ -102,6 +102,15 @@ export type LinkedListDiagram = {
   description?: string;
   values: string[];
   nullLabel?: string;
+};
+
+export type GraphDiagram = {
+  kind: "graph";
+  title?: string;
+  description?: string;
+  directed?: boolean;
+  nodes: Array<{ id: string; label: string; x: number; y: number }>;
+  edges: Array<{ from: string; to: string }>;
 };
 
 export type Choice = {

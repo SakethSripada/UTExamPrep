@@ -174,7 +174,11 @@ export function splitExamQuestions(text) {
   const lines = text.split("\n");
   const headings = [];
   lines.forEach((line, index) => {
-    const match = line.match(/^\s{0,4}(\d{1,2})\.\s+(.*)$/);
+    // A few exams label a multi-part programming problem as "2A." and
+    // "2B." while still counting it as a single Question 2. Treat the first
+    // lettered heading as question 2; the subsequent part stays in that
+    // section until Question 3 begins.
+    const match = line.match(/^\s{0,4}(\d{1,2})(?:[A-Z])?\.\s+(.*)$/);
     if (!match) return;
     if (!/point|pts/i.test(line)) return;
     if (COVER_HINTS.test(line)) return;

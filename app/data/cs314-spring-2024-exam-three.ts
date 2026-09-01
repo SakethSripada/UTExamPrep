@@ -4,6 +4,10 @@ export const cs314Spring2024ExamThree: Exam = {
   id: "cs314-2024-spring-exam-3",
   title: "CS 314 Spring 2024 Exam 3",
   subtitle: "Trees, encoding, heaps, hashing, and graphs",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/cs314/2024-spring/exam-3-exam-spring-2024.pdf", role: "exam" },
+    { label: "Official solution", path: "exampdfs/cs314/2024-spring/exam-3-solution-spring-2024.pdf", role: "solution" },
+  ],
   questions: [
     {
       id: "cs314-2024-spring-exam-3-q1",
@@ -40,6 +44,36 @@ export const cs314Spring2024ExamThree: Exam = {
           alt: "A five-by-five timing table with V and E values from 10,000 to 160,000.",
           width: 1030,
           height: 570,
+        },
+        {
+          kind: "graph",
+          title: "For parts W and X: Directed graph",
+          description: "The graphical form of the source adjacency list. Arrowheads show edge direction.",
+          directed: true,
+          nodes: [
+            { id: "A", label: "A", x: 110, y: 200 },
+            { id: "B", label: "B", x: 260, y: 90 },
+            { id: "C", label: "C", x: 260, y: 310 },
+            { id: "D", label: "D", x: 420, y: 140 },
+            { id: "E", label: "E", x: 520, y: 260 },
+            { id: "F", label: "F", x: 660, y: 300 },
+            { id: "G", label: "G", x: 420, y: 40 },
+            { id: "H", label: "H", x: 610, y: 55 },
+          ],
+          edges: [
+            { from: "A", to: "B" },
+            { from: "A", to: "C" },
+            { from: "B", to: "D" },
+            { from: "B", to: "G" },
+            { from: "C", to: "B" },
+            { from: "C", to: "D" },
+            { from: "D", to: "E" },
+            { from: "E", to: "A" },
+            { from: "E", to: "C" },
+            { from: "E", to: "D" },
+            { from: "E", to: "F" },
+            { from: "G", to: "H" },
+          ],
         },
       ],
       code: `A. What is output when the call a(9, 1) is made?

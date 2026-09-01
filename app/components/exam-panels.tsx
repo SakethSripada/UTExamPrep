@@ -1,9 +1,29 @@
 import type { Dispatch, SetStateAction } from "react";
-import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
+import { CheckCircle2, ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
 import { MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
 import { MathFormulaBlock } from "@/app/components/math-formula";
 import { QuestionDiagramVisual } from "@/app/components/question-diagram";
+import { gradingRubric, manualScoreForQuestion, rubricScoreKey } from "@/app/lib/exam-state";
+
+export function CodePracticePanel() {
+  return (
+    <section className="java-panel code-practice-panel">
+      <div className="java-panel-header">
+        <div>
+          <h2>
+            <CheckCircle2 size={18} />
+            Response saved
+          </h2>
+          <p>
+            Code execution is temporarily unavailable. Submit when you are ready, then score each rubric criterion
+            beside your response and compare it with the official solution.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export function JavaRunnerPanel({
   question,
@@ -89,14 +109,12 @@ export function JavaRunnerPanel({
 
 export function SubmitModal({
   incompleteSections,
-  javaAvailable,
   submitting,
   onClose,
   onSubmit,
   onJump,
 }: {
   incompleteSections: IncompleteSection[];
-  javaAvailable: boolean;
   submitting: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -111,7 +129,7 @@ export function SubmitModal({
             <p>
               {incompleteSections.length} section{incompleteSections.length === 1 ? " is" : "s are"} still
               incomplete. Jump back to a section, continue editing, or submit anyway.
-              {javaAvailable ? " Answered code questions will be tested locally before scoring." : ""}
+              Your responses stay saved, and written or coding questions can be scored criterion by criterion in review mode.
             </p>
           </div>
           <button className="modal-close" aria-label="Close submit dialog" onClick={onClose}>
@@ -150,6 +168,85 @@ export function SubmitModal({
   );
 }
 
+function RubricScoreEditor({
+  question,
+  manual,
+  setManual,
+}: {
+  question: Question;
+  manual: ManualState;
+  setManual: Dispatch<SetStateAction<ManualState>>;
+}) {
+  const { rubric, maximum, scope } = gradingRubric(question);
+  const earned = manualScoreForQuestion(question, manual);
+
+  const updateCriterion = (index: number, points: number, itemMaximum: number) => {
+    const key = rubricScoreKey(question.id, index, scope);
+    const value = Math.min(itemMaximum, Math.max(0, Number.isFinite(points) ? points : 0));
+    setManual((current) => {
+      const next = { ...current, [key]: value };
+      delete next[question.id];
+      return next;
+    });
+  };
+
+  return (
+    <section className="rubric-editor" aria-label="Self-grading rubric">
+      <div className="rubric-score-summary" aria-live="polite">
+        <div>
+          <span>Self-graded score</span>
+          <strong>{earned.toFixed(1)}</strong>
+        </div>
+        <span>/ {maximum} points</span>
+      </div>
+      {rubric.length ? (
+        <div className="rubric rubric-inputs">
+          {rubric.map((item, index) => {
+            const key = rubricScoreKey(question.id, index, scope);
+            const value = manual[key] ?? 0;
+            return (
+              <label key={item.label}>
+                <span>{item.label}</span>
+                <span className="criterion-score">
+                  <input
+                    aria-label={`${item.label} points`}
+                    type="number"
+                    min="0"
+                    max={item.points}
+                    step="0.5"
+                    inputMode="decimal"
+                    value={value}
+                    onChange={(event) => updateCriterion(index, Number(event.target.value), item.points)}
+                  />
+                  <strong>/ {item.points}</strong>
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      ) : (
+        <label className="manual-score">
+          <span>Your score for this response</span>
+          <input
+            type="number"
+            min="0"
+            max={maximum}
+            step="0.5"
+            value={manual[question.id] ?? 0}
+            onChange={(event) =>
+              setManual((current) => ({
+                ...current,
+                [question.id]: Math.min(maximum, Math.max(0, Number(event.target.value) || 0)),
+              }))
+            }
+          />
+          <strong>/ {maximum}</strong>
+        </label>
+      )}
+    </section>
+  );
+}
+
 export function ReviewPanel({
   question,
   manual,
@@ -176,31 +273,7 @@ export function ReviewPanel({
         </p>
         {question.workPoints ? (
           <>
-            <label className="manual-score">
-              <span>Reasoning and work score</span>
-              <input
-                type="number"
-                min="0"
-                max={question.workPoints}
-                step="0.5"
-                value={manual[question.id] ?? 0}
-                onChange={(event) =>
-                  setManual((current) => ({
-                    ...current,
-                    [question.id]: Number(event.target.value),
-                  }))
-                }
-              />
-              <strong>/ {question.workPoints}</strong>
-            </label>
-            <div className="rubric">
-              {question.workRubric?.map((item) => (
-                <div key={item.label}>
-                  <span>{item.label}</span>
-                  <strong>{item.points}</strong>
-                </div>
-              ))}
-            </div>
+            <RubricScoreEditor question={question} manual={manual} setManual={setManual} />
           </>
         ) : null}
         {question.officialSolution ? (
@@ -242,34 +315,11 @@ export function ReviewPanel({
       <section className="review-panel">
         <h2>
           <ListChecks size={18} />
-          Self-Grade
+          Self-grade this response
         </h2>
-        <label className="manual-score">
-          <span>Your score for this problem</span>
-          <input
-            type="number"
-            min="0"
-            max={question.points}
-            step="0.5"
-            value={manual[question.id] ?? 0}
-            onChange={(event) =>
-              setManual((current) => ({
-                ...current,
-                [question.id]: Number(event.target.value),
-              }))
-            }
-          />
-          <strong>/ {question.points}</strong>
-        </label>
-        <div className="rubric">
-          {question.rubric?.map((item) => (
-            <div key={item.label}>
-              <span>{item.label}</span>
-              <strong>{item.points}</strong>
-            </div>
-          ))}
-        </div>
-        <h3>Correct answer</h3>
+        <p>Keep your response visible on the left. Award only the points clearly supported by what you wrote.</p>
+        <RubricScoreEditor question={question} manual={manual} setManual={setManual} />
+        <h3>Official answer</h3>
         {isComputerScience ? (
           <MixedContent
             content={question.officialSolution ?? question.answer}
@@ -287,33 +337,10 @@ export function ReviewPanel({
     <section className="review-panel">
       <h2>
         <ListChecks size={18} />
-        Coding Score
+        Self-grade this code
       </h2>
-      <label className="manual-score">
-        <span>Your score for this problem</span>
-        <input
-          type="number"
-          min="0"
-          max={question.points}
-          step="1"
-          value={manual[question.id] ?? 0}
-          onChange={(event) =>
-            setManual((current) => ({
-              ...current,
-              [question.id]: Number(event.target.value),
-            }))
-          }
-        />
-        <strong>/ {question.points}</strong>
-      </label>
-      <div className="rubric">
-        {question.rubric?.map((item) => (
-          <div key={item.label}>
-            <span>{item.label}</span>
-            <strong>{item.points}</strong>
-          </div>
-        ))}
-      </div>
+      <p>Compare criterion by criterion with the response on the left. Partial credit is supported in half-point steps.</p>
+      <RubricScoreEditor question={question} manual={manual} setManual={setManual} />
       <h3>Official solution</h3>
       <MixedContent content={question.answer} language={question.language} className="solution-notes" />
     </section>

@@ -4,6 +4,10 @@ export const cs314Spring2024ExamTwo: Exam = {
   id: "cs314-2024-spring-exam-2",
   title: "CS 314 Spring 2024 Exam 2",
   subtitle: "Recursion, linked structures, maps, and graph search",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/cs314/2024-spring/exam-2-exam-spring-2024.pdf", role: "exam" },
+    { label: "Official solution", path: "exampdfs/cs314/2024-spring/exam-2-solution-spring-2024.pdf", role: "solution" },
+  ],
   questions: [
     {
       id: "cs314-2024-spring-exam-2-q1",

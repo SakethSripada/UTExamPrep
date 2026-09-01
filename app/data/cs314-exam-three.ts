@@ -4,6 +4,14 @@ export const cs314ExamThree: Exam = {
   id: "cs314-fall-2025-e3",
   title: "CS 314 Fall 2025 Exam 3",
   subtitle: "Trees, graphs, hashing, heaps, tries, and dynamic programming",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/CS_314_Fall_25_E3.pdf", role: "exam" },
+    {
+      label: "Official solution and grading criteria",
+      path: "exampdfs/Fall_2025_E3_GradingCrit_And_Solutions.pdf",
+      role: "solution",
+    },
+  ],
   questions: [
     {
       id: "cs314-e3-q1",
@@ -172,16 +180,24 @@ public boolean isBridge(String v1, String v2) {
       type: "code",
       prompt:
         "Inside IntBST, implement numInRange(low, high). Return the number of int values in the binary search tree that are in the inclusive range [low, high]. Use the BST property to avoid visiting unnecessary nodes. The calling object is not altered. Do not check preconditions.",
-      reference: `Example tree:
-        5
-      /   \\
-     3     12
-    /     /  \\
-   0     9    15
-        /
-       7
-
-Example calls:
+      diagrams: [
+        {
+          kind: "tree",
+          title: "Example binary search tree",
+          description: "Use this tree for the example calls below.",
+          root: "5",
+          nodes: [
+            { id: "5", label: "5", left: "3", right: "12" },
+            { id: "3", label: "3", left: "0" },
+            { id: "0", label: "0" },
+            { id: "12", label: "12", left: "9", right: "15" },
+            { id: "9", label: "9", left: "7" },
+            { id: "7", label: "7" },
+            { id: "15", label: "15" },
+          ],
+        },
+      ],
+      reference: `Example calls:
 - numInRange(3, 6) returns 2
 - numInRange(20, 30) returns 0
 - numInRange(-5, -10) returns 0
@@ -329,4 +345,3 @@ Facts and restrictions:
     },
   ],
 };
-

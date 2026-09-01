@@ -1,4 +1,4 @@
-import type { AnswerState, Exam, ObjectivePart, PersistedExam, Question } from "@/app/lib/exam-types";
+import type { AnswerState, Exam, ManualState, ObjectivePart, PersistedExam, Question, Rubric } from "@/app/lib/exam-types";
 
 const storagePrefix = "utexamprep";
 const legacyStoragePrefix = "digitalexams";
@@ -9,6 +9,35 @@ function storageKey(examId: string, prefix = storagePrefix) {
 
 export function workResponseKey(questionId: string) {
   return `${questionId}:work`;
+}
+
+export function rubricScoreKey(questionId: string, index: number, scope: "response" | "work" = "response") {
+  return `${questionId}:rubric:${scope}:${index}`;
+}
+
+export function gradingRubric(question: Question): { rubric: Rubric[]; maximum: number; scope: "response" | "work" } {
+  if (question.type === "short" && question.workPoints) {
+    return {
+      rubric: question.workRubric ?? [],
+      maximum: question.workPoints,
+      scope: "work",
+    };
+  }
+  return {
+    rubric: question.rubric ?? [],
+    maximum: question.points,
+    scope: "response",
+  };
+}
+
+export function manualScoreForQuestion(question: Question, manual: ManualState) {
+  const { rubric, maximum, scope } = gradingRubric(question);
+  const criterionKeys = rubric.map((_, index) => rubricScoreKey(question.id, index, scope));
+  const hasCriterionScores = criterionKeys.some((key) => Object.hasOwn(manual, key));
+  const score = hasCriterionScores
+    ? criterionKeys.reduce((sum, key) => sum + (manual[key] ?? 0), 0)
+    : (manual[question.id] ?? 0);
+  return Math.min(maximum, Math.max(0, score));
 }
 
 export function isSameCode(left: string | undefined, right: string | undefined) {
@@ -199,7 +228,7 @@ function isCorrectSingle(given: string, expected: string) {
   const userNumber = numericAnswer(given);
   const officialNumber = numericAnswer(expected);
   if (userNumber && officialNumber && userNumber.unit === officialNumber.unit) {
-    const scale = Math.max(1, Math.abs(officialNumber.value));
+    const scale = Math.abs(officialNumber.value) || Number.EPSILON;
     if (Math.abs(userNumber.value - officialNumber.value) <= scale * 1e-9) {
       return true;
     }
@@ -343,7 +372,7 @@ export function answerPlaceholder(part: ObjectivePart) {
   if (/pick the letter|answer with the letter|which of the following|choices:/.test(text)) {
     return "Type letter(s)";
   }
-  if (/big o|order\b|efficient/.test(text)) {
+  if (/\bbig o\b|\bwhat is (?:the )?order\b|\border of\b|\befficient\b/.test(text)) {
     return "Type Big O";
   }
   if (/expected time|seconds|time for/.test(text)) {

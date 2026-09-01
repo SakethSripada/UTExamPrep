@@ -1789,10 +1789,153 @@ function classify(question) {
 
 let generated = 0;
 const skipped = [];
+
+async function generateSparseMatrixToStringHarness(question) {
+  const dir = path.join(questionsRoot, question.id);
+  const student = `import java.util.*;
+
+class SMEntry {
+    private final int row, col, value;
+    SMEntry(int row, int col, int value) { this.row = row; this.col = col; this.value = value; }
+    public int getRow() { return row; }
+    public int getCol() { return col; }
+    public int getVal() { return value; }
+}
+
+class SparseMatrix {
+    private final int numRows;
+    private final int numCols;
+    private final ArrayList<SMEntry> nonZeroValues = new ArrayList<>();
+
+    private SparseMatrix(int[][] values) {
+        numRows = values.length;
+        numCols = values[0].length;
+        for (int row = 0; row < numRows; row++)
+            for (int col = 0; col < numCols; col++)
+                if (values[row][col] != 0) nonZeroValues.add(new SMEntry(row, col, values[row][col]));
+    }
+
+    static SparseMatrix of(int[][] values) { return new SparseMatrix(values); }
+
+${marker}
+}
+`;
+  const runner = `import java.util.*;
+
+public class TestRunner {
+    private static int passed;
+    private static int total;
+
+    private static void check(String actual, String expected, String name) {
+        total++;
+        if (Objects.equals(actual, expected)) {
+            passed++;
+            System.out.println("PASS " + name);
+        } else {
+            System.out.println("FAIL " + name + " expected=" + expected + " actual=" + actual);
+        }
+    }
+
+    public static void main(String[] args) {
+        check(SparseMatrix.of(new int[][] {{7}}).toString(), "7_\\n", "one value");
+        check(SparseMatrix.of(new int[][] {{1, 2}, {0, 3}}).toString(), "1_2_\\n0_3_\\n", "mixed 2x2");
+        check(SparseMatrix.of(new int[][] {{0, 4}, {3, 0}}).toString(), "0_4_\\n3_0_\\n", "zeros around values");
+        check(SparseMatrix.of(new int[][] {{1, 2, 3}, {4, 5, 6}}).toString(), "1_2_3_\\n4_5_6_\\n", "dense matrix");
+        check(SparseMatrix.of(new int[][] {{3, 0, 0}, {0, -2, 0}, {0, 0, 5}}).toString(), "3_0_0_\\n0_-2_0_\\n0_0_5_\\n", "sparse negative value");
+        System.out.println("RESULT " + passed + "/" + total);
+        if (passed != total) System.exit(1);
+    }
+}
+`;
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, "SparseMatrix.java"), student);
+  await writeFile(path.join(dir, "TestRunner.java"), runner);
+}
+
+async function generateBagIteratorHarness(question) {
+  const dir = path.join(questionsRoot, question.id);
+  const student = `import java.util.*;
+
+class Bag<E> implements Iterable<E> {
+    private int size;
+    private E[] container;
+
+    @SuppressWarnings("unchecked")
+    private Bag(E[] values) {
+        container = (E[]) new Object[Math.max(3, values.length * 2 + 1)];
+        for (int index = 0; index < values.length; index++) {
+            container[index * 2] = values[index];
+            size++;
+        }
+    }
+
+    @SafeVarargs
+    static <T> Bag<T> of(T... values) { return new Bag<T>(values); }
+    int examSize() { return size; }
+    public Iterator<E> iterator() { return new BagIterator(); }
+
+${marker}
+}
+`;
+  const runner = `import java.util.*;
+
+public class TestRunner {
+    private static int passed;
+    private static int total;
+
+    private static void check(boolean condition, String name) {
+        total++;
+        if (condition) {
+            passed++;
+            System.out.println("PASS " + name);
+        } else {
+            System.out.println("FAIL " + name);
+        }
+    }
+
+    private static boolean throwsType(Runnable action, Class<? extends Throwable> type) {
+        try { action.run(); return false; }
+        catch (Throwable error) { return type.isInstance(error); }
+    }
+
+    public static void main(String[] args) {
+        Bag<String> bag = Bag.of("A", "B", "A");
+        Iterator<String> iterator = bag.iterator();
+        check(iterator.hasNext(), "initial hasNext");
+        check("A".equals(iterator.next()), "first value through gap-aware iterator");
+        iterator.remove();
+        check(bag.examSize() == 2, "remove decrements bag size");
+        check(throwsType(iterator::remove, IllegalStateException.class), "double remove rejected");
+        check("B".equals(iterator.next()), "second value");
+        check("A".equals(iterator.next()), "third value");
+        check(!iterator.hasNext(), "exhausted iterator");
+        check(throwsType(iterator::next, NoSuchElementException.class), "next past end rejected");
+        Bag<Integer> empty = Bag.of();
+        check(!empty.iterator().hasNext(), "empty bag");
+        System.out.println("RESULT " + passed + "/" + total);
+        if (passed != total) System.exit(1);
+    }
+}
+`;
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, "Bag.java"), student);
+  await writeFile(path.join(dir, "TestRunner.java"), runner);
+}
+
 for (const question of questions) {
   await rm(path.join(questionsRoot, question.id), { recursive: true, force: true });
 }
 for (const question of questions) {
+  if (question.id === "cs314-2014-spring-exam-1-q4") {
+    await generateSparseMatrixToStringHarness(question);
+    generated++;
+    continue;
+  }
+  if (question.id === "cs314-2015-spring-exam-1-q4") {
+    await generateBagIteratorHarness(question);
+    generated++;
+    continue;
+  }
   const family = classify(question);
   if (!family) {
     skipped.push(question.id);

@@ -4,6 +4,10 @@ export const cs314Spring2024ExamOne: Exam = {
   id: "cs314-2024-spring-exam-1",
   title: "CS 314 Spring 2024 Exam 1",
   subtitle: "Algorithm analysis, lists, baby names, and multisets",
+  sourceFiles: [
+    { label: "Original exam", path: "exampdfs/cs314/2024-spring/exam-1-exam-spring-2024.pdf", role: "exam" },
+    { label: "Official solution", path: "exampdfs/cs314/2024-spring/exam-1-solution-spring-2024.pdf", role: "solution" },
+  ],
   questions: [
     {
       id: "cs314-2024-spring-exam-1-q1",

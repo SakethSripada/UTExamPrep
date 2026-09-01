@@ -5,6 +5,13 @@ export const examOne: Exam = {
   id: "sample-1",
   title: "CS 312 Sample Credit by Exam 1",
   subtitle: "UT Austin Computer Science sample exam",
+  sourceFiles: [
+    {
+      label: "Official sample solution and grading criteria",
+      path: "exampdfs/CS312_Sample_Exam_1_SOLUTION_0.pdf",
+      role: "solution",
+    },
+  ],
   questions: [
     {
       id: "e1-q1",
@@ -477,4 +484,3 @@ public static boolean capitalLettersPresent(Scanner sc, int[] required) {
     },
   ],
 };
-
