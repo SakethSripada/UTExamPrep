@@ -117,7 +117,7 @@ public static TreeSet<Integer> e(int n) {
     }
     return t;
 }
-F. Insert 9, 7, 5, 3, left to right, into an initially empty red-black tree using the lecture algorithm. Draw the resulting tree and label each node red or black. For automatic scoring, enter a semicolon-separated canonical description in this order: root, left child, left-left child, right child; use number(color), for example root=4(B); left=2(R); left.left=1(B); right=9(B).
+F. Insert 9, 7, 5, 3, left to right, into an initially empty red-black tree using the lecture algorithm. Which diagram is the resulting tree?
 G. A base-10 radix sort processes [725, 124, 131, 99, 1003]. What are the contents after the second pass?
 H. The English letters in PAVANAN, with no pseudo-EOF, are placed in a Huffman Code tree as demonstrated in lecture. Give the level-order traversal of leaf nodes only, ignoring internal nodes.
 I. How many bits are needed to encode a Huffman tree in Standard Tree Format with 10 internal nodes? Do not include the 32-bit tree-size header; BITS_PER_WORD = 8.
@@ -181,13 +181,73 @@ int[] result =
         .map(x -> x * 2)
         .toArray();
 System.out.print(Arrays.toString(result));`,
+      answerChoices: {
+        F: [
+          {
+            id: "A",
+            text: "Diagram A",
+            diagram: {
+              kind: "tree",
+              root: "a7",
+              nodes: [
+                { id: "a7", label: "7", left: "a5", right: "a9", tone: "black" },
+                { id: "a5", label: "5", left: "a3", tone: "red" },
+                { id: "a3", label: "3", tone: "black" },
+                { id: "a9", label: "9", tone: "black" },
+              ],
+            },
+          },
+          {
+            id: "B",
+            text: "Diagram B",
+            diagram: {
+              kind: "tree",
+              root: "b7",
+              nodes: [
+                { id: "b7", label: "7", left: "b5", right: "b9", tone: "black" },
+                { id: "b5", label: "5", left: "b3", tone: "black" },
+                { id: "b3", label: "3", tone: "red" },
+                { id: "b9", label: "9", tone: "black" },
+              ],
+            },
+          },
+          {
+            id: "C",
+            text: "Diagram C",
+            diagram: {
+              kind: "tree",
+              root: "c9",
+              nodes: [
+                { id: "c9", label: "9", left: "c7", tone: "black" },
+                { id: "c7", label: "7", left: "c5", tone: "black" },
+                { id: "c5", label: "5", left: "c3", tone: "red" },
+                { id: "c3", label: "3", tone: "red" },
+              ],
+            },
+          },
+          {
+            id: "D",
+            text: "Diagram D",
+            diagram: {
+              kind: "tree",
+              root: "d7",
+              nodes: [
+                { id: "d7", label: "7", left: "d3", right: "d9", tone: "black" },
+                { id: "d3", label: "3", right: "d5", tone: "black" },
+                { id: "d5", label: "5", tone: "red" },
+                { id: "d9", label: "9", tone: "black" },
+              ],
+            },
+          },
+        ],
+      },
       answers: [
         "94-121",
         "3Nlog2N + 4log2N + 4",
         "H D I N",
         "20 seconds",
         "22 seconds",
-        "root=7(B); left=5(B); left.left=3(R); right=9(B) or 7 black, 5 black, 3 red, 9 black",
+        "B",
         "[1003, 124, 725, 131, 99]",
         "A N P V",
         "120 bits",

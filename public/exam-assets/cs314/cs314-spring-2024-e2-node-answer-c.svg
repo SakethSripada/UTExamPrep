@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 250" role="img" aria-labelledby="title desc">
+  <title id="title">One self-referencing node</title>
+  <desc id="desc">n1 points to one node containing an array. The node's next field points back to itself.</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8z" fill="#475569"/></marker></defs>
+  <g fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"><path d="M145 116H255"/><path d="M445 150C545 150 545 52 445 52"/></g>
+  <g font-family="Arial, sans-serif" fill="#1f2937">
+    <text x="95" y="121" font-size="20" font-weight="700">n1</text>
+    <g transform="translate(260 52)"><rect width="190" height="126" rx="4" fill="#fff" stroke="#64748b" stroke-width="2"/><path d="M0 63H190" stroke="#cbd5e1"/><text x="12" y="38" font-size="16">data: int[2] {0, 0}</text><text x="12" y="101" font-size="16">next</text></g>
+  </g>
+</svg>

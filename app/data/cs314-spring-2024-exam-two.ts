@@ -19,16 +19,6 @@ export const cs314Spring2024ExamTwo: Exam = {
       diagrams: [
         {
           kind: "source",
-          beforePart: "I",
-          title: "For part I: Node object template",
-          description: "A slash denotes a null reference.",
-          src: "/exam-assets/cs314/cs314-spring-2024-e2-node-template.svg",
-          alt: "A Node object box split into data and next fields, with null slash marks in both fields.",
-          width: 680,
-          height: 260,
-        },
-        {
-          kind: "source",
           beforePart: "V",
           title: "For parts V through X: Binary tree",
           description: "Use this exact tree for the traversal and full-tree questions.",
@@ -114,7 +104,7 @@ public static int h(LinkedList<Double> t1, ArrayList<Double> t2) {
     }
     return t;
 }
-I. Consider this Node class and code. The original paper exam asked for a reference diagram. In this digitized version, enter the result in the exact canonical form shown: n1 -> Node(data=null, next=Node(data=int[2]{0,0}, next=n1)).
+I. Consider this Node class and code. Which diagram shows the variables, objects, and references after the code runs?
 public class Node {
     public Object data;
     public Node next;
@@ -199,6 +189,54 @@ BST<Integer> t = new BST<>();
 for (String name : names) {
     t.add(name.length());
 }`,
+      answerChoices: {
+        I: [
+          {
+            id: "A",
+            text: "Diagram A",
+            diagram: {
+              kind: "source",
+              src: "/exam-assets/cs314/cs314-spring-2024-e2-node-answer-a.svg",
+              alt: "n1 points to a node whose next field points to a second node containing an int array; the second node's next field is null.",
+              width: 680,
+              height: 250,
+            },
+          },
+          {
+            id: "B",
+            text: "Diagram B",
+            diagram: {
+              kind: "source",
+              src: "/exam-assets/cs314/cs314-spring-2024-e2-node-answer-b.svg",
+              alt: "n1 points to a node whose next field points to a second node containing an int array; the second node points back to the first node.",
+              width: 680,
+              height: 250,
+            },
+          },
+          {
+            id: "C",
+            text: "Diagram C",
+            diagram: {
+              kind: "source",
+              src: "/exam-assets/cs314/cs314-spring-2024-e2-node-answer-c.svg",
+              alt: "n1 points to one node containing an int array whose next field points back to itself.",
+              width: 680,
+              height: 250,
+            },
+          },
+          {
+            id: "D",
+            text: "Diagram D",
+            diagram: {
+              kind: "source",
+              src: "/exam-assets/cs314/cs314-spring-2024-e2-node-answer-d.svg",
+              alt: "n1 points to a node whose next field points to a second node containing an int array; the second node points to itself.",
+              width: 680,
+              height: 250,
+            },
+          },
+        ],
+      },
       answers: [
         "8",
         "10",
@@ -208,7 +246,7 @@ for (String name : names) {
         "{A=9, E=7, G=9, N=5, S=6}",
         "the class must also be declared abstract",
         "8 seconds",
-        "n1 -> Node(data=null, next=Node(data=int[2]{0,0}, next=n1))",
+        "B",
         "B",
         "20 seconds",
         "10 seconds",

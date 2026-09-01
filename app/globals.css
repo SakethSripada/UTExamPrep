@@ -816,32 +816,70 @@ textarea:focus-visible {
   height: calc(100vh - 64px);
   padding: 18px 14px;
   overflow: auto;
-  background: #f3f5f8;
+  background: #f5f5f3;
   border-right: 1px solid var(--line);
 }
 
 .score-panel {
   display: grid;
-  gap: 5px;
-  padding: 8px 4px 18px;
+  gap: 7px;
+  padding: 7px 5px 19px;
   border-bottom: 1px solid var(--line);
 }
 
-.score-panel span {
+.score-panel > span {
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
 }
 
-.score-panel strong {
-  font-size: 30px;
-  line-height: 1;
+.score-value {
+  color: #27231f;
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 29px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
 
-.score-panel small {
+.score-value small {
+  color: #766e67;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.score-panel > small {
   color: var(--muted);
+  font-size: 12px;
   line-height: 1.4;
+}
+
+.score-breakdown {
+  display: grid;
+  gap: 5px;
+  margin: 2px 0 0;
+  font-size: 11px;
+}
+
+.score-breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.score-breakdown dt {
+  color: var(--muted);
+}
+
+.score-breakdown dd {
+  margin: 0;
+  color: #39342f;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
 }
 
 .question-map {
@@ -1006,39 +1044,6 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 
-.review-banner {
-  display: grid;
-  grid-template-columns: minmax(190px, auto) minmax(0, 1fr);
-  gap: 24px;
-  align-items: center;
-  margin-bottom: 24px;
-  padding: 14px 16px;
-  background: var(--review-surface);
-  border: 1px solid var(--review-border);
-  border-left: 3px solid var(--review-accent);
-  border-radius: 4px;
-}
-
-.review-banner .eyebrow {
-  margin-bottom: 4px;
-  color: var(--review-accent-strong);
-}
-
-.review-banner h2 {
-  margin: 0;
-  color: #172431;
-  font-size: 21px;
-  font-variant-numeric: tabular-nums;
-  font-weight: 750;
-}
-
-.review-banner p:last-child {
-  margin: 0;
-  color: #526170;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
 .question-header {
   display: flex;
   justify-content: space-between;
@@ -1049,7 +1054,10 @@ textarea:focus-visible {
 }
 
 .question-header h1 {
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: clamp(24px, 3vw, 34px);
+  font-weight: 650;
+  letter-spacing: -0.025em;
 }
 
 .prompt {
@@ -1562,6 +1570,99 @@ textarea:focus-visible {
   scroll-margin: 96px;
 }
 
+.objective-part.with-part-choices {
+  grid-template-columns: 1fr;
+}
+
+.part-choice-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.part-choice-list legend {
+  grid-column: 1 / -1;
+  margin-bottom: 3px;
+  color: #5e5852;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.part-choice {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d5d0ca;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.part-choice:hover {
+  border-color: #8d837a;
+}
+
+.part-choice:has(input:checked) {
+  border-color: #695f56;
+  box-shadow: inset 0 0 0 1px #695f56;
+}
+
+.part-choice.correct {
+  background: #f0f8f3;
+  border-color: #75ad8c;
+}
+
+.part-choice.incorrect {
+  background: #fff5f4;
+  border-color: #d9958f;
+}
+
+.part-choice-heading {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  color: #302b27;
+  font-size: 13px;
+}
+
+.part-choice-heading input {
+  margin: 0;
+}
+
+.part-choice-heading > strong {
+  font-size: 13px;
+}
+
+.part-choice-heading em,
+.choice-result {
+  color: #39634b;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.part-choice.incorrect .part-choice-heading em,
+.choice-option-row.incorrect .choice-result {
+  color: #9f342c;
+}
+
+.part-choice .question-diagram {
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 6px;
+  border: 0;
+}
+
+.part-choice .source-diagram {
+  border: 0;
+}
+
 .objective-part.thrown-out {
   grid-template-columns: minmax(0, 1fr);
   padding: 12px 16px;
@@ -1639,7 +1740,7 @@ textarea:focus-visible {
 
 .choice-option-row {
   display: grid;
-  grid-template-columns: auto 32px minmax(0, 1fr);
+  grid-template-columns: auto 32px minmax(0, 1fr) auto;
   gap: 10px;
   align-items: start;
   padding: 12px;
@@ -2347,27 +2448,23 @@ textarea:focus-visible {
 }
 
 @media (min-width: 1321px) {
-  .review-shell.cs-exam .question-pane {
+  .review-shell.cs-exam.has-review-panel .question-pane {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(390px, 0.78fr);
     gap: 0 clamp(24px, 3vw, 48px);
     width: min(100%, 1640px);
   }
 
-  .review-shell.cs-exam .question-pane > * {
+  .review-shell.cs-exam.has-review-panel .question-pane > * {
     grid-column: 1;
     min-width: 0;
   }
 
-  .review-shell.cs-exam .question-pane > .review-banner {
-    grid-column: 1 / -1;
-  }
-
-  .review-shell.cs-exam .question-pane > .review-panel {
+  .review-shell.cs-exam.has-review-panel .question-pane > .review-panel {
     position: sticky;
     top: 88px;
     grid-column: 2;
-    grid-row: 2 / span 30;
+    grid-row: 1 / span 30;
     align-self: start;
     max-height: calc(100dvh - 112px);
     margin: 0;
@@ -2516,12 +2613,13 @@ textarea:focus-visible {
     padding: 4px 2px 10px;
   }
 
-  .score-panel strong {
+  .score-panel > .score-value {
     justify-self: end;
     font-size: 23px;
   }
 
-  .score-panel small {
+  .score-panel > small,
+  .score-breakdown {
     grid-column: 1 / -1;
   }
 
@@ -2548,18 +2646,16 @@ textarea:focus-visible {
     padding: 18px 14px;
   }
 
+  .part-choice-list {
+    grid-template-columns: 1fr;
+  }
+
   .answer-line {
     margin-top: 0;
   }
 
   .java-panel-header {
     grid-template-columns: 1fr;
-  }
-
-  .review-banner {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    align-items: start;
   }
 
   .floating-reference-panel {

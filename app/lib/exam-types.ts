@@ -48,6 +48,9 @@ export type Question = {
   answer?: string;
   answers?: string[];
   answerPoints?: number[];
+  // Some objective parts are better answered by selecting a visual or a
+  // structured option than by serializing a drawing into a text field.
+  answerChoices?: Record<string, Choice[]>;
   choices?: Choice[];
   correctChoiceIds?: string[];
   allowMultiple?: boolean;
@@ -120,6 +123,7 @@ export type GraphDiagram = {
 export type Choice = {
   id: string;
   text: string;
+  diagram?: QuestionDiagram;
 };
 
 export type ThrownOutPart = {

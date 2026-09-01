@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { ListChecks, Play, ShieldCheck, Terminal, X } from "lucide-react";
 import type { IncompleteSection, JavaRunResult, JavaStatus, ManualState, Question } from "@/app/lib/exam-types";
-import { MixedContent, ScientificContent, ScientificText } from "@/app/components/mixed-content";
+import { MixedContent, ScientificContent } from "@/app/components/mixed-content";
 import { MathFormulaBlock } from "@/app/components/math-formula";
 import { QuestionDiagramVisual } from "@/app/components/question-diagram";
 import { gradingRubric, manualScoreForQuestion, rubricScoreKey } from "@/app/lib/exam-state";
@@ -240,23 +240,18 @@ export function ReviewPanel({
   isComputerScience?: boolean;
 }) {
   if (question.type === "short") {
+    if (!question.workPoints) {
+      return null;
+    }
+
     return (
       <section className="review-panel">
         <h2>
           <ListChecks size={18} />
-          Correct answers{question.workPoints ? " and reasoning" : ""}
+          Self-grade your reasoning
         </h2>
-        <p>
-          Each result field is auto-scored. Review the correct answer shown beside each response above.
-          {question.workPoints
-            ? " Then use the official solution to self-score the explanation you recorded during the exam."
-            : ""}
-        </p>
-        {question.workPoints ? (
-          <>
-            <RubricScoreEditor question={question} manual={manual} setManual={setManual} />
-          </>
-        ) : null}
+        <p>Use the solution below to score only the reasoning you recorded during the exam.</p>
+        <RubricScoreEditor question={question} manual={manual} setManual={setManual} />
         {question.officialSolution ? (
           isComputerScience ? (
             <MixedContent content={question.officialSolution} language={question.language} className="solution-notes" />
@@ -273,22 +268,7 @@ export function ReviewPanel({
   }
 
   if (question.type === "choice") {
-    const correct = (question.correctChoiceIds ?? []).map((choiceId) => {
-      const choice = question.choices?.find((item) => item.id === choiceId);
-      return choice ? `${choiceId} — ${choice.text}` : choiceId;
-    });
-    return (
-      <section className="review-panel">
-        <h2>
-          <ListChecks size={18} />
-          Correct answer{correct.length === 1 ? "" : "s"}
-        </h2>
-        <p className="correct-answer-copy">
-          <strong>Correct answer{correct.length === 1 ? "" : "s"}: </strong>
-          {isComputerScience ? correct.join("; ") : <ScientificText text={correct.join("; ")} />}
-        </p>
-      </section>
-    );
+    return null;
   }
 
   if (question.type === "free-response") {
