@@ -164,7 +164,7 @@ F. List all possible frequency selectivities in this order: lowpass, highpass, a
           width: 1200,
           height: 1110,
           title: "Input and output spectrograms",
-          alt: "Three recreated chirp spectrograms: an input rising from zero to eight kilohertz, a lowpass-filtered output that retains only the first two kilohertz, and a nonlinear output with additional folded N-shaped frequency traces.",
+          alt: "Three recreated chirp spectrograms: an input rising from zero to eight kilohertz and two unlabeled output spectrograms. Output a attenuates the trace above its cutoff; output b adds folded N-shaped frequency traces.",
         },
       ],
       code: `A1. In output (a), identify the filter selectivity.

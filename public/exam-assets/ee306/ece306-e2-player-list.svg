@@ -37,5 +37,4 @@
   <rect class="box" x="965" y="172" width="235" height="145"/><line x1="965" x2="1200" y1="244" y2="244" stroke="#111827" stroke-width="3"/>
   <text class="text" x="1082.5" y="208">x0000</text><text class="text" x="1082.5" y="280">(n-1)th Player #</text>
   <path class="dashed" d="M900 208 H964"/>
-  <text x="660" y="420" class="caption">R4 can retain the predecessor address while R0 advances through the list.</text>
 </svg>

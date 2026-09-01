@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1110" role="img" aria-labelledby="title description">
   <title id="title">Input and output chirp spectrograms</title>
-  <desc id="description">Three recreated spectrograms: a chirp increasing from zero to eight kilohertz, a lowpass-filtered output that stops near two kilohertz, and a cubic-nonlinearity output with extra aliased N-shaped traces.</desc>
+  <desc id="description">Three recreated spectrograms: the input chirp and the two unlabeled output spectrograms from parts a and b.</desc>
   <defs>
     <linearGradient id="spectrogram" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#76809a"/><stop offset=".45" stop-color="#454b63"/><stop offset="1" stop-color="#252838"/></linearGradient>
     <linearGradient id="power" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#050505"/><stop offset=".55" stop-color="#67708f"/><stop offset="1" stop-color="#e7ffff"/></linearGradient>
@@ -32,7 +32,7 @@
   </g>
 
   <g>
-    <text x="110" y="412" class="subtitle">(a) Output spectrogram: lowpass system</text>
+    <text x="110" y="412" class="subtitle">(a) Output spectrogram y[n]</text>
     <rect class="frame" x="110" y="427" width="850" height="220"/>
     <g class="grid"><path d="M110 482H960 M110 537H960 M110 592H960 M280 427V647 M450 427V647 M620 427V647 M790 427V647"/></g>
     <rect x="374" y="427" width="586" height="220" fill="#030406" opacity=".91"/>
@@ -46,7 +46,7 @@
   </g>
 
   <g>
-    <text x="110" y="751" class="subtitle">(b) Output spectrogram: pointwise nonlinearity</text>
+    <text x="110" y="751" class="subtitle">(b) Output spectrogram y[n]</text>
     <rect class="frame" x="110" y="766" width="850" height="220"/>
     <g class="grid"><path d="M110 821H960 M110 876H960 M110 931H960 M280 766V986 M450 766V986 M620 766V986 M790 766V986"/></g>
     <path class="trace" d="M110 986 L960 766"/>

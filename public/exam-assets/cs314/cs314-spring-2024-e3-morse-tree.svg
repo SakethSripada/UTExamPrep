@@ -9,7 +9,9 @@
       <path d="M0,0 L10,5 L0,10" fill="#111827"/>
     </marker>
     <style>
-      .edge { stroke: #111827; stroke-width: 2.5; stroke-dasharray: 5 9; fill: none; }
+      .edge { stroke: #111827; stroke-width: 2.5; fill: none; }
+      .dot { stroke-dasharray: 2 9; stroke-linecap: round; }
+      .dash { stroke-dasharray: 11 8; }
       .node { fill: #fff; stroke: #111827; stroke-width: 2.5; }
       .letter { font: 24px Georgia, serif; fill: #111827; text-anchor: middle; dominant-baseline: middle; }
       .start { font: 33px Georgia, serif; fill: #111827; text-anchor: middle; dominant-baseline: middle; }
@@ -17,17 +19,17 @@
     </style>
   </defs>
   <rect width="1280" height="700" fill="#fff"/>
-  <text x="210" y="74" class="legend">Dot</text><path d="M330 88 L105 88" stroke="#111827" stroke-width="3" stroke-dasharray="5 10" marker-end="url(#leftArrow)"/>
-  <text x="1070" y="74" class="legend">Dash</text><path d="M950 88 L1175 88" stroke="#111827" stroke-width="3" stroke-dasharray="5 10" marker-end="url(#rightArrow)"/>
+  <text x="210" y="74" class="legend">Dot</text><path d="M330 88 L105 88" stroke="#111827" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" marker-end="url(#leftArrow)"/>
+  <text x="1070" y="74" class="legend">Dash</text><path d="M950 88 L1175 88" stroke="#111827" stroke-width="3" stroke-dasharray="12 9" marker-end="url(#rightArrow)"/>
 
-  <g class="edge">
-    <path d="M617 135 L413 188"/><path d="M663 135 L867 188"/>
-    <path d="M380 221 L259 278"/><path d="M410 221 L481 278"/><path d="M870 221 L789 278"/><path d="M900 221 L1021 278"/>
-    <path d="M238 311 L164 368"/><path d="M262 311 L338 368"/><path d="M478 311 L428 368"/><path d="M502 311 L552 368"/>
-    <path d="M758 311 L698 368"/><path d="M782 311 L838 368"/><path d="M1018 311 L928 368"/><path d="M1042 311 L1068 368"/>
-    <path d="M144 401 L104 463"/><path d="M164 401 L166 463"/><path d="M338 401 L328 463"/><path d="M428 401 L438 463"/>
-    <path d="M552 401 L528 463"/><path d="M572 401 L603 463"/><path d="M698 401 L678 463"/><path d="M718 401 L748 463"/>
-    <path d="M838 401 L823 463"/><path d="M858 401 L893 463"/><path d="M928 401 L958 463"/><path d="M948 401 L1028 463"/>
+  <g>
+    <path class="edge dot" d="M617 135 L413 188"/><path class="edge dash" d="M663 135 L867 188"/>
+    <path class="edge dot" d="M380 221 L259 278"/><path class="edge dash" d="M410 221 L481 278"/><path class="edge dot" d="M870 221 L789 278"/><path class="edge dash" d="M900 221 L1021 278"/>
+    <path class="edge dot" d="M238 311 L164 368"/><path class="edge dash" d="M262 311 L338 368"/><path class="edge dot" d="M478 311 L428 368"/><path class="edge dash" d="M502 311 L552 368"/>
+    <path class="edge dot" d="M758 311 L698 368"/><path class="edge dash" d="M782 311 L838 368"/><path class="edge dot" d="M1018 311 L928 368"/><path class="edge dash" d="M1042 311 L1068 368"/>
+    <path class="edge dot" d="M144 401 L104 463"/><path class="edge dash" d="M164 401 L166 463"/><path class="edge dot" d="M338 401 L328 463"/><path class="edge dot" d="M428 401 L438 463"/>
+    <path class="edge dot" d="M552 401 L528 463"/><path class="edge dash" d="M572 401 L603 463"/><path class="edge dot" d="M698 401 L678 463"/><path class="edge dash" d="M718 401 L748 463"/>
+    <path class="edge dot" d="M838 401 L823 463"/><path class="edge dash" d="M858 401 L893 463"/><path class="edge dot" d="M928 401 L958 463"/><path class="edge dash" d="M948 401 L1028 463"/>
   </g>
 
   <circle class="node" cx="640" cy="120" r="42"/><text class="start" x="640" y="120">start</text>
