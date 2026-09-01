@@ -84,6 +84,7 @@ D. How many clock cycles execute the Part D segment?`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A",
           src: "/exam-assets/ee306/ece306-e2-dpad.svg",
           width: 1320,
           height: 620,
@@ -168,6 +169,7 @@ B10. Give UP_MASK, DOWN_MASK, LEFT_MASK in that order, separated by commas.`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A",
           src: "/exam-assets/ee306/ece306-e2-player-list.svg",
           width: 1320,
           height: 620,

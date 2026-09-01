@@ -40,6 +40,7 @@ export const ece313ExamOne: Exam = {
       diagrams: [
         {
           kind: "source",
+          beforePart: "A",
           src: "/exam-assets/ece313/ece313-e1-sinusoid.svg",
           width: 1000,
           height: 560,
@@ -211,6 +212,7 @@ D. Is the aliased frequency audible? Answer yes or no.`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A",
           src: "/exam-assets/ece313/ece313-e1-stft.svg",
           width: 1280,
           height: 1200,

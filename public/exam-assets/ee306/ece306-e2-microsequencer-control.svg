@@ -33,8 +33,9 @@
     <path class="shape" d="M530 470 H590 Q620 500 590 530 H530 Q560 500 530 470Z"/><path class="shape" d="M670 470 H730 Q760 500 730 530 H670 Q700 500 670 470Z"/><path class="shape" d="M810 470 H870 Q900 500 870 530 H810 Q840 500 810 470Z"/><path class="shape" d="M950 470 H1010 Q1040 500 1010 530 H950 Q980 500 950 470Z"/><path class="shape" d="M1090 470 H1150 Q1180 500 1150 530 H1090 Q1120 500 1090 470Z"/>
     <path class="bus" d="M560 530 V570 H850"/><path class="bus" d="M700 530 V570 H850"/><path class="bus" d="M840 530 V570 H850"/><path class="bus" d="M980 530 V570 H850"/><path class="bus" d="M1120 530 V570 H850"/>
   </g>
-  <polygon class="shape" points="700,610 970,610 940,690 730,690"/><text x="835" y="655" class="label">IRD-controlled next-state mux</text><path class="wire" d="M850 570 V610"/>
-  <text x="1190" y="280" class="small">Thick outline: source's AND-plus-mux replacement for the J[5] path.</text>
+  <polygon class="shape" points="700,610 970,610 940,690 730,690"/><text x="835" y="646" class="label">IRD-controlled</text><text x="835" y="674" class="label">next-state mux</text><path class="wire" d="M850 570 H735 V610"/>
+  <text x="1150" y="274" class="small">Thick outline: source's AND-plus-mux</text>
+  <text x="1150" y="294" class="small">replacement for the J[5] path.</text>
 
   <text x="700" y="735" class="label">Incomplete control store</text>
   <g transform="translate(50 755)">

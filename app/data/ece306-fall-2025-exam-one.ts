@@ -77,6 +77,7 @@ C. What is the maximum number of LC-3 system calls that opcode 1111 could provid
       diagrams: [
         {
           kind: "source",
+          beforePart: "A1",
           src: "/exam-assets/ee306/ece306-e1-moore-machine.svg",
           width: 1320,
           height: 1180,
@@ -115,6 +116,7 @@ B8. Truth table row current state 11, X = 1: output Y.`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A",
           src: "/exam-assets/ee306/ece306-e1-sprinkler-incorrect.svg",
           width: 1040,
           height: 1140,

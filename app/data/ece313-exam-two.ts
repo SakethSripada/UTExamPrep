@@ -159,6 +159,7 @@ F. List all possible frequency selectivities in this order: lowpass, highpass, a
       diagrams: [
         {
           kind: "source",
+          beforePart: "A1",
           src: "/exam-assets/ece313/ece313-e2-system-identification.svg",
           width: 1200,
           height: 1110,
@@ -205,6 +206,7 @@ B. In output (b), give the integer exponent k for y[n] = x^k[n].`,
       diagrams: [
         {
           kind: "source",
+          beforePart: "A1",
           src: "/exam-assets/ece313/ece313-e2-filterbank.svg",
           width: 1600,
           height: 1490,

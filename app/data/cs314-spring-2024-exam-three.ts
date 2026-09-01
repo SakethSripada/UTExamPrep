@@ -19,7 +19,7 @@ export const cs314Spring2024ExamThree: Exam = {
       diagrams: [
         {
           kind: "source",
-          beforePart: "P",
+          beforePart: "P1",
           title: "For part P: Maximum binary heaps before and after removeMax",
           description:
             "The source problem's two heap states. The unknown value occupies the last node before removal and the left child of the root afterward.",
