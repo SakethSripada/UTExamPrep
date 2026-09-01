@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execFile as execFileCallback } from "node:child_process";
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -8,7 +9,11 @@ import { promisify } from "node:util";
 const execFile = promisify(execFileCallback);
 
 const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const examRoot = path.join(repoRoot, "exampdfs");
+const examRoot = process.env.UTEXAMPREP_PDF_ROOT
+  ? path.resolve(process.env.UTEXAMPREP_PDF_ROOT)
+  : existsSync(path.join(repoRoot, "exampdfs"))
+    ? path.join(repoRoot, "exampdfs")
+    : path.resolve(repoRoot, "..", "UTExamPrep-PDFs", "exampdfs");
 const tempRoot = path.join(examRoot, "_tmp-downloads");
 const python = process.env.PDF_QC_PYTHON || "/tmp/utexamprep-pdf-venv/bin/python";
 

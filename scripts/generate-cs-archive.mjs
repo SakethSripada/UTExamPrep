@@ -12,6 +12,7 @@
 // Run with --report to list every warning the parser produced (each one is a
 // spot where the output relies on an override or needs review).
 
+import { existsSync } from "node:fs";
 import { readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,7 +38,11 @@ import { cs314Overrides } from "./curation/cs314-overrides.mjs";
 import { cs439Exams } from "./curation/cs439-exams.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourceRoot = path.join(repoRoot, "exampdfs");
+const sourceRoot = process.env.UTEXAMPREP_PDF_ROOT
+  ? path.resolve(process.env.UTEXAMPREP_PDF_ROOT)
+  : existsSync(path.join(repoRoot, "exampdfs"))
+    ? path.join(repoRoot, "exampdfs")
+    : path.resolve(repoRoot, "..", "UTExamPrep-PDFs", "exampdfs");
 const dataRoot = path.join(repoRoot, "app", "data");
 const showReport = process.argv.includes("--report");
 
@@ -494,11 +499,17 @@ function buildProgrammingQuestion({ id, courseId, section, solutionSection, warn
     points,
     type: "code",
     language: "java",
-    prompt: promptParagraphs.join(" "),
+    prompt:
+      promptParagraphs.join(" ").trim() ||
+      "Complete the requested Java method according to the reference and restrictions below.",
     reference: [referenceText, prePostTail].filter(Boolean).join("\n\n"),
     stub: stub ?? "// Write your Java solution here.\n",
     answer: answer ?? "",
-    runnable: false,
+    // Each digitized CS 314 programming question has a corresponding
+    // sandboxed harness under runner/questions/<question-id>. Keep the
+    // frontend in sync with that registry so students can run tests and
+    // submit-time grading can score the result.
+    runnable: true,
     rubric,
   };
 }
