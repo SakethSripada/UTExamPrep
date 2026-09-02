@@ -76,6 +76,7 @@ export default function Home() {
   const [answers, setAnswers] = useState<AnswerState>({});
   const [manual, setManual] = useState<ManualState>({});
   const [flags, setFlags] = useState<FlagState>({});
+  const [checkedQuestionIds, setCheckedQuestionIds] = useState<Record<string, boolean>>({});
   const [savedExamIds, setSavedExamIds] = useState<string[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
@@ -91,10 +92,11 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const question = exam?.questions[index] ?? null;
+  const questionChecked = mode === "review" || Boolean(question && checkedQuestionIds[question.id]);
   const isComputerScience = exam?.subject === "Computer Science";
   const useCodePresentation = Boolean(isComputerScience || question?.codePresentation);
   const hasReviewPanel = Boolean(
-    mode === "review" &&
+    questionChecked &&
       question &&
       (question.type === "code" ||
         question.type === "free-response" ||
@@ -385,6 +387,7 @@ export default function Home() {
       setAnswers(persisted.answers ?? {});
       setManual(persisted.manual ?? {});
       setFlags(persisted.flags ?? {});
+      setCheckedQuestionIds({});
       setMode("exam");
       setIndex(0);
       setReferenceOpen(false);
@@ -430,6 +433,7 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
+    setCheckedQuestionIds({});
     setIndex(0);
     setReferenceOpen(false);
     setSavedExamIds([]);
@@ -442,6 +446,7 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
+    setCheckedQuestionIds({});
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
@@ -698,7 +703,7 @@ export default function Home() {
           </div>
         </div>
         {mode === "exam" ? (
-          <ExamTimer />
+          <ExamTimer key={exam.id} defaultMinutes={exam.durationMinutes} />
         ) : (
           <div className="review-mode-indicator" role="status">
             Review mode
@@ -799,14 +804,29 @@ export default function Home() {
               <p className="eyebrow">{question.points} points</p>
               <h1>{question.title}</h1>
             </div>
-            <button
-              className={`flag-button ${flags[question.id] ? "flagged" : ""}`}
-              onClick={() => setFlags((current) => ({ ...current, [question.id]: !current[question.id] }))}
-              disabled={mode === "review"}
-            >
-              <Flag size={17} />
-              Flag
-            </button>
+            <div className="question-header-actions">
+              {mode === "exam" ? (
+                <button
+                  type="button"
+                  className={`problem-check-button ${questionChecked ? "checked" : ""}`}
+                  onClick={() =>
+                    setCheckedQuestionIds((current) => ({ ...current, [question.id]: true }))
+                  }
+                  aria-pressed={questionChecked}
+                >
+                  <Check size={13} aria-hidden="true" />
+                  {questionChecked ? "Checked" : "Check"}
+                </button>
+              ) : null}
+              <button
+                className={`flag-button ${flags[question.id] ? "flagged" : ""}`}
+                onClick={() => setFlags((current) => ({ ...current, [question.id]: !current[question.id] }))}
+                disabled={mode === "review"}
+              >
+                <Flag size={17} />
+                Flag
+              </button>
+            </div>
           </div>
 
           {useCodePresentation ? (
@@ -855,7 +875,7 @@ export default function Home() {
                     onChange={(event) => setShortAnswer(question.id, 0, event.target.value)}
                     placeholder="Type your answer"
                   />
-                  {mode === "review" ? (
+                  {questionChecked ? (
                     <strong
                       className={
                         isCorrect(
@@ -894,7 +914,7 @@ export default function Home() {
 
                 const answerIndex = part.answerIndex ?? 0;
                 const userAnswers = (answers[question.id] as string[] | undefined) ?? [];
-                const submitted = mode === "review";
+                const submitted = questionChecked;
                 const correct = submitted && isCorrect(userAnswers[answerIndex] ?? "", question.answers![answerIndex]);
                 const partTargetId = `${question.id}-part-${part.label}`;
                 const partDiagrams = question.diagrams?.filter((diagram) => diagram.beforePart === part.label) ?? [];
@@ -937,7 +957,7 @@ export default function Home() {
                                   name={`${question.id}-${part.label}`}
                                   value={choice.id}
                                   checked={selected}
-                                  disabled={submitted}
+                                  disabled={mode === "review"}
                                   onChange={() => setShortAnswer(question.id, answerIndex, choice.id)}
                                 />
                                 <strong>{choice.id}</strong>
@@ -999,7 +1019,7 @@ export default function Home() {
               {question.choices.map((choice) => {
                 const value = answers[question.id];
                 const selected = Array.isArray(value) ? value.includes(choice.id) : value === choice.id;
-                const submitted = mode === "review";
+                const submitted = questionChecked;
                 const correct = Boolean(question.correctChoiceIds?.includes(choice.id));
                 return (
                   <label
@@ -1063,7 +1083,7 @@ export default function Home() {
             </div>
           ) : null}
 
-          {mode === "review" ? (
+          {questionChecked ? (
             <ReviewPanel
               question={question}
               manual={manual}

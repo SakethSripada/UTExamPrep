@@ -137,6 +137,7 @@ export type Exam = {
   id: string;
   title: string;
   subtitle: string;
+  durationMinutes?: number;
   course?: string;
   subject?: string;
   term?: string;
@@ -157,6 +158,7 @@ export type ExamCatalogEntry = {
   id: string;
   title: string;
   subtitle: string;
+  durationMinutes?: number;
   course: string;
   subject: string;
   term: string;
