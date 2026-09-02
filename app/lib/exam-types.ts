@@ -217,4 +217,5 @@ export type PersistedExam = {
   answers?: AnswerState;
   manual?: ManualState;
   flags?: FlagState;
+  completedScore?: number;
 };

@@ -3285,6 +3285,21 @@ textarea:focus-visible {
   min-width: 104px;
 }
 
+.exam-row-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.exam-score {
+  min-width: 3ch;
+  color: #4f4943;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 720;
+  text-align: right;
+}
+
 .empty-catalog {
   padding: 32px 0;
   background: transparent;
