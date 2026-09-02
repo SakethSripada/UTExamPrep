@@ -35,6 +35,7 @@ import {
   isCorrect,
   isSameCode,
   manualScoreForQuestion,
+  readCompletedExamScores,
   readPersistedExam,
   readSavedExamIds,
   workResponseKey,
@@ -104,6 +105,7 @@ export default function Home() {
   const [flags, setFlags] = useState<FlagState>({});
   const [checkedResponseIds, setCheckedResponseIds] = useState<Record<string, boolean>>({});
   const [savedExamIds, setSavedExamIds] = useState<string[]>([]);
+  const [completedScores, setCompletedScores] = useState<Record<string, number>>({});
   const [storageReady, setStorageReady] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [submitRunning, setSubmitRunning] = useState(false);
@@ -178,6 +180,7 @@ export default function Home() {
       } finally {
         if (!cancelled) {
           setSavedExamIds(readSavedExamIds(catalogExamIds));
+          setCompletedScores(readCompletedExamScores(catalogExamIds));
           setStorageReady(true);
         }
       }
@@ -187,27 +190,6 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (!storageReady) {
-      return;
-    }
-    if (!exam) {
-      return;
-    }
-    if (
-      Object.keys(answers).length === 0 &&
-      Object.keys(manual).length === 0 &&
-      Object.keys(flags).length === 0
-    ) {
-      clearPersistedExam(exam.id);
-      return;
-    }
-    window.localStorage.setItem(
-      `utexamprep:${exam.id}`,
-      JSON.stringify({ answers, manual, flags }),
-    );
-  }, [answers, exam, flags, manual, storageReady]);
 
   useEffect(() => {
     if (!pendingTargetId) {
@@ -270,7 +252,27 @@ export default function Home() {
       possible: autoPossible + manualPossible,
     };
   })();
+  const roundedScore = totals.possible > 0 ? Math.round((totals.earned / totals.possible) * 100) : 0;
   const answeredCount = exam?.questions.filter((item) => questionAnswered(item)).length ?? 0;
+
+  useEffect(() => {
+    if (!storageReady || !exam) {
+      return;
+    }
+
+    const completedScore = mode === "review" ? roundedScore : completedScores[exam.id];
+    const hasProgress =
+      Object.keys(answers).length > 0 || Object.keys(manual).length > 0 || Object.keys(flags).length > 0;
+    if (!hasProgress && completedScore === undefined) {
+      clearPersistedExam(exam.id);
+      return;
+    }
+
+    window.localStorage.setItem(
+      `utexamprep:${exam.id}`,
+      JSON.stringify({ answers, manual, flags, completedScore }),
+    );
+  }, [answers, completedScores, exam, flags, manual, mode, roundedScore, storageReady]);
 
   function questionAnswered(item: Question) {
     if (item.type === "short") {
@@ -428,6 +430,7 @@ export default function Home() {
 
   function returnToMenu() {
     setSavedExamIds(readSavedExamIds(catalogExamIds));
+    setCompletedScores(readCompletedExamScores(catalogExamIds));
     setMode("menu");
   }
 
@@ -436,6 +439,7 @@ export default function Home() {
       return;
     }
     setSubmitRunning(true);
+    setCompletedScores((current) => ({ ...current, [exam.id]: roundedScore }));
     setMode("review");
     setSubmitRunning(false);
   }
@@ -465,6 +469,7 @@ export default function Home() {
     setIndex(0);
     setReferenceOpen(false);
     setSavedExamIds([]);
+    setCompletedScores({});
   }
 
   function resetExam() {
@@ -480,6 +485,11 @@ export default function Home() {
     setMode("exam");
     clearPersistedExam(exam.id);
     setSavedExamIds((current) => current.filter((examId) => examId !== exam.id));
+    setCompletedScores((current) => {
+      const next = { ...current };
+      delete next[exam.id];
+      return next;
+    });
   }
 
   async function submitExamRequest(event: FormEvent<HTMLFormElement>) {
@@ -585,15 +595,23 @@ export default function Home() {
               {items.map((item) => {
                 const saved = savedExamIds.includes(item.id);
                 const loading = loadingExamId === item.id;
+                const completedScore = completedScores[item.id];
                 return (
                   <article className="exam-row" key={item.id}>
                     <div className="exam-row-copy">
                       <h3>{item.title}</h3>
                     </div>
-                    <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
-                      <BookOpen size={18} />
-                      {loading ? "Loading" : saved ? "Resume exam" : "Start exam"}
-                    </button>
+                    <div className="exam-row-actions">
+                      {completedScore !== undefined ? (
+                        <span className="exam-score" aria-label={`Completed score: ${completedScore}%`}>
+                          {completedScore}%
+                        </span>
+                      ) : null}
+                      <button className="primary-button" onClick={() => void startExam(item)} disabled={loading}>
+                        <BookOpen size={18} />
+                        {loading ? "Loading" : saved ? "Resume exam" : "Start exam"}
+                      </button>
+                    </div>
                   </article>
                 );
               })}
@@ -601,6 +619,13 @@ export default function Home() {
           ))}
           {groupedExams.length === 0 ? <p className="empty-catalog">No exams match those filters.</p> : null}
         </section>
+
+        <footer className="menu-footer">
+          <p>
+            UTExamPrep is an independent, completely free resource provided solely for educational purposes. It is
+            not affiliated with or endorsed by The University of Texas at Austin and is not commercial in any way.
+          </p>
+        </footer>
 
         {examRequestsEnabled && requestModalOpen ? (
           <div className="modal-backdrop" role="presentation">

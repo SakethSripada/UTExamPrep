@@ -123,6 +123,20 @@ export function readSavedExamIds(examIds: string[]) {
   );
 }
 
+export function readCompletedExamScores(examIds: string[]) {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  return examIds.reduce<Record<string, number>>((scores, examId) => {
+    const completedScore = readPersistedExam(examId).completedScore;
+    if (typeof completedScore === "number" && Number.isFinite(completedScore)) {
+      scores[examId] = Math.min(100, Math.max(0, Math.round(completedScore)));
+    }
+    return scores;
+  }, {});
+}
+
 export function clearPersistedExam(examId: string) {
   if (typeof window === "undefined") {
     return;
