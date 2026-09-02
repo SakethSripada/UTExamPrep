@@ -1060,6 +1060,39 @@ textarea:focus-visible {
   letter-spacing: -0.025em;
 }
 
+.question-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.problem-check-button {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 8px;
+  color: #526170;
+  font-size: 12px;
+  font-weight: 700;
+  background: transparent;
+  border: 1px solid #cbd5df;
+  border-radius: 999px;
+}
+
+.problem-check-button:hover {
+  color: var(--brand-dark);
+  background: #f4f8fa;
+  border-color: #8aa8b8;
+}
+
+.problem-check-button.checked {
+  color: #17633b;
+  background: #f0faf4;
+  border-color: #9bc9ac;
+}
+
 .prompt {
   max-width: 900px;
   margin: 20px 0;
@@ -1854,9 +1887,10 @@ textarea:focus-visible {
 }
 
 .answer-line {
+  position: relative;
   display: grid;
   gap: 8px;
-  align-self: start;
+  align-self: center;
   min-width: 0;
 }
 
@@ -1895,7 +1929,10 @@ textarea:focus-visible {
   border-color: var(--line);
 }
 
-.answer-line span {
+.answer-line > span {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 5px);
   display: block;
   width: auto;
   color: #344054;
@@ -2651,7 +2688,8 @@ textarea:focus-visible {
   }
 
   .answer-line {
-    margin-top: 0;
+    align-self: start;
+    margin-top: 22px;
   }
 
   .java-panel-header {
@@ -2676,7 +2714,8 @@ textarea:focus-visible {
   }
 
   .answer-line {
-    margin-top: 0;
+    align-self: start;
+    margin-top: 22px;
   }
 }
 
@@ -2796,6 +2835,14 @@ textarea:focus-visible {
   .question-header,
   .question-footer {
     flex-direction: column;
+  }
+
+  .question-header-actions {
+    width: 100%;
+  }
+
+  .question-header-actions .flag-button {
+    width: auto;
   }
 
   .question-pane {

@@ -26,8 +26,9 @@ function parseTime(input: string) {
   return Math.max(0, minutes) * 60 + Math.min(59, Math.max(0, seconds));
 }
 
-export function ExamTimer() {
-  const [remaining, setRemaining] = useState(0);
+export function ExamTimer({ defaultMinutes = 0 }: { defaultMinutes?: number }) {
+  const defaultSeconds = Math.max(0, defaultMinutes) * 60;
+  const [remaining, setRemaining] = useState(defaultSeconds);
   const [running, setRunning] = useState(false);
   const [expired, setExpired] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -66,7 +67,7 @@ export function ExamTimer() {
   function reset() {
     setRunning(false);
     setExpired(false);
-    setRemaining(0);
+    setRemaining(defaultSeconds);
   }
 
   function commitDraft() {
