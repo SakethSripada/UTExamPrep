@@ -1060,39 +1060,6 @@ textarea:focus-visible {
   letter-spacing: -0.025em;
 }
 
-.question-header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.problem-check-button {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  justify-content: center;
-  min-height: 28px;
-  padding: 0 8px;
-  color: #526170;
-  font-size: 12px;
-  font-weight: 700;
-  background: transparent;
-  border: 1px solid #cbd5df;
-  border-radius: 999px;
-}
-
-.problem-check-button:hover {
-  color: var(--brand-dark);
-  background: #f4f8fa;
-  border-color: #8aa8b8;
-}
-
-.problem-check-button.checked {
-  color: #17633b;
-  background: #f0faf4;
-  border-color: #9bc9ac;
-}
-
 .prompt {
   max-width: 900px;
   margin: 20px 0;
@@ -1887,10 +1854,9 @@ textarea:focus-visible {
 }
 
 .answer-line {
-  position: relative;
   display: grid;
   gap: 8px;
-  align-self: center;
+  align-self: start;
   min-width: 0;
 }
 
@@ -1902,7 +1868,7 @@ textarea:focus-visible {
   scroll-margin: 96px;
 }
 
-.single-answer span {
+.single-answer > label {
   color: #344054;
   font-size: 13px;
   font-weight: 700;
@@ -1929,10 +1895,7 @@ textarea:focus-visible {
   border-color: var(--line);
 }
 
-.answer-line > span {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + 5px);
+.answer-line > label {
   display: block;
   width: auto;
   color: #344054;
@@ -1941,6 +1904,66 @@ textarea:focus-visible {
   line-height: 17px;
   background: transparent;
   border: 0;
+}
+
+.answer-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.answer-check-button {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  min-height: 36px;
+  padding: 0 10px;
+  color: #344b5b;
+  font-size: 12px;
+  font-weight: 750;
+  background: #f8fafb;
+  border: 1px solid #aebbc5;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 7%);
+  transition:
+    color 120ms ease,
+    background 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.answer-check-button:hover {
+  color: #173f54;
+  background: #eef5f8;
+  border-color: #7896a6;
+  box-shadow: 0 2px 5px rgb(15 23 42 / 10%);
+}
+
+.answer-check-button:focus-visible {
+  outline: 2px solid rgb(15 93 127 / 22%);
+  outline-offset: 2px;
+}
+
+.answer-check-button.checked {
+  color: #17633b;
+  background: #f0f8f3;
+  border-color: #91bda2;
+  box-shadow: none;
+}
+
+.response-check-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.part-choice-response {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
 }
 
 .answer-line input,
@@ -2688,8 +2711,7 @@ textarea:focus-visible {
   }
 
   .answer-line {
-    align-self: start;
-    margin-top: 22px;
+    margin-top: 0;
   }
 
   .java-panel-header {
@@ -2714,8 +2736,7 @@ textarea:focus-visible {
   }
 
   .answer-line {
-    align-self: start;
-    margin-top: 22px;
+    margin-top: 0;
   }
 }
 
@@ -2835,14 +2856,6 @@ textarea:focus-visible {
   .question-header,
   .question-footer {
     flex-direction: column;
-  }
-
-  .question-header-actions {
-    width: 100%;
-  }
-
-  .question-header-actions .flag-button {
-    width: auto;
   }
 
   .question-pane {
