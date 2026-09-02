@@ -49,6 +49,32 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 
 const catalogExamIds = examCatalog.map((item) => item.id);
 
+function answerCheckKey(questionId: string, answerIndex?: number) {
+  return typeof answerIndex === "number" ? `${questionId}:answer:${answerIndex}` : questionId;
+}
+
+function CheckAnswerButton({
+  checked,
+  onCheck,
+  label = "Check",
+}: {
+  checked: boolean;
+  onCheck: () => void;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      className={`answer-check-button ${checked ? "checked" : ""}`}
+      onClick={onCheck}
+      aria-pressed={checked}
+    >
+      <Check size={14} strokeWidth={2.4} aria-hidden="true" />
+      <span>{checked ? "Checked" : label}</span>
+    </button>
+  );
+}
+
 function formatScore(value: number) {
   return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1);
 }
@@ -76,7 +102,7 @@ export default function Home() {
   const [answers, setAnswers] = useState<AnswerState>({});
   const [manual, setManual] = useState<ManualState>({});
   const [flags, setFlags] = useState<FlagState>({});
-  const [checkedQuestionIds, setCheckedQuestionIds] = useState<Record<string, boolean>>({});
+  const [checkedResponseIds, setCheckedResponseIds] = useState<Record<string, boolean>>({});
   const [savedExamIds, setSavedExamIds] = useState<string[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
@@ -92,7 +118,9 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const question = exam?.questions[index] ?? null;
-  const questionChecked = mode === "review" || Boolean(question && checkedQuestionIds[question.id]);
+  const questionChecked = mode === "review" || Boolean(question && checkedResponseIds[question.id]);
+  const singleAnswerChecked =
+    mode === "review" || Boolean(question && checkedResponseIds[answerCheckKey(question.id, 0)]);
   const isComputerScience = exam?.subject === "Computer Science";
   const useCodePresentation = Boolean(isComputerScience || question?.codePresentation);
   const hasReviewPanel = Boolean(
@@ -387,7 +415,7 @@ export default function Home() {
       setAnswers(persisted.answers ?? {});
       setManual(persisted.manual ?? {});
       setFlags(persisted.flags ?? {});
-      setCheckedQuestionIds({});
+      setCheckedResponseIds({});
       setMode("exam");
       setIndex(0);
       setReferenceOpen(false);
@@ -433,7 +461,7 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
-    setCheckedQuestionIds({});
+    setCheckedResponseIds({});
     setIndex(0);
     setReferenceOpen(false);
     setSavedExamIds([]);
@@ -446,7 +474,7 @@ export default function Home() {
     setAnswers({});
     setManual({});
     setFlags({});
-    setCheckedQuestionIds({});
+    setCheckedResponseIds({});
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
@@ -804,29 +832,14 @@ export default function Home() {
               <p className="eyebrow">{question.points} points</p>
               <h1>{question.title}</h1>
             </div>
-            <div className="question-header-actions">
-              {mode === "exam" ? (
-                <button
-                  type="button"
-                  className={`problem-check-button ${questionChecked ? "checked" : ""}`}
-                  onClick={() =>
-                    setCheckedQuestionIds((current) => ({ ...current, [question.id]: true }))
-                  }
-                  aria-pressed={questionChecked}
-                >
-                  <Check size={13} aria-hidden="true" />
-                  {questionChecked ? "Checked" : "Check"}
-                </button>
-              ) : null}
-              <button
-                className={`flag-button ${flags[question.id] ? "flagged" : ""}`}
-                onClick={() => setFlags((current) => ({ ...current, [question.id]: !current[question.id] }))}
-                disabled={mode === "review"}
-              >
-                <Flag size={17} />
-                Flag
-              </button>
-            </div>
+            <button
+              className={`flag-button ${flags[question.id] ? "flagged" : ""}`}
+              onClick={() => setFlags((current) => ({ ...current, [question.id]: !current[question.id] }))}
+              disabled={mode === "review"}
+            >
+              <Flag size={17} />
+              Flag
+            </button>
           </div>
 
           {useCodePresentation ? (
@@ -867,15 +880,29 @@ export default function Home() {
           {question.type === "short" && question.answers ? (
             <div className="objective-list">
               {!question.code ? (
-                <label className="single-answer" id={`${question.id}-answer`}>
-                  <span>Your answer</span>
-                  <input
-                    disabled={mode === "review"}
-                    value={((answers[question.id] as string[] | undefined) ?? [])[0] ?? ""}
-                    onChange={(event) => setShortAnswer(question.id, 0, event.target.value)}
-                    placeholder="Type your answer"
-                  />
-                  {questionChecked ? (
+                <section className="single-answer" id={`${question.id}-answer`}>
+                  <label htmlFor={`${question.id}-answer-input`}>Your answer</label>
+                  <div className="answer-input-row">
+                    <input
+                      id={`${question.id}-answer-input`}
+                      disabled={mode === "review"}
+                      value={((answers[question.id] as string[] | undefined) ?? [])[0] ?? ""}
+                      onChange={(event) => setShortAnswer(question.id, 0, event.target.value)}
+                      placeholder="Type your answer"
+                    />
+                    {mode === "exam" ? (
+                      <CheckAnswerButton
+                        checked={singleAnswerChecked}
+                        onCheck={() =>
+                          setCheckedResponseIds((current) => ({
+                            ...current,
+                            [answerCheckKey(question.id, 0)]: true,
+                          }))
+                        }
+                      />
+                    ) : null}
+                  </div>
+                  {singleAnswerChecked ? (
                     <strong
                       className={
                         isCorrect(
@@ -890,7 +917,7 @@ export default function Home() {
                       {useCodePresentation ? question.answers[0] : <ScientificText text={question.answers[0]} />}
                     </strong>
                   ) : null}
-                </label>
+                </section>
               ) : buildObjectiveParts(question).map((part, partIndex) => {
                 if (part.kind === "context") {
                   return (
@@ -914,7 +941,8 @@ export default function Home() {
 
                 const answerIndex = part.answerIndex ?? 0;
                 const userAnswers = (answers[question.id] as string[] | undefined) ?? [];
-                const submitted = questionChecked;
+                const checkKey = answerCheckKey(question.id, answerIndex);
+                const submitted = mode === "review" || Boolean(checkedResponseIds[checkKey]);
                 const correct = submitted && isCorrect(userAnswers[answerIndex] ?? "", question.answers![answerIndex]);
                 const partTargetId = `${question.id}-part-${part.label}`;
                 const partDiagrams = question.diagrams?.filter((diagram) => diagram.beforePart === part.label) ?? [];
@@ -941,44 +969,67 @@ export default function Home() {
                       )}
                     </div>
                     {answerChoices ? (
-                      <fieldset className="part-choice-list">
-                        <legend>Choose one</legend>
-                        {answerChoices.map((choice) => {
-                          const selected = userAnswers[answerIndex] === choice.id;
-                          const choiceCorrect = submitted && isCorrect(choice.id, question.answers![answerIndex]);
-                          return (
-                            <label
-                              className={`part-choice ${choiceCorrect ? "correct" : ""} ${submitted && selected && !choiceCorrect ? "incorrect" : ""}`}
-                              key={choice.id}
-                            >
-                              <span className="part-choice-heading">
-                                <input
-                                  type="radio"
-                                  name={`${question.id}-${part.label}`}
-                                  value={choice.id}
-                                  checked={selected}
-                                  disabled={mode === "review"}
-                                  onChange={() => setShortAnswer(question.id, answerIndex, choice.id)}
-                                />
-                                <strong>{choice.id}</strong>
-                                <span>{choice.text}</span>
-                                {choiceCorrect ? <em>Correct answer</em> : null}
-                                {submitted && selected && !choiceCorrect ? <em>Your answer</em> : null}
-                              </span>
-                              {choice.diagram ? <QuestionDiagramVisual diagram={choice.diagram} /> : null}
-                            </label>
-                          );
-                        })}
-                      </fieldset>
+                      <div className="part-choice-response">
+                        <fieldset className="part-choice-list">
+                          <legend>Choose one</legend>
+                          {answerChoices.map((choice) => {
+                            const selected = userAnswers[answerIndex] === choice.id;
+                            const choiceCorrect = submitted && isCorrect(choice.id, question.answers![answerIndex]);
+                            return (
+                              <label
+                                className={`part-choice ${choiceCorrect ? "correct" : ""} ${submitted && selected && !choiceCorrect ? "incorrect" : ""}`}
+                                key={choice.id}
+                              >
+                                <span className="part-choice-heading">
+                                  <input
+                                    type="radio"
+                                    name={`${question.id}-${part.label}`}
+                                    value={choice.id}
+                                    checked={selected}
+                                    disabled={mode === "review"}
+                                    onChange={() => setShortAnswer(question.id, answerIndex, choice.id)}
+                                  />
+                                  <strong>{choice.id}</strong>
+                                  <span>{choice.text}</span>
+                                  {choiceCorrect ? <em>Correct answer</em> : null}
+                                  {submitted && selected && !choiceCorrect ? <em>Your answer</em> : null}
+                                </span>
+                                {choice.diagram ? <QuestionDiagramVisual diagram={choice.diagram} /> : null}
+                              </label>
+                            );
+                          })}
+                        </fieldset>
+                        {mode === "exam" ? (
+                          <div className="response-check-row">
+                            <CheckAnswerButton
+                              checked={submitted}
+                              onCheck={() =>
+                                setCheckedResponseIds((current) => ({ ...current, [checkKey]: true }))
+                              }
+                            />
+                          </div>
+                        ) : null}
+                      </div>
                     ) : (
-                      <label className="answer-line">
-                        <span>Answer {part.label}</span>
-                        <input
-                          disabled={mode === "review"}
-                          value={userAnswers[answerIndex] ?? ""}
-                          onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
-                          placeholder={answerPlaceholder(part)}
-                        />
+                      <div className="answer-line">
+                        <label htmlFor={`${question.id}-${part.label}-input`}>Answer {part.label}</label>
+                        <div className="answer-input-row">
+                          <input
+                            id={`${question.id}-${part.label}-input`}
+                            disabled={mode === "review"}
+                            value={userAnswers[answerIndex] ?? ""}
+                            onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
+                            placeholder={answerPlaceholder(part)}
+                          />
+                          {mode === "exam" ? (
+                            <CheckAnswerButton
+                              checked={submitted}
+                              onCheck={() =>
+                                setCheckedResponseIds((current) => ({ ...current, [checkKey]: true }))
+                              }
+                            />
+                          ) : null}
+                        </div>
                         {submitted ? (
                           <strong className={correct ? "correct" : "incorrect"}>
                             Correct answer:{" "}
@@ -989,7 +1040,7 @@ export default function Home() {
                             )}
                           </strong>
                         ) : null}
-                      </label>
+                      </div>
                     )}
                     </section>
                   </Fragment>
@@ -1043,6 +1094,17 @@ export default function Home() {
                   </label>
                 );
               })}
+              {mode === "exam" ? (
+                <div className="response-check-row">
+                  <CheckAnswerButton
+                    checked={questionChecked}
+                    label="Check answer"
+                    onCheck={() =>
+                      setCheckedResponseIds((current) => ({ ...current, [question.id]: true }))
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
           ) : null}
 
@@ -1055,6 +1117,17 @@ export default function Home() {
                 placeholder="Work the problem here, then self-score against the correct answer after submitting."
                 rows={10}
               />
+              {mode === "exam" ? (
+                <div className="response-check-row">
+                  <CheckAnswerButton
+                    checked={questionChecked}
+                    label="Check response"
+                    onCheck={() =>
+                      setCheckedResponseIds((current) => ({ ...current, [question.id]: true }))
+                    }
+                  />
+                </div>
+              ) : null}
             </section>
           ) : null}
 
@@ -1080,6 +1153,17 @@ export default function Home() {
                   readOnly: mode === "review",
                 }}
               />
+              {mode === "exam" ? (
+                <div className="response-check-row">
+                  <CheckAnswerButton
+                    checked={questionChecked}
+                    label="Check response"
+                    onCheck={() =>
+                      setCheckedResponseIds((current) => ({ ...current, [question.id]: true }))
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
           ) : null}
 
