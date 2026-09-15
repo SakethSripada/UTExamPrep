@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { MathFormula } from "@/app/lib/exam-types";
 
-export function MathFormulaBlock({ formula }: { formula: MathFormula }) {
+function MathFormulaBlockImpl({ formula }: { formula: MathFormula }) {
   return (
     <figure className="math-formula">
       <span
@@ -15,3 +16,5 @@ export function MathFormulaBlock({ formula }: { formula: MathFormula }) {
     </figure>
   );
 }
+
+export const MathFormulaBlock = memo(MathFormulaBlockImpl);
