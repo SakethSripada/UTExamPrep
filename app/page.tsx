@@ -625,6 +625,7 @@ export default function Home() {
             UTExamPrep is an independent, completely free resource provided solely for educational purposes. It is
             not affiliated with or endorsed by The University of Texas at Austin and is not commercial in any way.
           </p>
+          <p>Every exam is publicly available online, and no gated content was accessed.</p>
         </footer>
 
         {examRequestsEnabled && requestModalOpen ? (
