@@ -1,9 +1,9 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import type { CodeLanguage, ContentSegment } from "@/app/lib/exam-types";
 
-export function CodeBlock({
+function CodeBlockImpl({
   code,
   className = "",
   language = "java",
@@ -373,7 +373,7 @@ export function splitMixedContent(content = "", forceCode = false): ContentSegme
   return segments;
 }
 
-export function MixedContent({
+function MixedContentImpl({
   content,
   forceCode = false,
   className = "",
@@ -405,7 +405,7 @@ export function MixedContent({
   );
 }
 
-export function InlineProseContent({
+function InlineProseContentImpl({
   content,
   codeContext,
   className = "",
@@ -492,11 +492,11 @@ function scientificNodes(text: string) {
   return nodes;
 }
 
-export function ScientificText({ text }: { text: string }) {
+function ScientificTextImpl({ text }: { text: string }) {
   return <span className="scientific-notation">{scientificNodes(text)}</span>;
 }
 
-export function ScientificContent({ content, className = "" }: { content?: string; className?: string }) {
+function ScientificContentImpl({ content, className = "" }: { content?: string; className?: string }) {
   return (
     <div className={`scientific-content ${className}`}>
       {(content ?? "").split("\n").map((line, index) => (
@@ -507,3 +507,13 @@ export function ScientificContent({ content, className = "" }: { content?: strin
     </div>
   );
 }
+
+// These renderers walk (and syntax-highlight) static exam prose on every call,
+// which is far too expensive to redo while somebody is typing an answer. Their
+// props are strings from the exam data, so a shallow compare is enough to skip
+// the work entirely.
+export const CodeBlock = memo(CodeBlockImpl);
+export const MixedContent = memo(MixedContentImpl);
+export const InlineProseContent = memo(InlineProseContentImpl);
+export const ScientificText = memo(ScientificTextImpl);
+export const ScientificContent = memo(ScientificContentImpl);

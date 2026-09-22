@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Image from "next/image";
 import type { GraphDiagram, LinkedListDiagram, QuestionDiagram, TreeDiagram } from "@/app/lib/exam-types";
 
@@ -129,7 +130,7 @@ function GraphVisual({ diagram }: { diagram: GraphDiagram }) {
   );
 }
 
-export function QuestionDiagramVisual({ diagram }: { diagram: QuestionDiagram }) {
+function QuestionDiagramVisualImpl({ diagram }: { diagram: QuestionDiagram }) {
   return (
     <figure className="question-diagram">
       {diagram.title ? <figcaption>{diagram.title}</figcaption> : null}
@@ -150,3 +151,7 @@ export function QuestionDiagramVisual({ diagram }: { diagram: QuestionDiagram })
     </figure>
   );
 }
+
+// Diagrams are laid out from scratch on every render; the diagram objects come
+// straight from the static exam data, so memoizing keeps typing cheap.
+export const QuestionDiagramVisual = memo(QuestionDiagramVisualImpl);

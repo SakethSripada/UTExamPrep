@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import type { FormEvent } from "react";
-import { Fragment, useEffect, useState } from "react";
+import type { ComponentProps, FormEvent } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   Check,
@@ -76,6 +76,158 @@ function CheckAnswerButton({
   );
 }
 
+// Answer fields keep their own copy of what is being typed and push it into the
+// exam state on a short idle delay. Keystrokes then paint immediately instead of
+// waiting on a full page render, and the editors below never fight a stale value.
+const COMMIT_DELAY_MS = 200;
+const CODE_COMMIT_DELAY_MS = 400;
+
+function useDebouncedCommit(commit: (next: string) => void, delay: number) {
+  const timerRef = useRef<number | null>(null);
+  const pendingRef = useRef<string | null>(null);
+  const commitRef = useRef(commit);
+
+  useEffect(() => {
+    commitRef.current = commit;
+  }, [commit]);
+
+  const flush = useCallback(() => {
+    if (timerRef.current === null) {
+      return;
+    }
+    window.clearTimeout(timerRef.current);
+    timerRef.current = null;
+    const pending = pendingRef.current;
+    pendingRef.current = null;
+    if (pending !== null) {
+      commitRef.current(pending);
+    }
+  }, []);
+
+  const push = useCallback(
+    (next: string) => {
+      pendingRef.current = next;
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
+      timerRef.current = window.setTimeout(() => {
+        timerRef.current = null;
+        const pending = pendingRef.current;
+        pendingRef.current = null;
+        if (pending !== null) {
+          commitRef.current(pending);
+        }
+      }, delay);
+    },
+    [delay],
+  );
+
+  // Never drop the last keystrokes when the field goes away (question change).
+  useEffect(() => flush, [flush]);
+
+  const isPending = useCallback(() => timerRef.current !== null, []);
+
+  return { push, flush, isPending };
+}
+
+function useBufferedText(value: string, commit: (next: string) => void, delay = COMMIT_DELAY_MS) {
+  const { push, flush, isPending } = useDebouncedCommit(commit, delay);
+  const [draft, setDraft] = useState(value);
+  const draftRef = useRef(value);
+
+  // Adopt outside changes (restoring saved work, resetting the exam) only while
+  // there is no edit of our own still waiting to be committed.
+  useEffect(() => {
+    if (!isPending() && value !== draftRef.current) {
+      draftRef.current = value;
+      setDraft(value);
+    }
+  }, [isPending, value]);
+
+  const change = useCallback(
+    (next: string) => {
+      draftRef.current = next;
+      setDraft(next);
+      push(next);
+    },
+    [push],
+  );
+
+  return { draft, change, flush };
+}
+
+type BufferedFieldProps<T> = Omit<T, "value" | "defaultValue" | "onChange" | "onBlur"> & {
+  value: string;
+  onCommit: (next: string) => void;
+};
+
+function BufferedInput({ value, onCommit, ...rest }: BufferedFieldProps<ComponentProps<"input">>) {
+  const { draft, change, flush } = useBufferedText(value, onCommit);
+  return <input {...rest} value={draft} onChange={(event) => change(event.target.value)} onBlur={flush} />;
+}
+
+function BufferedTextarea({ value, onCommit, ...rest }: BufferedFieldProps<ComponentProps<"textarea">>) {
+  const { draft, change, flush } = useBufferedText(value, onCommit);
+  return <textarea {...rest} value={draft} onChange={(event) => change(event.target.value)} onBlur={flush} />;
+}
+
+// Monaco owns its buffer. Handing it a `value` prop makes the wrapper replace
+// the entire model whenever the two disagree, which drops the caret at the end
+// of the file, so the editor is mounted uncontrolled (keyed per question by the
+// caller) and only reports changes outward.
+function CodeAnswerEditor({
+  initialValue,
+  language,
+  path,
+  readOnly,
+  onCommit,
+}: {
+  initialValue: string;
+  language: string;
+  path: string;
+  readOnly: boolean;
+  onCommit: (next: string) => void;
+}) {
+  const { push, flush } = useDebouncedCommit(onCommit, CODE_COMMIT_DELAY_MS);
+  // Captured once: the editor is uncontrolled from here on, and the caller
+  // remounts it whenever the answer is replaced from outside.
+  const [initialCode] = useState(initialValue);
+  const options = useMemo(
+    () => ({
+      minimap: { enabled: false },
+      fontSize: 14,
+      lineHeight: 22,
+      scrollBeyondLastLine: false,
+      wordWrap: "on" as const,
+      tabSize: 4,
+      automaticLayout: true,
+      readOnly,
+    }),
+    [readOnly],
+  );
+  const handleChange = useCallback((next: string | undefined) => push(next ?? ""), [push]);
+  const handleMount = useCallback(
+    (editor: { onDidBlurEditorText: (listener: () => void) => unknown }) => {
+      editor.onDidBlurEditorText(flush);
+    },
+    [flush],
+  );
+
+  return (
+    <MonacoEditor
+      height="430px"
+      defaultLanguage={language}
+      language={language}
+      path={path}
+      theme="vs"
+      defaultValue={initialCode}
+      onChange={handleChange}
+      onMount={handleMount}
+      options={options}
+    />
+  );
+}
+
 function formatScore(value: number) {
   return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1);
 }
@@ -118,6 +270,9 @@ export default function Home() {
   const [subjectFilter, setSubjectFilter] = useState("All");
   const [courseFilter, setCourseFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  // The code editor is uncontrolled, so it has to be remounted whenever answers
+  // are replaced from outside (reset, or reopening an exam).
+  const [editorGeneration, setEditorGeneration] = useState(0);
 
   const question = exam?.questions[index] ?? null;
   const questionChecked = mode === "review" || Boolean(question && checkedResponseIds[question.id]);
@@ -205,7 +360,7 @@ export default function Home() {
     return () => window.cancelAnimationFrame(frame);
   }, [index, pendingTargetId]);
 
-  const totals = (() => {
+  const totals = useMemo(() => {
     if (!exam) {
       return { autoEarned: 0, autoPossible: 0, manualEarned: 0, manualPossible: 0, earned: 0, possible: 0 };
     }
@@ -251,7 +406,7 @@ export default function Home() {
       earned: autoEarned + manualEarned,
       possible: autoPossible + manualPossible,
     };
-  })();
+  }, [answers, exam, manual]);
   const roundedScore = totals.possible > 0 ? Math.round((totals.earned / totals.possible) * 100) : 0;
   const answeredCount = exam?.questions.filter((item) => questionAnswered(item)).length ?? 0;
 
@@ -268,6 +423,8 @@ export default function Home() {
       return;
     }
 
+    // Answers now arrive on the fields' idle delay rather than per keystroke, so
+    // this stays a direct write and nothing is left unsaved.
     window.localStorage.setItem(
       `utexamprep:${exam.id}`,
       JSON.stringify({ answers, manual, flags, completedScore }),
@@ -418,6 +575,7 @@ export default function Home() {
       setManual(persisted.manual ?? {});
       setFlags(persisted.flags ?? {});
       setCheckedResponseIds({});
+      setEditorGeneration((current) => current + 1);
       setMode("exam");
       setIndex(0);
       setReferenceOpen(false);
@@ -466,6 +624,7 @@ export default function Home() {
     setManual({});
     setFlags({});
     setCheckedResponseIds({});
+    setEditorGeneration((current) => current + 1);
     setIndex(0);
     setReferenceOpen(false);
     setSavedExamIds([]);
@@ -480,6 +639,7 @@ export default function Home() {
     setManual({});
     setFlags({});
     setCheckedResponseIds({});
+    setEditorGeneration((current) => current + 1);
     setIndex(0);
     setReferenceOpen(false);
     setMode("exam");
@@ -909,11 +1069,12 @@ export default function Home() {
                 <section className="single-answer" id={`${question.id}-answer`}>
                   <label htmlFor={`${question.id}-answer-input`}>Your answer</label>
                   <div className="answer-input-row">
-                    <input
+                    <BufferedInput
+                      key={`${question.id}-answer-input`}
                       id={`${question.id}-answer-input`}
                       disabled={mode === "review"}
                       value={((answers[question.id] as string[] | undefined) ?? [])[0] ?? ""}
-                      onChange={(event) => setShortAnswer(question.id, 0, event.target.value)}
+                      onCommit={(next) => setShortAnswer(question.id, 0, next)}
                       placeholder="Type your answer"
                     />
                     {mode === "exam" ? (
@@ -1040,11 +1201,12 @@ export default function Home() {
                       <div className="answer-line">
                         <label htmlFor={`${question.id}-${part.label}-input`}>Answer {part.label}</label>
                         <div className="answer-input-row">
-                          <input
+                          <BufferedInput
+                            key={`${question.id}-${part.label}-input`}
                             id={`${question.id}-${part.label}-input`}
                             disabled={mode === "review"}
                             value={userAnswers[answerIndex] ?? ""}
-                            onChange={(event) => setShortAnswer(question.id, answerIndex, event.target.value)}
+                            onCommit={(next) => setShortAnswer(question.id, answerIndex, next)}
                             placeholder={answerPlaceholder(part)}
                           />
                           {mode === "exam" ? (
@@ -1080,10 +1242,11 @@ export default function Home() {
               <label>
                 <strong>{question.workRequired ? "Show your work (required)" : "Show your work"}</strong>
                 <p>{question.workPrompt}</p>
-                <textarea
+                <BufferedTextarea
+                  key={`${question.id}-work-input`}
                   disabled={mode === "review"}
                   value={(answers[workResponseKey(question.id)] as string | undefined) ?? ""}
-                  onChange={(event) => setWorkResponse(question.id, event.target.value)}
+                  onCommit={(next) => setWorkResponse(question.id, next)}
                   placeholder={question.workPlaceholder ?? "Write your derivation or explanation here."}
                   rows={question.workRows ?? 8}
                 />
@@ -1136,10 +1299,11 @@ export default function Home() {
 
           {question.type === "free-response" ? (
             <section className="free-response" id={`${question.id}-free-response`}>
-              <textarea
+              <BufferedTextarea
+                key={`${question.id}-free-response-input`}
                 value={(answers[question.id] as string | undefined) ?? ""}
                 disabled={mode === "review"}
-                onChange={(event) => setFreeResponse(question.id, event.target.value)}
+                onCommit={(next) => setFreeResponse(question.id, next)}
                 placeholder="Work the problem here, then self-score against the correct answer after submitting."
                 rows={10}
               />
@@ -1159,25 +1323,13 @@ export default function Home() {
 
           {question.type === "code" ? (
             <div className="editor-wrap" id={`${question.id}-editor`}>
-              <MonacoEditor
-                key={`${selectedExamId}-${question.id}`}
-                height="430px"
-                defaultLanguage={question.language ?? "java"}
+              <CodeAnswerEditor
+                key={`${selectedExamId}-${question.id}-${editorGeneration}`}
                 language={question.language ?? "java"}
                 path={`${selectedExamId}/${question.id}.${question.language === "python" ? "py" : question.language === "c" ? "c" : "java"}`}
-                theme="vs"
-                value={(answers[question.id] as string | undefined) ?? question.stub ?? ""}
-                onChange={(value) => setCodeAnswer(question, value)}
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  lineHeight: 22,
-                  scrollBeyondLastLine: false,
-                  wordWrap: "on",
-                  tabSize: 4,
-                  automaticLayout: true,
-                  readOnly: mode === "review",
-                }}
+                initialValue={(answers[question.id] as string | undefined) ?? question.stub ?? ""}
+                readOnly={mode === "review"}
+                onCommit={(next) => setCodeAnswer(question, next)}
               />
               {mode === "exam" ? (
                 <div className="response-check-row">
